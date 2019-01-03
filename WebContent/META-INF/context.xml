@@ -1,0 +1,8 @@
+<!-- maxIdleSwap 表示多少分钟后保存
+directory 表示那个文件夹，会在项目目录下创建 -->
+
+<Context>
+			<Manager className="org.apache.catalina.session.PersistentManager" maxIdleSwap="1">
+				<Store className="org.apache.catalina.session.FileStore" directory="threeblog"/>
+			</Manager>
+</Context>

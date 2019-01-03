@@ -1,0 +1,24 @@
+/* CSS Document */
+#index_body_left{
+	margin-top:100px;
+	float:left;
+	width:730px;
+	margin-left:-10px;
+	}
+#blog_title ul{
+	padding-left:50px;}
+#index_body_left ul li{
+	float:left;
+	list-style:none;}
+#index_body_left ul li a{
+	font-size:20px;
+	color:#666;
+	}
+#index_body_left li:hover {
+	font-weight:bold;
+	 }
+#index_pictures_left{
+	margin-top:100px;
+	margin-left:70px;
+	width:650px;
+	float:left;}

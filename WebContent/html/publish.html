@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>发表博文</title>
+<link rel="stylesheet" href="css/homepage.css" type="text/css"/>
+<link rel="stylesheet" href="css/blog.css" type="text/css"/>
+<link href="css/publish.css" rel="stylesheet">
+<link rel="stylesheet" href="css/calendar.css">
+<link href="css/owl.carousel.css" rel="stylesheet">
+<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="ckfinder/ckfinder.js"></script>
+<script src="js/jquery-1.min.js"></script>
+<script src="js/owl.carousel.js"></script>
+<!--头部show的js-->
+<script>
+$(function(){
+    $('#owl-demo').owlCarousel({
+        items: 1,
+        autoPlay: true
+    });
+});
+</script>
+<!--消息栏显示-->
+<script>
+
+$(function() {
+    $('li').hover(function() {
+            $(this).find('ul').css({
+                'display': 'block',
+                'animation:': '2s'
+            })
+        },
+        function() {
+            $(this).find('ul').css({
+                'display': 'none',
+                'animation:': '2s'
+            })
+        });
+});
+</script>
+
+<script type="text/javascript">
+	function change() {
+		var pic = document.getElementById("img"), file = document
+				.getElementById("publish_fm");
+
+		var ext = file.value.substring(file.value.lastIndexOf(".") + 1)
+				.toLowerCase();
+
+		// gif在IE浏览器暂时无法显示
+		if (ext != 'png' && ext != 'jpg' && ext != 'jpeg') {
+			alert("图片的格式必须为png或者jpg或者jpeg格式！");
+			return;
+		}
+		var isIE = navigator.userAgent.match(/MSIE/) != null, isIE6 = navigator.userAgent
+				.match(/MSIE 6.0/) != null;
+
+		if (isIE) {
+			file.select();
+			var reallocalpath = document.selection.createRange().text;
+
+			// IE6浏览器设置img的src为本地路径可以直接显示图片
+			if (isIE6) {
+				pic.src = reallocalpath;
+			} else {
+				// 非IE6版本的IE由于安全问题直接设置img的src无法显示本地图片，但是可以通过滤镜来实现
+				pic.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='image',src=\""
+						+ reallocalpath + "\")";
+				// 设置img的src为base64编码的透明图片 取消显示浏览器默认图片
+				pic.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
+			}
+		} else {
+			html5Reader(file);
+		}
+	}
+
+	function html5Reader(file) {
+		var file = file.files[0];
+		var reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = function(e) {
+			var pic = document.getElementById("img");
+			pic.src = this.result;
+		}
+	}
+</script>
+</head>
+
+<body>
+<!--顶端栏begin-->
+<div id="index_head">
+  <div id="index_head_logo"> <img src="image/logo.png"> </div>
+  <div id="index_head_menu">
+    <ul>
+      <li><a href="#" >首页</a></li>
+      <li><a href="#" >博文</a></li>
+      <li><a href="#" >画廊</a></li>
+      <li><a href="#" >我的</a></li>
+    </ul>
+  </div>
+  <div id="index_head_tools"> 
+  <ul>
+  	<li>
+    	<a href="#">
+        	<img  src="image/search.png" style="float:left;" />
+       	</a> 
+    </li>
+    <li id="messagepic">
+    	<a href="#">
+        	<div style="float:left; position:relative;">
+    			<img src="image/message.png"/>
+                	<span  id="tools_messagenumber">0</span>
+             </div>
+         </a> 
+         <ul class="index_tools_messages">
+         	<li><a href="#home">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
+          	<li><a href="#home">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
+            <li><a href="#home">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
+            <li><a href="#home">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+         </ul>
+    </li>
+    <li>
+    	<a href="#">
+        	<img src="image/setting.png"/>
+        </a>
+        <ul class="index_tools_setting">
+            
+            <li><a href="#home">&ensp;个人中心&ensp;</a></li>
+            <li><a href="#home">&ensp;账号设置&ensp;</a></li>
+            <li><a href="#home">&ensp;举报中心&ensp;</a></li>
+            <li><a href="#home">&ensp;退出账号&ensp;</a></li>
+         </ul>
+    </li>
+     </ul>
+     </div>
+  <span style="color:#FFF; font-size:36px;float:left; margin-top:15px;"> |</span>
+  <div id="index_head_signin">
+    <ul>
+      <li><a href="register.html">注册</a></li>
+      <li><a href="signin.html">登录</a></li>
+    </ul>
+  </div>
+</div>
+</div>
+<!--顶端栏end-->
+<!--内容栏begin-->
+<div id="index_all">
+   <div id="publish_all">
+   		<h3 id="publish_a_h3">█ 发表博文</h3>
+        <!--封面-->
+        <div id="publish_a_fm" ></div>
+       	<form action="${pageContext.request.contextPath}/servlet/Publish"
+				enctype="multipart/form-data" method="post">
+        <div id="publish_a_fm_pic">
+        	<input  type="file" id="publish_fm" name="publish_fm" onchange="change()" accept="image/*">
+            <img id="img" src="">
+        </div>
+        <!--标题内容-->
+        <div id="publish_a_w">
+        	<span class="publish_a_w_span">标题：</span>
+       		 <input id="bt" type="text"   placeholder="请输入标题(限15字)"  maxlength="30" class="publish_a_w_span" >
+              <span class="publish_a_w_span">标签：</span>
+             <input  id="labels" type="text" placeholder="添加标签,例<热夏>" class="publish_a_w_span" >
+             <span class="publish_a_w_span">分类 ： </span>
+             <select class="publish_a_w_span">
+             	<option>默认分类</option>
+             </select>
+             <br>
+             <span class="publish_a_w_span">导语：</span>
+       		<input id="pub_daoyu" maxlength="100" type="text"  class="publish_a_w_span" placeholder="请输入导语（限50字）"><br><br>
+            <textarea name="editor" id="editor" cols="30" rows="30" class="ckeditor"></textarea>
+        </div>
+        <input  type="submit" value="发表" id="publish_a_submit" >
+    	<input type="hidden" name="author" value="<%=user.getUsername()%>">
+    	</form>
+   </div> 
+</div>
+<!--内容栏end-->
+<!--底部begin-->
+<footer>
+	<img src="image/footer_logo.png">
+    <div id="footer_about">
+    <p>&emsp;关于我们 | 意见反馈 | 服务条例 | 隐私政策</p>
+    <p>Copyright © 2018 | Three Blog | All Right Reserved</p>
+    </div>
+</footer>
+<!--底部end-->
+</body>
+</html>

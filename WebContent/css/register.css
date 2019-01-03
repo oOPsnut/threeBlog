@@ -1,0 +1,141 @@
+/* CSS Document */
+#login_all{
+	width:1100px;
+	height:auto;
+	min-height:700px;
+	overflow:hidden;
+	background:url(../image/background_11.jpg) no-repeat;
+	background-size:100% 100%;
+	 }
+
+#login_left{
+	width:450px;
+	height:auto;
+	overflow:hidden;
+	float:left;
+	margin-top:110px;
+	margin-left:60px;
+	}
+#login_left table{
+	margin-top:200px;
+	border-left:2px solid #f5f2c1;
+	}
+#login_left p{
+	margin-left:20px;
+	color: #F5F2c1;
+	font-size:32px;
+	letter-spacing: 0;
+	margin-bottom:15px;
+		}
+#login_left span{
+	margin-left:20px;
+	display:block;
+	color: #F5F2c1;
+	font-size:18px;
+	letter-spacing: 0;
+	margin-bottom:32px;
+		}
+
+#login_right{
+	width:450px;
+	height:530px;
+	background-color:#F5F2c1;
+	float:right;
+	margin-top:110px;
+	margin-right:40px;
+	padding:10px;
+	}
+#right_content{
+	width:100%;
+	height:100%;
+	border:1px solid #6cf;
+	}
+#right_content_img{
+	margin:30px 75px 0 75px;
+	width:300px;
+	}
+.f_input{
+	font:"Microsoft YaHei UI", "Microsoft YaHei UI Light";
+	margin-top:20px;
+	height:40px;
+	width:300px;
+	}
+
+.f_username{
+	width:100%;;
+	height:45px;
+	margin:20px 0 0 0;
+	}
+.f_username_input{
+	margin-left:73px;
+	height:40px;
+	width:300px;
+	float:left;
+	}
+#f_username_img{
+	width:20px;	
+	float:left;
+	margin-top:10px;
+	cursor:pointer;
+	}
+#f_checknumber{
+	width:100%;;
+	height:45px;
+	margin:20px 0;}
+#f_cnum_input{
+	height:40px;
+	width:170px;
+	margin-right:10px;
+	float:left;
+	margin-left:73px;
+	}
+#f_cnum_a{
+	float:18px;
+	display:block;
+	background-color:#6cf;
+	color:#FFF;
+	width:120px;
+	height:25px;
+	float:left;
+	padding:10px 0;
+	}
+#forget_passwd{
+	font-size:16px;
+	color:#666;
+	margin-left:230px;}
+#forget_passwd:hover{
+	color:#000;
+	font-weight:bold;}
+#register{
+	height:40px;
+	width:304px;
+	border:1px solid #ff0000;
+	padding:2px 3px;
+	background-color:#ff0000;
+	font-size:18px;
+	color:#FFF;
+	cursor:pointer;
+	}
+#login_now{
+	color:#666;}
+#login_now:hover{
+	color:#000;
+	font-weight:bold;}
+.errorSpan{
+	float:left;
+	margin-top:10px;
+}
+#span01{
+	margin-top:-10px;
+}
+.banclick{
+	pointer-events:none;
+}
+#error_all{
+	width:1100px;
+	height:auto;
+	min-height:700px;
+	overflow:hidden;
+	background:url(../image/background_11.jpg) no-repeat;
+	background-size:100% 100%;
+	 }

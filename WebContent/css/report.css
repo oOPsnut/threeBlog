@@ -1,0 +1,76 @@
+/* CSS Document */
+#report_all{
+	width:960px;
+	height:auto;
+	overflow:hidden;
+	margin-top:100px;
+	margin-left:70px;
+	padding-bottom:100px;
+	border:1px solid #6cf;
+	box-shadow:3px 3px 8px #999;
+	padding:10px 20px 20px 20px;}
+#report_article{
+	width:880px;
+	background-color:#f7f7f7;
+	height:auto;
+	overflow:hidden;
+	min-height:300px;
+	padding:20px 20px 20px 40px;}
+#report_a_up span{
+	font-size:18px;}
+#report_a_up a u{
+	color:#09F; 
+	font-weight:bold;
+	font-size:18px;}
+#report_a_up textarea{
+	width:90%; 
+	height:80px;  
+	color:#333;
+	 font-size:20px; 
+	 resize:none; 
+	 overflow:hidden;
+	 padding:8px 8px;}
+#report_a_middle{
+	margin-top:20px;
+	width:95%;
+	}
+#report_a_middle span{
+	font-size:18px;}
+#middle_report_class{
+	font-size:18px;
+	width:20px;
+	height:20px;}
+#answer{
+	font-size:18px;}
+#report_a_down{
+	margin-top:30px;
+	}
+#report_a_down span{
+	font-size:18px;}
+#report_a_down textarea{
+	width:90%; 
+	height:150px; 
+	font-size:20px; 
+	resize:none;
+	overflow:hidden;
+	padding:8px 8px;}
+#report_a_click{
+	width:98%;
+	margin-top:50px;
+	height:50px;}
+#click_submit{
+	width:100px; 
+	height:40px; 
+	font-size:20px;
+	color:#FFF;
+	font-weight:bold;
+	 background-color:#6cf;
+	 margin-left:150px; }
+#click_reset{
+	
+	width:100px; 
+	height:40px; 
+	font-size:20px;
+	color:#FFF; 
+	font-weight:bold; 
+	background-color:#f55;}
