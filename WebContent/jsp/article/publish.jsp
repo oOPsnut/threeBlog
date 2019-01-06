@@ -16,6 +16,7 @@
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script src="${pageContext.request.contextPath}/js/checkpublish.js"></script>
+<script src="${pageContext.request.contextPath}/js/sisyphus.min.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -43,6 +44,14 @@ $(function() {
         });
 });
 </script>
+
+<!-- <script type="text/javascript">
+$( function() {
+	$( "#publish_form" ).sisyphus();	
+} );
+
+</script> -->
+
 <!-- 封面预览  -->
 <script type="text/javascript">
 	function change() {
@@ -195,7 +204,7 @@ $(function() {
    		<h3 id="publish_a_h3">█ 发表博文</h3>
         <!--封面-->
         <div id="publish_a_fm" ></div>
-       	<form action="${pageContext.request.contextPath}/UserServlet?method=Publish" enctype="multipart/form-data" method="post">
+       	<form action="${pageContext.request.contextPath}/UserServlet?method=Publish" enctype="multipart/form-data" method="post" id="publish_form">
         <div id="publish_a_fm_pic">
         	<input  type="file" id="publish_fm" name="publish_fm" onchange="change()" accept="image/*">
             <img id="img" src="">
@@ -207,16 +216,19 @@ $(function() {
               <span class="publish_a_w_span">标签：</span>
              <input  id="labels" type="text" placeholder="添加标签（只有一个）" class="publish_a_w_span">
              <span class="publish_a_w_span">分类 ： </span>
-             <select class="publish_a_w_span">
-             	<option>默认分类</option>
+             <select class="publish_a_w_span" id="pub_type">
+             	<option value="默认分类">默认分类</option>
              </select>
              <br>
              <span class="publish_a_w_span">导语：</span>
        		<input id="pub_daoyu" maxlength="100" type="text"  class="publish_a_w_span" placeholder="请输入导语（限50字）" required><br><br>
             <textarea name="editor" id="editor" cols="30" rows="30" class="ckeditor"></textarea>
+            <!--引入ckeditor-->
+            <script type="text/javascript">CKEDITOR.replace('editor');</script>
         </div>
-        <input  type="submit" value="发表" id="publish_a_submit" onclick="formatLabels()">
-    	<input type="hidden" name="author" value="">
+        <input  type="button" value="保存" id="publish_a_save" onclick="return save()">
+        <input  type="submit" value="发表" id="publish_a_submit" onclick="return checkAll()">
+    	<input type="hidden" name="author" value="${userBean.id}">
     	</form>
    </div> 
 </div>

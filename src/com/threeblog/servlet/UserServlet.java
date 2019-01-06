@@ -271,6 +271,9 @@ public class UserServlet extends BaseServlet {
 							response.addCookie(cookie);
 							
 						}
+						//添加CKFinder_UserRole属性。给予使用ckfinder的权限。
+						request.getSession().setAttribute("CKFinder_UserRole","user");
+						
 						request.getSession().setAttribute("userBean", userBean);
 						//request.getRequestDispatcher("/Homepage.jsp").forward(request, response);
 						response.sendRedirect(request.getContextPath()+"/Homepage.jsp");
@@ -301,6 +304,7 @@ public class UserServlet extends BaseServlet {
 		// 删除cookie和session
         HttpSession session = request.getSession();
         session.removeAttribute("userBean");
+        session.removeAttribute("CKFinder_UserRole");//移除ckfinder属性
         session.invalidate();
         
         Cookie[] cookies = request.getCookies();
@@ -471,6 +475,9 @@ public class UserServlet extends BaseServlet {
 		}
 		//创建迭代器
 		Iterator iterator=list.iterator();
+		
+		
+		
 		return "";		
 	}
 	

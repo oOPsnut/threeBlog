@@ -75,6 +75,8 @@ public class AutoLoginFilter implements Filter {
 					//更新登录时间
 					UserService userService=new UserServiceImpl();
 					userService.changeLoginTime(id,last_login_time);
+					//添加CKFinder_UserRole属性。给予使用ckfinder的权限。
+					request.getSession().setAttribute("CKFinder_UserRole","user");
 					//使用session存这个值到域中，方便下一次未过期前还可以用
 					request.getSession().setAttribute("userBean", userBean);
 					chain.doFilter(request, response);	
@@ -129,6 +131,8 @@ public class AutoLoginFilter implements Filter {
 
 						//更新登录时间
 						userService.changeLoginTime(id,last_login_time);
+						//添加CKFinder_UserRole属性。给予使用ckfinder的权限。
+						request.getSession().setAttribute("CKFinder_UserRole","user");
 						//使用session存这个值到域中，方便下一次未过期前还可以用
 						request.getSession().setAttribute("userBean", userBean2);
 						chain.doFilter(request, response);	
