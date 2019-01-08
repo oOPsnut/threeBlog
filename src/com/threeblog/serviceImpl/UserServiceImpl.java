@@ -23,10 +23,10 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean userRegister(String phone, String username, String password,Date register_time) throws SQLException{
+	public boolean userRegister(String id,String phone, String username, String password,Date register_time) throws SQLException{
 		//实现注册功能
 		UserDao dao=new UserDaoImpl();
-		boolean result = dao.userRegister(phone, username, password,register_time);
+		boolean result = dao.userRegister(id,phone, username, password,register_time);
 		return result;
 	}
 
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public boolean changeLoginTime(int id, Date last_login_time) throws SQLException{
+	public boolean changeLoginTime(String id, Date last_login_time) throws SQLException{
 		//通过id改变登录时间
 		UserDao dao = new UserDaoImpl();
 		boolean result = dao.changeLoginTime(id,last_login_time);
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserBean findUserInfo(int id) throws SQLException {
+	public UserBean findUserInfo(String id) throws SQLException {
 		// 通过id查询所有个人信息
 		UserDao dao=new UserDaoImpl();
 		UserBean userBean = dao.findUserInfo(id);

@@ -16,7 +16,6 @@
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script src="${pageContext.request.contextPath}/js/checkpublish.js"></script>
-<script src="${pageContext.request.contextPath}/js/sisyphus.min.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -45,59 +44,7 @@ $(function() {
 });
 </script>
 
-<!-- <script type="text/javascript">
-$( function() {
-	$( "#publish_form" ).sisyphus();	
-} );
 
-</script> -->
-
-<!-- 封面预览  -->
-<script type="text/javascript">
-	function change() {
-		var pic = document.getElementById("img"), file = document
-				.getElementById("publish_fm");
-
-		var ext = file.value.substring(file.value.lastIndexOf(".") + 1)
-				.toLowerCase();
-
-		// gif在IE浏览器暂时无法显示
-		if (ext != 'png' && ext != 'jpg' && ext != 'jpeg') {
-			alert("图片的格式必须为png或者jpg或者jpeg格式！");
-			return;
-		}
-		var isIE = navigator.userAgent.match(/MSIE/) != null, isIE6 = navigator.userAgent
-				.match(/MSIE 6.0/) != null;
-
-		if (isIE) {
-			file.select();
-			var reallocalpath = document.selection.createRange().text;
-
-			// IE6浏览器设置img的src为本地路径可以直接显示图片
-			if (isIE6) {
-				pic.src = reallocalpath;
-			} else {
-				// 非IE6版本的IE由于安全问题直接设置img的src无法显示本地图片，但是可以通过滤镜来实现
-				pic.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='image',src=\""
-						+ reallocalpath + "\")";
-				// 设置img的src为base64编码的透明图片 取消显示浏览器默认图片
-				pic.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==';
-			}
-		} else {
-			html5Reader(file);
-		}
-	}
-
-	function html5Reader(file) {
-		var file = file.files[0];
-		var reader = new FileReader();
-		reader.readAsDataURL(file);
-		reader.onload = function(e) {
-			var pic = document.getElementById("img");
-			pic.src = this.result;
-		}
-	}
-</script>
 </head>
 
 <body>
@@ -204,7 +151,7 @@ $( function() {
    		<h3 id="publish_a_h3">█ 发表博文</h3>
         <!--封面-->
         <div id="publish_a_fm" ></div>
-       	<form action="${pageContext.request.contextPath}/UserServlet?method=Publish" enctype="multipart/form-data" method="post" id="publish_form">
+       	<form action="${pageContext.request.contextPath}/ArticleServlet?method=Publish" enctype="multipart/form-data" method="post" id="publish_form">
         <div id="publish_a_fm_pic">
         	<input  type="file" id="publish_fm" name="publish_fm" onchange="change()" accept="image/*">
             <img id="img" src="">
@@ -214,21 +161,21 @@ $( function() {
         	<span class="publish_a_w_span">标题：</span>
        		 <input id="bt" type="text" name="bt"   placeholder="请输入标题(限15字)"  maxlength="30" class="publish_a_w_span" required >
               <span class="publish_a_w_span">标签：</span>
-             <input  id="labels" type="text" placeholder="添加标签（只有一个）" class="publish_a_w_span">
+             <input  id="labels" type="text" placeholder="添加标签（只有一个）" class="publish_a_w_span" name="label">
              <span class="publish_a_w_span">分类 ： </span>
-             <select class="publish_a_w_span" id="pub_type">
+             <select class="publish_a_w_span" id="pub_type" name="publish_type">
              	<option value="默认分类">默认分类</option>
              </select>
              <br>
              <span class="publish_a_w_span">导语：</span>
-       		<input id="pub_daoyu" maxlength="100" type="text"  class="publish_a_w_span" placeholder="请输入导语（限50字）" required><br><br>
+       		<input id="pub_daoyu" name="publish_daoyu" maxlength="100" type="text"  class="publish_a_w_span" placeholder="请输入导语（限50字）" required><br><br>
             <textarea name="editor" id="editor" cols="30" rows="30" class="ckeditor"></textarea>
             <!--引入ckeditor-->
             <script type="text/javascript">CKEDITOR.replace('editor');</script>
         </div>
+        <p style="color:red">Tips：* 请养成保存的好习惯，每次点击保存按钮，可保存10分钟哟！</p>
         <input  type="button" value="保存" id="publish_a_save" onclick="return save()">
         <input  type="submit" value="发表" id="publish_a_submit" onclick="return checkAll()">
-    	<input type="hidden" name="author" value="${userBean.id}">
     	</form>
    </div> 
 </div>

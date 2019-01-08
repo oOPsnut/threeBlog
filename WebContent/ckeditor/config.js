@@ -35,8 +35,7 @@ CKEDITOR.editorConfig = function( config ) {
 	// 图片上传相关
 	//清楚预览图片的文字说明
 	config.image_previewText=' ';
-	config.removeDialogTabs = 'image:advanced;image:Link'; // 移除图片上传页面的'高级','链接'页签
-	config.removeDialogTabs = 'link:advanced;link:upload;link:target';// 移除超链接页面的'高级','上传','目标'页签
+	config.removeDialogTabs = 'link:advanced;link:upload;link:target;image:advanced;image:Link';// 移除超链接页面的'高级','上传','目标'页签// 移除图片上传页面的'高级','链接'页签
 	config.filebrowserBrowseUrl =  '/ThreeBlog_V1.0/ckfinder/ckfinder.html' ; 
 	config.filebrowserImageBrowseUrl =  '/ThreeBlog_V1.0/ckfinder/ckfinder.html?type=Images' ;  
     config.filebrowserUploadUrl =  '/ThreeBlog_V1.0/ckfinder/core/connector/java/connector.java?command=QuickUpload&type=Files' ;  

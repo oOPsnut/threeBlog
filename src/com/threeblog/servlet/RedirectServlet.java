@@ -97,4 +97,12 @@ public class RedirectServlet extends BaseServlet{
 	public String PchangeInfoUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "/jsp/personalcenter/personalcenter_changeinfo.jsp";
 	}
+	//跳转到文章举报中心
+	public String AreportCenterUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/jsp/reportcenter/report_article.jsp";
+	}
+	//跳转到评论举报中心
+	public String RreportCenterUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/jsp/reportcenter/report_reviews.jsp";
+	}
 }

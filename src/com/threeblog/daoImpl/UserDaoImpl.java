@@ -40,11 +40,11 @@ public class UserDaoImpl implements UserDao{
 	}
 
 	@Override
-	public boolean userRegister(String phone, String username, String password,Date register_time) throws SQLException {
+	public boolean userRegister(String id,String phone, String username, String password,Date register_time) throws SQLException {
 		
 		QueryRunner runner=new QueryRunner(JDBCUtil.getDataSource());
-		String sql="insert into t_user(phone,username,password,register_time) values(?,?,?,?);";
-		int result = runner.update(sql,phone,username,password,register_time);
+		String sql="insert into t_user(id,phone,username,password,register_time) values(?,?,?,?,?);";
+		int result = runner.update(sql,id,phone,username,password,register_time);
 		return result>0;
 	}
 	
@@ -67,7 +67,7 @@ public class UserDaoImpl implements UserDao{
 
 	
 	@Override
-	public boolean changeLoginTime(int id, Date last_login_time)throws SQLException {
+	public boolean changeLoginTime(String id, Date last_login_time)throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="update t_user set last_login_time=? where id=?";
 		int result = runner.update(sql,last_login_time,id);
@@ -90,7 +90,7 @@ public class UserDaoImpl implements UserDao{
 	}
 
 	@Override
-	public UserBean findUserInfo(int id) throws SQLException {
+	public UserBean findUserInfo(String id) throws SQLException {
 		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
 		String sql="select * from t_user where id=?";
 		return runner.query(sql, new BeanHandler<UserBean>(UserBean.class),id);

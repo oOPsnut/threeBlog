@@ -22,11 +22,13 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.threeblog.base.BaseServlet;
+import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.UserService;
 import com.threeblog.serviceImpl.UserServiceImpl;
 import com.threeblog.util.DateDiffUtil;
 import com.threeblog.util.Md5StringUtils;
+import com.threeblog.util.UUIDUtils;
 
 import net.sf.json.JSONObject;
 
@@ -52,6 +54,8 @@ public class UserServlet extends BaseServlet {
 		String password = Md5StringUtils.getMD5Str(fpassword+md5Key,null);		
 		
 		UserBean user=new UserBean();
+		//UUID生成用户id
+		String id = UUIDUtils.getId();
 		//注册时间
 		Date now=new Date();
 		java.sql.Date register_time=new java.sql.Date(now.getTime());
@@ -60,7 +64,7 @@ public class UserServlet extends BaseServlet {
 		UserService userService=new UserServiceImpl();
 		try {
 			//注册成功，跳转到登录页
-			boolean result = userService.userRegister(phone,username,password,register_time);
+			boolean result = userService.userRegister(id,phone,username,password,register_time);
 			if (result) {
 //				response.getWriter().print("<script>alert('注册成功，将自动返回登录页面！')</script>");
 				return "/jsp/login/login.jsp";
@@ -242,7 +246,7 @@ public class UserServlet extends BaseServlet {
 					//成功登录
 					
 					//获取用户id
-					int id=userBean.getId();
+					String id=userBean.getId();
 					//获取禁用时间
 					Date ban_time=userBean.getBan_time();					
 					//创建当前时间
@@ -423,13 +427,14 @@ public class UserServlet extends BaseServlet {
 	                    head="/ThreeBlog_V1.0/image/"+filename;
 	                } catch (Exception e) {
 	                    //System.out.println("文件为空，未修改头像");
+	                	e.printStackTrace();
 	                }
 				}				
 			}
 			//在session中获取用户id
 			HttpSession session = request.getSession();
 			UserBean userBean = (UserBean) session.getAttribute("userBean");
-			int id = userBean.getId();
+			String id = userBean.getId();
 
 			//把数据封装到user
 			UserBean user= new UserBean();
@@ -459,33 +464,5 @@ public class UserServlet extends BaseServlet {
 			}
 	}
 	
-	//发表文章
-	public String Publish(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		//创建工厂
-		DiskFileItemFactory factory = new DiskFileItemFactory();
-		//通过工厂创建解析器ServletFileUpload
-		ServletFileUpload upload = new ServletFileUpload(factory);		
-		//解析请求
-		List<FileItem> list=null;
-		try {
-			list =upload.parseRequest(request);
-		} catch (FileUploadException e) {
-			e.printStackTrace();
-		}
-		//创建迭代器
-		Iterator iterator=list.iterator();
-		
-		
-		
-		return "";		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

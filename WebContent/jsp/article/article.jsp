@@ -1,20 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="java.text.SimpleDateFormat"%>
+<% request.getSession().getAttribute("aBean"); %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="toTop" content="true">
-<title>文章</title>
-<link rel="stylesheet" href="css/homepage.css" type="text/css"/>
-<link rel="stylesheet" href="css/personalcenter.css" type="text/css"/>
-<link rel="stylesheet" href="css/calendar.css">
+<title>${aBean.title }</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
 
-<link rel="stylesheet" href="css/comment.css" type="text/css">
-<link rel="stylesheet" href="css/style.css" type="text/css">
-<link href="css/owl.carousel.css" rel="stylesheet">
-<script src="js/jquery-1.min.js"></script>
-<script src="js/owl.carousel.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/comment.css" type="text/css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" type="text/css">
+<link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
+<script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -48,56 +51,97 @@ $(function() {
 <body>
 <!--顶端栏begin-->
 <div id="index_head">
-  <div id="index_head_logo"> <img src="image/logo.png"> </div>
+  <div id="index_head_logo"> <img src="${pageContext.request.contextPath}/image/logo.png"> </div>
   <div id="index_head_menu">
     <ul>
-      <li><a href="#" >首页</a></li>
-      <li><a href="#" >博文</a></li>
-      <li><a href="#" >画廊</a></li>
-      <li><a href="#" >我的</a></li>
+      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=homePageUI" >首页</a></li>
+      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=blogUI" >博文</a></li>
+      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=picturesUI" >画廊</a></li>
+      <c:if test="${not empty userBean }">
+      	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI" >我的</a></li>
+      </c:if>
+      <c:if test="${empty userBean }">
+       <li style="visibility: hidden;"><a href="javascript:;" >我的</a></li>
+      </c:if>
     </ul>
   </div>
   <div id="index_head_tools"> 
   <ul>
   	<li>
-    	<a href="#">
-        	<img  src="image/search.png" style="float:left;" />
+    	<a href="${pageContext.request.contextPath}/RedirectServlet?method=searchUI">
+        	<img  src="${pageContext.request.contextPath}/image/search.png" style="float:left;" />
        	</a> 
     </li>
+    <c:if test="${not empty userBean }">
     <li id="messagepic">
-    	<a href="#">
+    	<a href="javascript:;">
         	<div style="float:left; position:relative;">
-    			<img src="image/message.png"/>
+    			<img src="${pageContext.request.contextPath}/image/message.png"/>
                 	<span  id="tools_messagenumber">0</span>
              </div>
          </a> 
          <ul class="index_tools_messages">
-         	<li><a href="#home">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
-          	<li><a href="#home">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
-            <li><a href="#home">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
-            <li><a href="#home">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
          </ul>
     </li>
     <li>
-    	<a href="#">
-        	<img src="image/setting.png"/>
+    	<a href="javascript:;">
+        	<img src="${pageContext.request.contextPath}/image/setting.png"/>
         </a>
         <ul class="index_tools_setting">
             
-            <li><a href="#home">&ensp;个人中心&ensp;</a></li>
-            <li><a href="#home">&ensp;账号设置&ensp;</a></li>
-            <li><a href="#home">&ensp;举报中心&ensp;</a></li>
-            <li><a href="#home">&ensp;退出账号&ensp;</a></li>
+            <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">&ensp;个人中心&ensp;</a></li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=changePasswordUI">&ensp;账号设置&ensp;</a></li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=PreportCenterUI">&ensp;举报中心&ensp;</a></li>
+	        <li><a href="${pageContext.request.contextPath}/UserServlet?method=LoginOut">&ensp;退出账号&ensp;</a></li>
          </ul>
     </li>
+    </c:if>
+    <c:if test="${empty userBean }">
+	    <li id="messagepic" style=" visibility: hidden;">
+	    	<a href="javascript:;">
+	        	<div style="float:left; position:relative;">
+	    			<img src="${pageContext.request.contextPath}/image/message.png"/>
+	                	<span  id="tools_messagenumber">0</span>
+	             </div>
+	         </a> 
+	         <ul class="index_tools_messages">
+	         	<li><a href="javascript:;">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
+	          	<li><a href="javascript:;">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
+	            <li><a href="javascript:;">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
+	            <li><a href="javascript:;">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+	         </ul>
+	    </li>
+	    <li style="visibility: hidden;">
+    	<a href="javascript:;">
+        	<img src="${pageContext.request.contextPath}/image/setting.png"/>
+        </a>
+        <ul class="index_tools_setting">
+            
+            <li><a href="javascript:;">&ensp;个人中心&ensp;</a></li>
+            <li><a href="javascript:;">&ensp;账号设置&ensp;</a></li>
+            <li><a href="javascript:;">&ensp;举报中心&ensp;</a></li>
+            <li><a href="javascript:;">&ensp;退出账号&ensp;</a></li>
+         </ul>
+    </li>
+    </c:if>
      </ul>
      </div>
   <span style="color:#FFF; font-size:36px;float:left; margin-top:15px;"> |</span>
   <div id="index_head_signin">
+    <c:if test="${empty userBean }">
     <ul>
-      <li><a href="register.html">注册</a></li>
-      <li><a href="signin.html">登录</a></li>
+      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=registUI">注册</a></li>
+      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=LoginUI">登录</a></li>
     </ul>
+    </c:if>
+    <c:if test="${not empty userBean }">
+     <a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI" id="signin_headpic"><img src="${userBean.head }"></a>
+    <a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI"><span id="signin_username">${userBean.username}</span></a>
+    </c:if>
   </div>
 </div>
 </div>
@@ -107,46 +151,20 @@ $(function() {
 	<div id="article_all_content">
     	<!--文章up-->
         <div class="article_a_up">
-        	<h2>闹心的孩子千篇一律，智慧的父母万里挑一</h2>
+        	<h2>${aBean.title}</h2>
             <div id="a_up_info">
             <a href="#">
               <img src="image/head1.png"/>
-              <span>oopx</span>
+              <span>${aBean.author}</span>
            	</a>
-                        <span>2018-10-02 18:41</span>
+                        <span>${aBean.publish_date}</span>
                         <span>分类 : </span><span><strong>默认分类</strong></span>
-                        <span>标签 : </span><a href="#" id="article_a_up_a">&lt;父母&gt;</a><a href="#" id="article_a_up_a">&lt;孩子&gt;</a>
-                        <span>阅读 : </span><span>12</span>
+                        <span>标签 : </span><a href="#" id="article_a_up_a">&lt;${aBean.label}&gt;</a>
+                        <span>阅读 : </span><span>${aBean.click_num}</span>
             </div>
         </div>
         <!--文章middle-->
-        <div class="article_a_middle">
-        	<p>文/苏菲马文
-            <br>
-            我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-            <br>
-            每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。
-            <br>
-            有时候，村里的人会说，我们家的孩子打啊、骂啊都没有用，他就是学不好。
-            <br>
-            我妈说，好孩子不是打骂出来的。让孩子做什么事，要给孩子讲原因，还要和孩子商量着办。
-            <br>
-            别人问，为什么你带的孩子不挑食，不用人喂饭？
-            <br>
-            我妈答，吃饭是她自己的事。告诉孩子，想吃什么就和我说，我做给她吃。不好好吃饭？过了饭点也没有零食吃，知道饿了，下一顿就好好吃饭了。
-            <br>
-            别人问，为什么你的孩子学习不用你管？
-            <br>
-            我妈答，学习也是她自己的事。告诉孩子，每天先把作业写了，再看电视，看完睡觉。不按时写作业，磨蹭到半夜？到点了关灯睡觉，第二天交不上作业，她就知道以后得自觉抓紧时间写了。
-            <br>
-            虽然我妈的育儿经看起来简单粗暴，但是她能做到耐心地和小孩子解释每一件要做的事，让孩子懂的道理，主动去做，做错能改，这并不容易做到。
-            <br>
-            很多家长，特别羡慕别人家孩子，想让孩子学习好、懂事。孩子表现的不好，家长马上就生起气来。孩子怎么写作业这么磨蹭？他怎么一直打游戏？他怎么跟算盘珠子似的，拨一下才动一下？这么想着，不好听地话就直接说出来了，“你能不能快点？”“我说的话你就是记不住是吗！”家长越是这样，孩子对家长的反应越是冷淡、迟钝。
-            <br>
-            如何改变现状？
-            <br>
-            《忍住！别插手！让孩子独立的自我管理课：合理安排时间》这本书正是专门为家长们亲身打造的，跟着这本书学习，家长将改变自己教养孩子的心态，改变与孩子的相处模式，帮助孩子成为独立地、更够自主管理时间的人。</p>
-        </div>
+        <div class="article_a_middle">${aBean.text}</div>
         <!--文章down-->
         <div class="article_a_down" >
         	<div id="a_down_lead">
@@ -155,17 +173,17 @@ $(function() {
             </div>
             <div id="a_down_tools">
             	<div id="tools_like">
-            		<img  id="like" src="image/unlike.png"  title="喜欢">
+            		<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="喜欢">
                     <span>喜欢</span>
-                    <span>xxx</span>
+                    <span id="slike">${aBean.liked_num }</span>
                     <!--喜欢图标更换的js-->
                     <script>
                     $('#like').click(function(){  
                               
-                            if($('#like').attr('src')=='image/unlike.png'){  
-                                $('#like').attr('src','image/like.png');  
+                            if($('#like').attr('src')=='${pageContext.request.contextPath}/image/unlike.png'){  
+                                $('#like').attr('src','${pageContext.request.contextPath}/image/like.png');  
                             }else{ 
-                                $('#like').attr('src','image/unlike.png');  
+                                $('#like').attr('src','${pageContext.request.contextPath}/image/unlike.png');  
                             }  
                     
                               
@@ -173,7 +191,7 @@ $(function() {
                     </script>  
                 </div>
                 <div id="tools_favor">
-        			<img  id="favor" src="image/unfavor.png" title="收藏"/>
+        			<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
                     <span>收藏</span>
                     <span>xxx</span>
                     
@@ -192,23 +210,23 @@ $(function() {
                     </script>
         		</div>
                 <div id="tools_share">	
-                		<img src="image/share.png" id="share" onClick="copyLink();" title="分享">
+                		<img src="${pageContext.request.contextPath}/image/share.png" id="share" onClick="copyLink();" title="分享">
         				<span>分享</span>
                         <!--分享js-->
                         <script>
-                        function copyLink(){
-							 var clipBoardContent="";
-							 clipBoardContent+=document.title;
-							 clipBoardContent+="";
-							 clipBoardContent+=this.location.href;
-							 window.clipboardData.setData("Text",clipBoardContent);
-							 alert("复制成功，请粘贴到你的QQ/MSN上推荐给你的好友");
-}
-							
+                        	function copyLink(){
+								 var clipBoardContent="";
+								 clipBoardContent+=document.title;
+								 clipBoardContent+="";
+								 clipBoardContent+=this.location.href;
+								 window.clipboardData.setData("Text",clipBoardContent);
+								 alert("复制成功，请粘贴到你的QQ/WeChat上推荐给你的好友");
+							}	
                         </script>
         		</div>
                 <div id="tools_report">
-        				<a href="reportcenter_article.html">	                    	<img src="image/report.png" id="report" title="举报">
+        				<a href="${pageContext.request.contextPath}/RedirectServlet?method=AreportCenterUI">
+        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
         				<span>举报</span>
         			</a>
         		</div>
@@ -385,10 +403,10 @@ $(function() {
 											var args = {
 													
 											
-												"article_id" : "<%=article_id%>",	//文章id
-												"author_id":"<%=user.getId()%>",    //从页面获得的用户id
-												"receiver_id":"<%=author_id%>",		//从文章id获得的作者id
-												"text1":"<%=article.getTitle()%>",  //文章标题
+												"article_id" : "${aBean.id}",	//文章id
+												"author_id":"${userBean.id}",    //从页面获得的用户id
+												"receiver_id":"${aBean.author_id}",		//从文章id获得的作者id
+												"text1":"${aBean.title}",  //文章标题
 												"text2":oSize,                      //评论内容
 												"time" : new Date()
 											};
@@ -873,11 +891,11 @@ $(function() {
 </div>
 <!--内容end-->
 <!--置顶框begin-->
-	<script type="text/javascript" src="js/toTop.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/toTop.js"></script>
 <!--置顶框end-->
 <!--底部begin-->
 <footer>
-	<img src="image/footer_logo.png">
+	<img src="${pageContext.request.contextPath}/image/footer_logo.png">
     <div id="footer_about">
     <p>&emsp;关于我们 | 意见反馈 | 服务条例 | 隐私政策</p>
     <p>Copyright © 2018 | Three Blog | All Right Reserved</p>

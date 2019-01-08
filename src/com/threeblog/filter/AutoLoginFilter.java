@@ -57,7 +57,7 @@ public class AutoLoginFilter implements Filter {
 				//已登录
 				//检测是否被禁用
 				//获取用户id
-				int id=userBean.getId();
+				String id=userBean.getId();
 				//获取禁用时间
 				Date ban_time=userBean.getBan_time();					
 				//创建当前时间
@@ -113,7 +113,7 @@ public class AutoLoginFilter implements Filter {
 					
 					//检测是否被禁用
 					//获取用户id
-					int id=userBean2.getId();
+					String id=userBean2.getId();
 					//获取禁用时间
 					Date ban_time=userBean2.getBan_time();					
 					//创建当前时间

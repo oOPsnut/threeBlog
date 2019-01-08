@@ -24,7 +24,7 @@ public interface UserService {
 	 * @param username
 	 * @param password
 	 */
-	boolean userRegister(String phone, String username, String password,Date register_time)throws SQLException;
+	boolean userRegister(String id,String phone, String username, String password,Date register_time)throws SQLException;
 	
 	/**
 	 * 检测电话号是否已经注册
@@ -61,7 +61,7 @@ public interface UserService {
 	 * @param id
 	 * @param last_login_time
 	 */
-	boolean changeLoginTime(int id, Date last_login_time) throws SQLException;
+	boolean changeLoginTime(String id, Date last_login_time) throws SQLException;
 	
 	/**
 	 * 通过id修改个人信息
@@ -76,5 +76,5 @@ public interface UserService {
 	 * @return
 	 * @throws SQLException
 	 */
-	UserBean findUserInfo(int id)throws SQLException;
+	UserBean findUserInfo(String id)throws SQLException;
 }

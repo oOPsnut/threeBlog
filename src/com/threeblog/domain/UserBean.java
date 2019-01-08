@@ -8,7 +8,7 @@ import java.util.Date;;
  */
 public class UserBean {
 
-	private int id;
+	private String id;
 	private String username;
 	private String password;
 	private int age;
@@ -24,11 +24,11 @@ public class UserBean {
 	
 	private  String album;
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -141,7 +141,7 @@ public class UserBean {
 	}
 		
 	 
-	public UserBean(int id, String username, String password, int age, String sex, String phone, String introduction,
+	public UserBean(String id, String username, String password, int age, String sex, String phone, String introduction,
 			String head, String province, String city, Date register_time, Date last_login_time, Date ban_time,
 			String album) {
 		super();
