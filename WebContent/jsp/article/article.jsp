@@ -1,8 +1,43 @@
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.*" %>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page import="java.text.SimpleDateFormat"%>
-<% request.getSession().getAttribute("aBean"); %>
+
+<% 
+	//判断session中是否存在aBean、aTypeBean
+	ArticleBean aBean = (ArticleBean)request.getSession().getAttribute("aBean");
+	ArticleTypeBean aTypeBean = (ArticleTypeBean)request.getSession().getAttribute("aTypeBean");
+	String author_id=null;
+	if(aBean!=null && aTypeBean!=null){
+		//从aBean中取文章id、作者id
+		String id = aBean.getId();
+		author_id= aBean.getAuthor_id();	
+		//从aTypeBean中取文章类型
+		String article_Type = aTypeBean.getArticle_type();
+	}else{
+		//从地址栏获取文章id
+		String id =  request.getQueryString().substring(3);
+		//通过文章id获取作者id
+		ArticleService aService = new ArticleServiceImpl();
+		ArticleBean aBean2 =  aService.findArticle(id);		
+		author_id = aBean2.getAuthor_id();
+		//通过文章id获取文章类型
+		ArticleTypeBean aTypeBean2 = aService.findArticleType(id);
+		//讲文章信息和文章类型放到session中
+		request.getSession().setAttribute("aBean", aBean2);
+		request.getSession().setAttribute("aTypeBean", aTypeBean2);
+	}
+	//通过作者id取作者的头像、名字
+	UserService uService = new UserServiceImpl();
+	UserBean author = uService.findUserInfo(author_id);
+	//将作者的信息放到session中
+	request.getSession().setAttribute("author", author);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -151,14 +186,22 @@ $(function() {
 	<div id="article_all_content">
     	<!--文章up-->
         <div class="article_a_up">
-        	<h2>${aBean.title}</h2>
+        	<h2>${aBean.title }</h2>
             <div id="a_up_info">
-            <a href="#">
-              <img src="image/head1.png"/>
+            <c:if test="${userBean.id }==${aBean.author_id }">
+            <a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">
+              <img src="${author.head }"/>
               <span>${aBean.author}</span>
            	</a>
+           	</c:if>
+           	<c:if test="${userBean.id }!=${aBean.author_id }">
+            <a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${author.id}">
+              <img src="${author.head }"/>
+              <span>${aBean.author}</span>
+           	</a>
+           	</c:if>
                         <span>${aBean.publish_date}</span>
-                        <span>分类 : </span><span><strong>默认分类</strong></span>
+                        <span>分类 : </span><span><strong>${aTypeBean.article_type }</strong></span>
                         <span>标签 : </span><a href="#" id="article_a_up_a">&lt;${aBean.label}&gt;</a>
                         <span>阅读 : </span><span>${aBean.click_num}</span>
             </div>
