@@ -6,7 +6,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <% 
 	//判断session中是否存在aBean、aTypeBean，存在：表示是自己发表的。不存在：表示别人点击进来的
 	ArticleBean aBean = (ArticleBean)request.getSession().getAttribute("aBean");
@@ -31,11 +30,17 @@
 		//判断为空,不为空则存到session中
 		if(last_aBean!=null){request.getSession().setAttribute("last_aBean", last_aBean);}
 		if(next_aBean!=null){request.getSession().setAttribute("next_aBean", next_aBean);}
+		//从userBean中取用户id
+		UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
+		String uid = userBean.getId();
+		//查找用户与赞的关系表
+		ZanBean zBean = aService.findAZan(uid, id);
+		request.getSession().setAttribute("zBean", zBean);
 		//将本篇存在session中
 		request.getSession().setAttribute("aBean", aBean3);
 		//从aTypeBean中取文章类型
 		String article_Type = aTypeBean.getArticle_type();		
-	}else{
+	}else{  
 		//从地址栏获取文章id
 		String id =  request.getQueryString().substring(3);
 		//通过文章id获取作者id
@@ -60,7 +65,14 @@
 			//将上一篇、下一篇和本文章信息和文章类型放到session中
 			request.getSession().setAttribute("aBean", aBean4);
 			request.getSession().setAttribute("aTypeBean", aTypeBean2);
+			//从userBean中取用户id
+			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
+			String uid = userBean.getId();
+			//查找用户与赞的关系表
+			ZanBean zBean = aService.findAZan(uid, id);
+			request.getSession().setAttribute("zBean", zBean);
 		}else{
+			//文章id不存在
 			response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
 		}
 	}
@@ -265,22 +277,86 @@ $(function() {
             </div>
             <div id="a_down_tools">
             	<div id="tools_like">
-            		<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="喜欢">
-                    <span>喜欢</span>
+            		<c:if test="${userBean.id==aBean.author_id }">
+            			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
+            		</c:if>
+            		<c:if test="${userBean.id!=aBean.author_id }">
+            			<img  id="like" src="${zBean.zpic}"  title="赞">
+            		</c:if>
+            		<c:if test="${empty userBean }">
+            			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
+            		</c:if>
+                    <span>点赞</span>
                     <span id="slike">${aBean.liked_num }</span>
-                    <!--喜欢图标更换的js-->
-                    <script>
-                    $('#like').click(function(){  
-                              
-                            if($('#like').attr('src')=='${pageContext.request.contextPath}/image/unlike.png'){  
-                                $('#like').attr('src','${pageContext.request.contextPath}/image/like.png');  
-                            }else{ 
-                                $('#like').attr('src','${pageContext.request.contextPath}/image/unlike.png');  
-                            }  
-                    
-                              
-                    });  
-                    </script>  
+                    <!--点赞图标更换的js-->
+                    <c:if test="${not empty userBean }">
+	                    <script type="text/javascript">
+	                    $('#like').click(function(){  
+	                            var article_id="${aBean.id}";//文章id
+	    						var receiver_id="${aBean.author_id}";//作者id
+	    						var sender_id="${userBean.id}";//用户id
+	    						var article_title="${aBean.title}";//文章标题
+	    						var id="${zBean.id}";//点赞id
+	    						if(receiver_id != sender_id){
+		                            if($('#like').attr('src')=='${pageContext.request.contextPath}/image/unlike.png'){  	    								
+		    							$.ajax({
+		    								type:"POST",//用post方式传输
+		    								dataType:"json",//数据格式:JSON
+		    								url:"/ThreeBlog_V1.0/ArticleServlet?method=AddArticleZan" ,//目标地址
+		    								data:{
+		    									"article_id" : article_id,
+			    								"receiver_id":receiver_id,
+			    								"sender_id":sender_id,
+			    								"zpic":"/ThreeBlog_V1.0/image/like.png",
+			    								"text":article_title
+			    							},
+		    								error:function(){
+		    									alert("出错！");
+		    								},
+		    								success:function(data){
+		    									if(data){
+		    										alert("感谢您的赞！");    										
+		    									}else{
+		    										alert("点赞失败，心碎！");	    										
+		    									}
+		    								}
+		    							});
+		    							
+		                            }else{ 
+		                            	$.ajax({
+		    								type:"POST",//用post方式传输
+		    								dataType:"json",//数据格式:JSON
+		    								url:"/ThreeBlog_V1.0/ArticleServlet?method=UpdateArticleZan" ,//目标地址
+		    								data:{
+		    									"article_id":article_id,
+		    									"id": id,
+		    									"zpic":"/ThreeBlog_V1.0/image/unlike.png"
+			    								},
+		    								error:function(){
+		    									alert("出错！");
+		    								},
+		    								success:function(data){
+		    									if(data){
+		    										alert("你不喜欢吗？");    										
+		    									}else{
+		    										alert("取消点赞失败，心碎！");	    										
+		    									}
+		    								}
+		    							});  
+		                            } 
+	    						}else {
+									alert("不能给自己点赞哟！");
+								}
+	                    });  
+	                    </script>  
+                    </c:if>
+                    <c:if test="${empty userBean }">
+	                    <script type="text/javascript">
+		                    $('#like').click(function(){  
+		                    	window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';       
+		                    });  
+	                    </script>  
+                    </c:if>
                 </div>
                 <div id="tools_favor">
         			<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
