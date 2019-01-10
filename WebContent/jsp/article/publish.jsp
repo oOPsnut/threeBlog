@@ -165,6 +165,15 @@ $(function() {
              <span class="publish_a_w_span">分类 ： </span>
              <select class="publish_a_w_span" id="pub_type" name="publish_type">
              	<option value="默认分类">默认分类</option>
+             	<option value="个人心情">个人心情</option>
+             	<option value="杂乱无章">杂乱无章</option>
+             	<option value="休闲娱乐">休闲娱乐</option>
+             	<option value="游戏漫画">游戏漫画</option>
+             	<option value="旅游摄影">旅游摄影</option>
+             	<option value="时尚美食">时尚美食</option>
+             	<option value="校园青春">校园青春</option>
+             	<option value="媒体科技">媒体科技</option>
+             	<option value="体育健康">体育健康</option>
              </select>
              <br>
              <span class="publish_a_w_span">导语：</span>

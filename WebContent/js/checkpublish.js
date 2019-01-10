@@ -138,7 +138,13 @@ function checkAll(){
 				},
 				success:function(data){
 					if(data==0){
-						 return true;
+						var msg=confirm("发表后不能再修改哟！");
+						if(msg){
+							alert("发布成功，正在为您跳转...");
+							return true;
+						}else{
+							return false;
+						}
 					}else if(data==1){
 						alert("标题存在违规词！请检查并改正！");
 						return false;

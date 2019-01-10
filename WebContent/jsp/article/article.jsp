@@ -1,7 +1,6 @@
-<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
-<%@page import="com.threeblog.service.ArticleService"%>
-<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
-<%@page import="com.threeblog.service.UserService"%>
+<%@page import="java.util.Date"%>
+<%@page import="com.threeblog.service.*"%>
+<%@page import="com.threeblog.serviceImpl.*"%>
 <%@page import="com.threeblog.domain.*" %>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -9,28 +8,61 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <% 
-	//判断session中是否存在aBean、aTypeBean
+	//判断session中是否存在aBean、aTypeBean，存在：表示是自己发表的。不存在：表示别人点击进来的
 	ArticleBean aBean = (ArticleBean)request.getSession().getAttribute("aBean");
 	ArticleTypeBean aTypeBean = (ArticleTypeBean)request.getSession().getAttribute("aTypeBean");
 	String author_id=null;
+	int click_num;
+	Date pub_time=null;
 	if(aBean!=null && aTypeBean!=null){
-		//从aBean中取文章id、作者id
+		//从aBean中取文章id、作者id、文章点击次数
 		String id = aBean.getId();
 		author_id= aBean.getAuthor_id();	
+		click_num=aBean.getClick_num();	
+		pub_time = aBean.getPublish_date();
+		//更新点击量
+		click_num+=1;
+		ArticleService aService = new ArticleServiceImpl();
+		aService.updateClickNumByAId(id,click_num);
+		ArticleBean aBean3 = aService.findArticle(id);
+		//找上一篇和下一篇的id
+		ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
+		ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
+		//判断为空,不为空则存到session中
+		if(last_aBean!=null){request.getSession().setAttribute("last_aBean", last_aBean);}
+		if(next_aBean!=null){request.getSession().setAttribute("next_aBean", next_aBean);}
+		//将本篇存在session中
+		request.getSession().setAttribute("aBean", aBean3);
 		//从aTypeBean中取文章类型
-		String article_Type = aTypeBean.getArticle_type();
+		String article_Type = aTypeBean.getArticle_type();		
 	}else{
 		//从地址栏获取文章id
 		String id =  request.getQueryString().substring(3);
 		//通过文章id获取作者id
 		ArticleService aService = new ArticleServiceImpl();
-		ArticleBean aBean2 =  aService.findArticle(id);		
-		author_id = aBean2.getAuthor_id();
-		//通过文章id获取文章类型
-		ArticleTypeBean aTypeBean2 = aService.findArticleType(id);
-		//讲文章信息和文章类型放到session中
-		request.getSession().setAttribute("aBean", aBean2);
-		request.getSession().setAttribute("aTypeBean", aTypeBean2);
+		ArticleBean aBean2 =  aService.findArticle(id);
+		if(aBean2!=null){
+			author_id = aBean2.getAuthor_id();
+			click_num = aBean2.getClick_num();
+			pub_time =  aBean2.getPublish_date();
+			//更新点击量
+			click_num+=1;
+			aService.updateClickNumByAId(id,click_num);
+			ArticleBean aBean4 =  aService.findArticle(id);
+			//通过文章id获取文章类型
+			ArticleTypeBean aTypeBean2 = aService.findArticleType(id);
+			//找上一篇和下一篇的id
+			ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
+			ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
+			//判断为空,不为空则存到session中
+			if(last_aBean!=null){request.getSession().setAttribute("last_aBean", last_aBean);}
+			if(next_aBean!=null){request.getSession().setAttribute("next_aBean", next_aBean);}
+			//将上一篇、下一篇和本文章信息和文章类型放到session中
+			request.getSession().setAttribute("aBean", aBean4);
+			request.getSession().setAttribute("aTypeBean", aTypeBean2);
+		}else{
+			response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+		}
 	}
 	//通过作者id取作者的头像、名字
 	UserService uService = new UserServiceImpl();
@@ -188,13 +220,13 @@ $(function() {
         <div class="article_a_up">
         	<h2>${aBean.title }</h2>
             <div id="a_up_info">
-            <c:if test="${userBean.id }==${aBean.author_id }">
+            <c:if test="${userBean.id == aBean.author_id }">
             <a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">
               <img src="${author.head }"/>
               <span>${aBean.author}</span>
            	</a>
            	</c:if>
-           	<c:if test="${userBean.id }!=${aBean.author_id }">
+           	<c:if test="${userBean.id != aBean.author_id }">
             <a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${author.id}">
               <img src="${author.head }"/>
               <span>${aBean.author}</span>
@@ -202,17 +234,34 @@ $(function() {
            	</c:if>
                         <span>${aBean.publish_date}</span>
                         <span>分类 : </span><span><strong>${aTypeBean.article_type }</strong></span>
-                        <span>标签 : </span><a href="#" id="article_a_up_a">&lt;${aBean.label}&gt;</a>
+                        <span>标签 : </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" id="article_a_up_a">&lt;${aBean.label}&gt;</a>
                         <span>阅读 : </span><span>${aBean.click_num}</span>
             </div>
         </div>
-        <!--文章middle-->
-        <div class="article_a_middle">${aBean.text}</div>
-        <!--文章down-->
+        <c:if test="${aBean.status != '屏蔽'}">
+	        <!--文章middle-->
+	        <div class="article_a_middle">${aBean.text}</div>
+	        <!--文章down-->
+        </c:if>
+        <c:if test="${aBean.status == '屏蔽'}">
+	        <!--文章middle-->
+	        <div class="article_a_middle"><p>该文章涉嫌违规内容，已被屏蔽！！请浏览其他文章...</p></div>
+	        <!--文章down-->
+        </c:if>
         <div class="article_a_down" >
         	<div id="a_down_lead">
-            	<a href="#" style="float:left;">◁上一篇  所有的你</a>
-       		 	<a href="#" style="float:right">▷下一篇  没有了</a><br>
+        	<c:if test="${empty last_aBean }">
+            	<a href="javascript:;" style="float:left;">◁上一篇  没有了</a>
+            </c:if>
+            <c:if test="${not empty last_aBean }">
+            	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${last_aBean.id}" style="float:left;">◁上一篇  ${last_aBean.title}</a>
+            </c:if>
+            <c:if test="${empty next_aBean }">
+            	<a href="javascript:;" style="float:right">▷下一篇  没有了</a><br>
+            </c:if>
+       		 <c:if test="${not empty next_aBean }">
+            	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${next_aBean.id}" style="float:right">▷下一篇  ${next_aBean.title}</a><br>
+            </c:if>	
             </div>
             <div id="a_down_tools">
             	<div id="tools_like">

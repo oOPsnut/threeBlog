@@ -12,8 +12,6 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
 
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
-<script src="${pageContext.request.contextPath}/js/class.js"></script>
-<script src="${pageContext.request.contextPath}/js/MsgBox.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <!--头部show的js-->
@@ -215,12 +213,19 @@ $(function() {
               </div>
         	<!--博文分类-->
         	<div id="introduce_left_classify">
-              	<span>█ 博文分类</span><a href="javascript:void(0);" id="navmanage" onclick="navmanage();">分类管理</a>
+              	<span>█ 博文分类</span>
                 <ul>
                 	<li><a href="#">全部博文(4)</a></li><br>
                     <li><a href="#">默认分类(2)</a></li><br>
-                    <li><a href="#">草稿(2)</a></li><br>
-                    <li><a href="#">游戏(2)</a></li><br>
+                    <li><a href="#">个人心情(2)</a></li><br>
+                    <li><a href="#">杂乱无章(2)</a></li><br>
+                    <li><a href="#">休闲 & 娱乐(2)</a></li><br>
+                    <li><a href="#">游戏 & 漫画(2)</a></li><br>
+                    <li><a href="#">旅游 & 摄影(2)</a></li><br>
+                  	<li><a href="#">时尚 & 美食(2)</a></li><br>
+                  	<li><a href="#">校园 & 青春(2)</a></li><br>
+                  	<li><a href="#">媒体 & 科技(2)</a></li><br>
+                  	<li><a href="#">体育 & 健康(2)</a></li><br>
                 </ul>
         	</div>
             <!--日期归档-->
