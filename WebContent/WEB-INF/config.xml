@@ -1,0 +1,122 @@
+<config>
+	
+	<!--启用ckfinder  -->
+	<enabled>true</enabled>
+	
+	<baseDir>F:\Tomcat\Tomcat\apache-tomcat-7.0.85\webapps\ThreeBlog_V1.0\image\images</baseDir>
+	<baseURL>/ThreeBlog_V1.0/image/images</baseURL>
+	<licenseKey></licenseKey>
+	<licenseName></licenseName>
+	
+	<imgWidth>1600</imgWidth>
+	<imgHeight>1200</imgHeight>
+	<imgQuality>80</imgQuality>
+	
+	<uriEncoding>UTF-8</uriEncoding>
+	
+	<defaultResourceTypes></defaultResourceTypes>
+	<types>
+		<type name="Images">
+			<url>%BASE_URL%images/</url>
+			<directory>%BASE_DIR%images</directory>
+			<maxSize>0</maxSize>
+			<allowedExtensions>bmp,gif,jpeg,jpg,png</allowedExtensions>
+			<deniedExtensions></deniedExtensions>
+		</type>
+	</types>
+	
+	<userRoleSessionVar>CKFinder_UserRole</userRoleSessionVar>
+	<accessControls>
+		<accessControl>
+			<role>admin</role>
+			<resourceType>*</resourceType>
+			<folder>/</folder>
+			<folderView>true</folderView>
+			<folderCreate>true</folderCreate>
+			<folderRename>true</folderRename>
+			<folderDelete>true</folderDelete>
+			<fileView>true</fileView>
+			<fileUpload>true</fileUpload>
+			<fileRename>true</fileRename>
+			<fileDelete>true</fileDelete>
+		</accessControl>
+		<accessControl>
+			<role>user</role>
+			<resourceType>Images</resourceType>
+			<folder>/</folder>
+			<folderView>true</folderView>
+			<folderCreate>false</folderCreate>
+			<folderRename>false</folderRename>
+			<folderDelete>false</folderDelete>
+			<fileView>true</fileView>
+			<fileUpload>true</fileUpload>
+			<fileRename>false</fileRename>
+			<fileDelete>false</fileDelete>
+		</accessControl>
+	</accessControls>
+	<thumbs>
+		<enabled>true</enabled>
+		<url>%BASE_URL%_thumbs/</url>
+		<directory>%BASE_DIR%_thumbs</directory>
+		<directAccess>false</directAccess>
+		<maxHeight>100</maxHeight>
+		<maxWidth>100</maxWidth>
+		<quality>80</quality>
+	</thumbs>
+	
+	<disallowUnsafeCharacters>false</disallowUnsafeCharacters>
+	
+	<checkDoubleExtension>true</checkDoubleExtension>
+	
+	<checkSizeAfterScaling>true</checkSizeAfterScaling>
+	
+	<secureImageUploads>true</secureImageUploads>
+	
+	<htmlExtensions>html,htm,xml,js</htmlExtensions>
+	
+	<forceASCII>false</forceASCII>
+	
+	<enableCsrfProtection>true</enableCsrfProtection>
+	
+	<hideFolders>
+		<folder>.*</folder>
+		<folder>CVS</folder>
+	</hideFolders>
+	
+	<hideFiles>
+		<file>.*</file>
+	</hideFiles>
+	<plugins>
+		<plugin>
+			<name>imageresize</name>
+			<class>com.ckfinder.connector.plugins.ImageResize</class>
+			<params>
+				<param name="smallThumb" value="90x90"></param>
+				<param name="mediumThumb" value="120x120"></param>
+				<param name="largeThumb" value="180x180"></param>
+			</params>
+		</plugin>
+		<plugin>
+			<name>fileeditor</name>
+			<class>com.ckfinder.connector.plugins.FileEditor</class>
+			<params></params>
+		</plugin>
+		<!-- Before enabling the watermark plugin make sure to specify path to source image -->
+		<!-- The "internal" flag informs CKFinder that watermark is a pure server side plugin -->
+		<!--
+		<plugin>
+			<name>watermark</name>
+			<class>com.ckfinder.connector.plugins.Watermark</class>
+			<params>
+				<param name="source" value="/path/in/servlet/context/logo.gif"></param>
+				<param name="transparency" value="0.8"></param>
+				<param name="quality" value="100"></param>
+				<param name="marginRight" value="5"></param>
+				<param name="marginBottom" value="5"></param>
+			</params>
+			<internal>true</internal>
+		</plugin>
+		-->
+	</plugins>
+	<basePathBuilderImpl>com.ckfinder.connector.configuration.ConfigurationPathBuilder</basePathBuilderImpl>
+</config>
