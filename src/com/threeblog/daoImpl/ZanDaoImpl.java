@@ -30,7 +30,7 @@ public class ZanDaoImpl implements ZanDao {
 	@Override
 	public ZanBean findAZan(String uid, String id) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="select * from t_zan where sender_id = ? and article_id";
+		String sql="select * from t_zan where sender_id = ? and article_id=?";
 		return runner.query(sql, new BeanHandler<ZanBean>(ZanBean.class),uid,id);
 	}
 

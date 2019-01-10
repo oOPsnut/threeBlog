@@ -36,6 +36,9 @@
 		//查找用户与赞的关系表
 		ZanBean zBean = aService.findAZan(uid, id);
 		request.getSession().setAttribute("zBean", zBean);
+		//查找用户与收藏的关系表
+		CollectBean cBean = aService.findACollect(uid, id);
+		request.getSession().setAttribute("cBean", cBean);
 		//将本篇存在session中
 		request.getSession().setAttribute("aBean", aBean3);
 		//从aTypeBean中取文章类型
@@ -71,6 +74,9 @@
 			//查找用户与赞的关系表
 			ZanBean zBean = aService.findAZan(uid, id);
 			request.getSession().setAttribute("zBean", zBean);
+			//查找用户与收藏的关系表
+			CollectBean cBean = aService.findACollect(uid, id);
+			request.getSession().setAttribute("cBean", cBean);
 		}else{
 			//文章id不存在
 			response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
@@ -359,23 +365,84 @@ $(function() {
                     </c:if>
                 </div>
                 <div id="tools_favor">
-        			<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
+                	<c:if test="${userBean.id==aBean.author_id }">
+        				<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
+        			</c:if>
+        			<c:if test="${userBean.id!=aBean.author_id }">     			
+            			<img  id="favor" src="${cBean.cpic}" title="收藏"/>
+            		</c:if>
+            		<c:if test="${empty userBean }">
+            			<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
+            		</c:if>
                     <span>收藏</span>
-                    <span>xxx</span>
-                    
+                    <span>${aBean.collect_num }</span>                   
         			<!--收藏图标更换的js-->
-                    <script>
-                    $('#favor').click(function(){  
-                              
-                            if($('#favor').attr('src')=='image/unfavor.png'){  
-                                $('#favor').attr('src','image/favor.png');  
-                            }else{ 
-                                $('#favor').attr('src','image/unfavor.png');  
-                            }  
-                    
-                              
-                    });  
-                    </script>
+        			<c:if test="${not empty userBean }">
+	                    <script type="text/javascript">
+	                    $('#favor').click(function(){  
+	                            var article_id="${aBean.id}";//文章id
+	    						var author_id="${aBean.author_id}";//作者id
+	    						var user_id="${userBean.id}";//用户id
+	    						var id="${cBean.id}";//点赞id
+	    						if(author_id != user_id){
+		                            if($('#favor').attr('src')=='${pageContext.request.contextPath}/image/unfavor.png'){  	    								
+		    							$.ajax({
+		    								type:"POST",//用post方式传输
+		    								dataType:"json",//数据格式:JSON
+		    								url:"/ThreeBlog_V1.0/ArticleServlet?method=AddArticleCollect" ,//目标地址
+		    								data:{
+		    									"article_id" : article_id,
+			    								"author_id":author_id,
+			    								"user_id":user_id,
+			    								"cpic":"/ThreeBlog_V1.0/image/favor.png"
+			    							},
+		    								error:function(){
+		    									alert("出错！");
+		    								},
+		    								success:function(data){
+		    									if(data){
+		    										alert("收藏成功！");    										
+		    									}else{
+		    										alert("收藏失败，心碎！");	    										
+		    									}
+		    								}
+		    							});
+		    							
+		                            }else{ 
+		                            	$.ajax({
+		    								type:"POST",//用post方式传输
+		    								dataType:"json",//数据格式:JSON
+		    								url:"/ThreeBlog_V1.0/ArticleServlet?method=UpdateArticleCollect" ,//目标地址
+		    								data:{
+		    									"article_id":article_id,
+		    									"id": id,
+		    									"cpic":"/ThreeBlog_V1.0/image/unfavor.png"
+			    								},
+		    								error:function(){
+		    									alert("出错！");
+		    								},
+		    								success:function(data){
+		    									if(data){
+		    										alert("你不喜欢吗？");    										
+		    									}else{
+		    										alert("取消收藏失败，心碎！");	    										
+		    									}
+		    								}
+		    							});  
+		                            } 
+	    						}else {
+									alert("不能收藏自己的文章哟！");
+								}
+	                    });  
+	                    </script>  
+                    </c:if>
+                    <c:if test="${empty userBean }">
+	                    <script type="text/javascript">
+		                    $('#like').click(function(){  
+		                    	window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';       
+		                    });  
+	                    </script>  
+                    </c:if>                   
         		</div>
                 <div id="tools_share">	
                 		<img src="${pageContext.request.contextPath}/image/share.png" id="share" onClick="copyLink();" title="分享">
@@ -402,6 +469,7 @@ $(function() {
         </div>
         <!--评论/回复区域-->
         <div class="article_a_discuss">
+        <!--此评论textarea文本框部分使用的https://github.com/alexdunphy/flexText此插件-->
         	<div class="commentAll">
 					<!--评论区域 begin-->
 					<div class="reviewArea clearfix">
@@ -409,8 +477,7 @@ $(function() {
 							<pre class="pre">
 								<span></span><br>
 							</pre>
-							<textarea class="content comment-input" placeholder="留下你的评论..."
-								onkeyup="keyUP(this)"></textarea>
+							<textarea class="content comment-input" placeholder="留下你的评论..." onkeyup="keyUP(this)"></textarea>
 						</div>
 						<a href="javascript:;" class="plBtn">评论</a>
 					</div>

@@ -76,6 +76,13 @@ public class ArticleDaoImpl implements ArticleDao {
 		
 	}
 
+	@Override
+	public void updateCollectNumByAId(String id, int collect_num) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_article set collect_num=? where id=?;";
+		runner.update(sql,collect_num,id);
+	}
+
 	
 
 }

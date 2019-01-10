@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
+import com.threeblog.domain.CollectBean;
 import com.threeblog.domain.ZanBean;
 
 /**
@@ -96,7 +97,7 @@ public interface ArticleService {
 	
 	/**
 	 * 通过用户id和文章id找到赞信息
-	 * @param id
+	 * @param uid id
 	 * @return
 	 * @throws SQLException
 	 */
@@ -109,5 +110,45 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	boolean UpdateArticleZan(ZanBean zan)throws SQLException;
+	
+	/**
+	 * 通过文章id更新文章收藏数
+	 * @param id
+	 * @throws SQLException
+	 */
+	void updateCollectNumByAId(String id,int collect_num)throws SQLException;
+
+	/**
+	 * 将文章收藏信息写进表
+	 * @param collect
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addArticleCollect(CollectBean collect)throws SQLException;
+
+	/**
+	 * 通过收藏id找到收藏信息
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	CollectBean findArticleCollect(String id)throws SQLException;
+
+	/**
+	 * 通过收藏id更新收藏图标
+	 * @param collect
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean UpdateArticleCollect(CollectBean collect)throws SQLException;
+	
+	/**
+	 * 通过用户id和文章id找到收藏信息
+	 * @param uid
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	CollectBean findACollect(String uid,String id)throws SQLException;
 
 }

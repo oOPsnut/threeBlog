@@ -23,6 +23,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import com.threeblog.base.BaseServlet;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
+import com.threeblog.domain.CollectBean;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.domain.ZanBean;
@@ -254,7 +255,7 @@ public class ArticleServlet extends BaseServlet {
 			//点赞时间
 			Date now=new Date();
 			Date add_time=new Date(now.getTime());
-			//将数据封装到zBean中
+			//将数据封装到zan中
 			zan.setId(id);
 			zan.setType(type);
 			zan.setReceiver_id(receiver_id);
@@ -309,4 +310,84 @@ public class ArticleServlet extends BaseServlet {
 				response.getWriter().println(false);	
 			}								
 		}
+		
+		//为文章添加收藏
+		public void AddArticleCollect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+				
+			//获取数据
+			String article_id = request.getParameter("article_id");
+			String author_id = request.getParameter("author_id");
+			String user_id = request.getParameter("user_id");
+			String cpic=request.getParameter("cpic");
+			
+			//通过文章id查找对应文章并将收藏数更新上去
+			ArticleService aService = new ArticleServiceImpl();
+			ArticleBean aBean = aService.findArticle(article_id);
+			int collect_num = aBean.getCollect_num();
+			collect_num+=1;
+			aService.updateCollectNumByAId(article_id, collect_num);
+			//取出更新后的值，存到session中
+			ArticleBean aBean2 = aService.findArticle(article_id);
+			request.getSession().setAttribute("aBean", aBean2);
+			
+			//将数据写进收藏表
+			CollectBean collect=new CollectBean();
+			//UUID生成收藏id
+			String id = UUIDUtils.getId();
+			//收藏时间
+			Date now=new Date();
+			Date collect_date=new Date(now.getTime());
+			//将数据封装到collect中
+			collect.setId(id);
+			collect.setUser_id(user_id);
+			collect.setArticle_id(article_id);
+			collect.setAuthor_id(author_id);
+			collect.setCollect_date(collect_date);
+			collect.setCpic(cpic);
+			boolean result = aService.addArticleCollect(collect);
+			if (result) {
+				//收藏成功
+				//取出收藏信息，存到session中
+				CollectBean cBean = aService.findArticleCollect(id);
+				request.getSession().setAttribute("cBean", cBean);
+				response.getWriter().println(true);
+			} else {
+				response.getWriter().println(false);	
+			}								
+		}		
+	
+		//为文章取消收藏
+		public void UpdateArticleCollect(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+				
+			//获取数据
+			String article_id = request.getParameter("article_id");
+			String id = request.getParameter("id");
+			String cpic=request.getParameter("cpic");
+			
+			//通过文章id查找对应文章并将收藏数更新上去
+			ArticleService aService = new ArticleServiceImpl();
+			ArticleBean aBean = aService.findArticle(article_id);
+			int collect_num = aBean.getCollect_num();
+			collect_num-=1;
+			aService.updateCollectNumByAId(article_id, collect_num);
+			//取出更新后的值，存到session中
+			ArticleBean aBean2 = aService.findArticle(article_id);
+			request.getSession().setAttribute("aBean", aBean2);
+			
+			//将数据写进收藏表
+			CollectBean collect=new CollectBean();			
+			//将数据封装到zBean中
+			collect.setId(id);
+			collect.setCpic(cpic);
+			boolean result = aService.UpdateArticleCollect(collect);
+			if (result) {
+				//更新成功
+				//取出赞信息，存到session中
+				ZanBean zBean = aService.findArticleZan(id);
+				request.getSession().setAttribute("zBean", zBean);
+				response.getWriter().println(true);
+			} else {
+				response.getWriter().println(false);	
+			}								
+		}		
 }

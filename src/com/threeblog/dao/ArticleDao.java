@@ -78,6 +78,13 @@ public interface ArticleDao {
 	 */
 	void updateLikedNumByAId(String id,int liked_num)throws SQLException;
 
+	/**
+	 * 通过文章id更新文章收藏数
+	 * @param id
+	 * @throws SQLException
+	 */
+	void updateCollectNumByAId(String id,int collect_num)throws SQLException;
+
 	
 	
 }

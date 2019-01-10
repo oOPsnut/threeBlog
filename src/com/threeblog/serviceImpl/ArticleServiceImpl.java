@@ -4,11 +4,14 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import com.threeblog.dao.ArticleDao;
+import com.threeblog.dao.CollectDao;
 import com.threeblog.dao.ZanDao;
 import com.threeblog.daoImpl.ArticleDaoImpl;
+import com.threeblog.daoImpl.CollectDaoImpl;
 import com.threeblog.daoImpl.ZanDaoImpl;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
+import com.threeblog.domain.CollectBean;
 import com.threeblog.domain.ZanBean;
 import com.threeblog.service.ArticleService;
 
@@ -107,5 +110,44 @@ public class ArticleServiceImpl implements ArticleService {
 		ZanDao dao = new ZanDaoImpl();
 		boolean result = dao.UpdateArticleZan(zan);
 		return result;
+	}
+
+	@Override
+	public void updateCollectNumByAId(String id, int collect_num) throws SQLException {
+		// 通过文章id更新文章喜欢数
+		ArticleDao dao = new ArticleDaoImpl();
+		dao.updateCollectNumByAId(id,collect_num);	
+	}
+
+	@Override
+	public boolean addArticleCollect(CollectBean collect) throws SQLException {
+		//将文章点赞信息写进表
+		CollectDao dao = new CollectDaoImpl();
+		boolean result = dao.addArticleCollect(collect);
+		return result;
+	}
+
+	@Override
+	public CollectBean findArticleCollect(String id) throws SQLException {
+		// 通过收藏id找到收藏信息
+		CollectDao dao = new CollectDaoImpl();
+		CollectBean cBean = dao.findArticleCollect(id);
+		return cBean;
+	}
+
+	@Override
+	public boolean UpdateArticleCollect(CollectBean collect) throws SQLException {
+		// 通过点赞id更新点赞图标
+		CollectDao dao = new CollectDaoImpl();
+		boolean result = dao.UpdateArticleCollect(collect);
+		return result;
+	}
+
+	@Override
+	public CollectBean findACollect(String uid, String id) throws SQLException {
+		//通过用户id和文章id找到收藏信息
+		CollectDao dao = new CollectDaoImpl();
+		CollectBean cBean = dao.findACollect(uid,id);
+		return cBean;
 	}
 }
