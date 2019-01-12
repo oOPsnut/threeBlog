@@ -1,11 +1,15 @@
 package com.threeblog.service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.threeblog.domain.AnswerBean;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
 import com.threeblog.domain.CollectBean;
+import com.threeblog.domain.CommentBean;
 import com.threeblog.domain.ZanBean;
 
 /**
@@ -151,4 +155,32 @@ public interface ArticleService {
 	 */
 	CollectBean findACollect(String uid,String id)throws SQLException;
 
+	/**
+	 * 通过文章id找到评论
+	 * @param aid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<CommentBean> getCommentsFromArticle_id(String aid)throws SQLException;
+	
+	/**
+	 * 通过评论id找到评论回答
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AnswerBean> getAnswersFromComment_id(String id)throws SQLException;
+
+	/**
+	 * 通过文章id，更新评论数目
+	 * @param article_id
+	 * @param comment_num
+	 */
+	void updateCommentNumByAId(String article_id, int comment_num)throws SQLException;
+
+	/**
+	 * 将文章评论写进表
+	 * @param comment
+	 */
+	boolean addArticleComment(CommentBean comment)throws SQLException;
 }

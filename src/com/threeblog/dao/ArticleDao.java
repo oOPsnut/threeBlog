@@ -85,6 +85,11 @@ public interface ArticleDao {
 	 */
 	void updateCollectNumByAId(String id,int collect_num)throws SQLException;
 
-	
+	/**
+	 * 通过文章id更新文章评论数
+	 * @param article_id
+	 * @param comment_num
+	 */
+	void updateCommentNumByAId(String article_id, int comment_num)throws SQLException;
 	
 }

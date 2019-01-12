@@ -6,8 +6,11 @@ import java.sql.SQLException;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
+import com.threeblog.dao.MessageDao;
 import com.threeblog.dao.UserDao;
+import com.threeblog.daoImpl.MessageDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
+import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.UserService;
 import com.threeblog.util.JDBCUtil;
@@ -85,6 +88,13 @@ public class UserServiceImpl implements UserService{
 		UserDao dao=new UserDaoImpl();
 		UserBean userBean = dao.findUserInfo(id);
 		return userBean;
+	}
+
+	@Override
+	public void addMessage(MessageBean message) throws SQLException {
+		// 添加消息
+		MessageDao dao= new MessageDaoImpl();
+		dao.addMessage(message);
 	}
 
 }

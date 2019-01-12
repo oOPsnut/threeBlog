@@ -1,17 +1,25 @@
 package com.threeblog.serviceImpl;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.threeblog.dao.AnswersDao;
 import com.threeblog.dao.ArticleDao;
 import com.threeblog.dao.CollectDao;
+import com.threeblog.dao.CommentDao;
 import com.threeblog.dao.ZanDao;
+import com.threeblog.daoImpl.AnswersDaoImpl;
 import com.threeblog.daoImpl.ArticleDaoImpl;
 import com.threeblog.daoImpl.CollectDaoImpl;
+import com.threeblog.daoImpl.CommentDaoImpl;
 import com.threeblog.daoImpl.ZanDaoImpl;
+import com.threeblog.domain.AnswerBean;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
 import com.threeblog.domain.CollectBean;
+import com.threeblog.domain.CommentBean;
 import com.threeblog.domain.ZanBean;
 import com.threeblog.service.ArticleService;
 
@@ -149,5 +157,38 @@ public class ArticleServiceImpl implements ArticleService {
 		CollectDao dao = new CollectDaoImpl();
 		CollectBean cBean = dao.findACollect(uid,id);
 		return cBean;
+	}
+
+	@Override
+	public List<CommentBean> getCommentsFromArticle_id(String aid) throws SQLException {
+		// 通过文章id找到评论
+		CommentDao dao = new CommentDaoImpl();
+		List<CommentBean> comments=dao.getCommentsFromArticle_id(aid);
+		return comments;
+	}
+
+	@Override
+	public List<AnswerBean> getAnswersFromComment_id(String id) throws SQLException {
+		// 通过评论id找到评论回答
+		AnswersDao dao = new AnswersDaoImpl();
+		List<AnswerBean> answers=dao.getAnswersFromComment_id(id);
+		return answers;
+	}
+
+	@Override
+	public void updateCommentNumByAId(String article_id, int comment_num) throws SQLException {
+		// 通过文章id，更新评论数目
+		ArticleDao dao = new ArticleDaoImpl();
+		dao.updateCommentNumByAId(article_id,comment_num);
+		
+	}
+
+	@Override
+	public boolean addArticleComment(CommentBean comment) throws SQLException {
+		// 将文章评论写进表
+		CommentDao dao=new CommentDaoImpl();
+		boolean result = dao.addArticleComment(comment);
+		return result;
+		
 	}
 }

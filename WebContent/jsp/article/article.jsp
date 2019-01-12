@@ -1,3 +1,4 @@
+<%@page import="java.util.List"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.threeblog.service.*"%>
 <%@page import="com.threeblog.serviceImpl.*"%>
@@ -455,15 +456,32 @@ $(function() {
 								 clipBoardContent+="";
 								 clipBoardContent+=this.location.href;
 								 window.clipboardData.setData("Text",clipBoardContent);
-								 alert("复制成功，请粘贴到你的QQ/WeChat上推荐给你的好友");
+								 alert("复制成功，请粘贴到你的QQ/WeChat上推荐给你的好友吧！");
 							}	
                         </script>
         		</div>
                 <div id="tools_report">
-        				<a href="${pageContext.request.contextPath}/RedirectServlet?method=AreportCenterUI">
-        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
-        				<span>举报</span>
-        			</a>
+                	<c:if test="${userBean.id!=aBean.author_id }">
+        				<a href="${pageContext.request.contextPath}/reportcenter/report_article.jsp?id=${aBean.id}">
+	        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
+	        				<span>举报</span>
+        				</a>
+        			</c:if>	
+        			<c:if test="${userBean.id==aBean.author_id }">       				
+	        			<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报" onclick="reportA()">
+	        			<span>举报</span>
+        				<script type="text/javascript">
+        					function reportA() {
+								alert("别闹，不能举报自己的文章哟！");
+							}
+        				</script>
+        			</c:if>	
+        			<c:if test="${empty userBean }">
+        				<a href="${pageContext.request.contextPath}/RedirectServlet?method=LoginUI">
+	        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
+	        				<span>举报</span>
+        				</a>
+        			</c:if>	
         		</div>
             </div>
         </div>
@@ -481,25 +499,28 @@ $(function() {
 						</div>
 						<a href="javascript:;" class="plBtn">评论</a>
 					</div>
-					<!--评论区域 end-->
+					<!--评论区域 end-->										
 					<!--回复区域 begin-->
 					<div class="comment-show">
 
 						<%
-							ArrayList<Comment> comments = service.getCommentsFromArticle_id(article_id);
-							SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//定义格式，不显示毫秒
-							int i;
+							UserBean userBean =(UserBean)request.getSession().getAttribute("userBean");
+							ArticleBean aBean1=(ArticleBean)request.getSession().getAttribute("aBean");
+							String aid=aBean1.getId();//文章id
+							ArticleService aservice = new ArticleServiceImpl();
+							List<CommentBean> comments = aservice.getCommentsFromArticle_id(aid);
+							//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//定义格式
 							if(!comments.isEmpty()){
-								for (i = 0; i < comments.size(); i++) {
-									Comment comment = comments.get(i);
-									User comment_author = service.getUserFromId(comment.getAuthor_id());
+								for (int i = 0; i < comments.size(); i++) {
+									CommentBean comment = comments.get(i);
+									UserBean commenterBean = uService.findUserInfo(comment.getAuthor_id());									
 						%>
 						<!--1-->
 						<div class="comment-show-con clearfix">
 							<!--这是头像div-->
 							<div class="comment-show-con-img pull-left">
 							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=comment.getAuthor_id()%>">
-								<img src="<%=comment_author.getTouxiang()%>" alt="">
+								<img src="<%=commenterBean.getHead()%>" alt="">
 							</a>
 							</div>
                             <!--这是内容div-->
@@ -507,7 +528,7 @@ $(function() {
 								<div class="pl-text clearfix">
 									<!--用户名-->
 									<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=comment.getAuthor_id()%>" class="comment-size-name"
-										data="<%=comment.getId()%>"><%=comment_author.getUsername()%> : </a>
+										data="<%=comment.getId()%>"><%=commenterBean.getUsername()%> : </a>
 									<!--评论内容 -->
 									<%if(!comment.getStatus().equals("屏蔽")){ %>	
 									<span class="my-pl-con"><%=comment.getText()%></span>
@@ -516,11 +537,11 @@ $(function() {
 									<%} %>
 								</div>
 								<div class="date-dz">
-									<span class="date-dz-left pull-left comment-time"><%=df.format(comment.getAdd_time())%></span>
+									<span class="date-dz-left pull-left comment-time"><%=comment.getAdd_time()%></span>
 									<div class="date-dz-right pull-right comment-pl-block">
 										
 										<a href="javascript:;" class="removeBlock">举报</a>
-										<%if(comment_author.getId()==user_id){ %>
+										<%if(commenterBean.getId()==userBean.getId() ){ %>
 										<a href="javascript:;" class="delete">删除</a>
 										<%} %>
 										<a href="javascript:;" class="date-dz-pl pl-hf pull-left">回复</a>
@@ -537,15 +558,15 @@ $(function() {
 						<!-- 评论回复内容区域begin -->
 
 									<%
-										ArrayList<Answer> answers=service.getAnswersFromArticle_idComment_id(comment.getId());
+										List<AnswerBean> answers=aservice.getAnswersFromComment_id(comment.getId());
 										for(int j=0;j<answers.size();j++){
-											Answer answer=answers.get(j);
-											User answer_author=service.getUserFromId(answer.getAuthor_id());
+											AnswerBean answer=answers.get(j);
+											UserBean answerUBean=uService.findUserInfo(answer.getAuthor_id());
 									%>
 
 									<div class="all-pl-con">
 										<div class="pl-text hfpl-text clearfix">
-											<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=answer.getAuthor_id()%>" class="comment-size-name" data="<%=answer.getId()%>"><%=answer_author.getUsername() %> : </a> 
+											<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=answer.getAuthor_id()%>" class="comment-size-name" data="<%=answer.getId()%>"><%=answerUBean.getUsername() %> : </a> 
 											
 											<%if(!answer.getStatus().equals("屏蔽")){ %>
 											<span class="my-pl-con"> &nbsp;<%=answer.getText() %></span>
@@ -554,11 +575,11 @@ $(function() {
 											<%} %>
 										</div>
 										<div class="date-dz">
-											<span class="date-dz-left pull-left comment-time"><%=df.format(answer.getAdd_time() )%></span>
+											<span class="date-dz-left pull-left comment-time"><%=answer.getAdd_time()%></span>
 											<div class="date-dz-right pull-right comment-pl-block">
 												
 												<a href="javascript:;" class="removeBlock">举报</a>
-												<%if(answer_author.getId()==user_id){ %>
+												<%if(answerUBean.getId()==userBean.getId()){ %>
 												<a href="javascript:;" class="delete">删除</a>
 												<%} %>
 												<a href="javascript:;"
@@ -573,10 +594,6 @@ $(function() {
                                     <!-- 评论回复内容区域end -->	
 									</div>
 									<%} %>
-
-
-									
-
 								</div>
 							</div>
 						</div>
@@ -584,12 +601,6 @@ $(function() {
 							}
 							}
 						%>
-
-
-
-
-
-
 					</div>
 				</div>
 
@@ -610,88 +621,89 @@ $(function() {
 		<script type="text/javascript">
 					function keyUP(t) {
 						var len = $(t).val().length;
-						if (len > 139) {
-							$(t).val($(t).val().substring(0, 140));
+						if (len > 300) {
+							$(t).val($(t).val().substring(0, 300));
 						}
 					}
-				</script>
+		</script>
 		<!--点击评论创建评论条-->
-		<%if(login_flag){ %>
-		<script type="text/javascript">
-					$('.commentAll')
-							.on(
-									'click',
-									'.plBtn',
-									function() {
+		<c:if test="${userBean.id!=aBean.author_id }">
+				<script type="text/javascript">
+					$('.commentAll').on('click','.plBtn',function() {
 										//获取输入内容
 										var oHtml;
-										var oSize = $(this).siblings(
-												'.flex-text-wrap').find(
-												'.comment-input').val();
+										var oSize = $(this).siblings('.flex-text-wrap').find('.comment-input').val();
 										console.log(oSize);
-										//动态创建评论模块
-										
-										if (oSize.replace(/(^\s*)|(\s*$)/g, "") != '') {
-											
-											
-											var url = "${pageContext.request.contextPath}/servlet/AddComment";
-											var args = {
-													
-											
+										//动态创建评论模块										
+										if (oSize.replace(/(^\s*)|(\s*$)/g, "") != '') {																						
+											var url = "${pageContext.request.contextPath}/CommentServlet?method=addComment";
+											var args = {																								
 												"article_id" : "${aBean.id}",	//文章id
-												"author_id":"${userBean.id}",    //从页面获得的用户id
-												"receiver_id":"${aBean.author_id}",		//从文章id获得的作者id
-												"text1":"${aBean.title}",  //文章标题
-												"text2":oSize,                      //评论内容
-												"time" : new Date()
+												"author_id":"${userBean.id}",    //用户id
+												"text":oSize,                      //评论内容
+												"receiver_id":"${aBean.author_id}",//文章作者id
+												"text1":"${aBean.title}"	//文章标题
 											};
 											$.ajaxSettings.async = false;  
-											$.get(url, args,
-													function(data) {
+											$.get(url, args,function(data) {
+												if (!data) {
+													alert("评论出错，抱歉！");
+												} else {
+
+												
 													var result=eval("("+data+")");
-														var comment_id=result.comment_id;
-														console.log(comment_id);
-														var add_time=result.add_time;
-														console.log(add_time);
-												     	oHtml = '<div class="comment-show-con clearfix"><div class="comment-show-con-img pull-left" ><a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=user_id%>"><img src="<%=user.getTouxiang()%>"</a>  alt=""></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"> <a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=user_id%>" class="comment-size-name" data="'
-															+comment_id+
-														'"><%=user.getUsername()%> : </a> <span class="my-pl-con">&nbsp;'
-															+ oSize
-															+ '</span> </div> <div class="date-dz"> <span class="date-dz-left pull-left comment-time">'
-															+ add_time
-															+ '</span> <div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock">举报</a><a href="javascript:;" class="delete">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a> </div> </div><div class="hf-list-con"></div></div> </div>';
-														
-												     
+													var comment_id=result.comment_id;
+													console.log(comment_id);
+													var add_time=result.add_time;
+													console.log(add_time);
+												    oHtml = '<div class="comment-show-con clearfix">
+												     				<div class="comment-show-con-img pull-left" >
+												     					<a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}">
+												     					<img src="${userBean.head}"</a>  alt="">
+												     				</div> 
+												     				<div class="comment-show-con-list pull-left clearfix">
+												     					<div class="pl-text clearfix"> 
+												     						<a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'+comment_id+'"><%=userBean.getUsername()%> : </a> 
+												     						<span class="my-pl-con">&nbsp;'+ oSize+ '</span> 
+												     					</div> 
+												     					<div class="date-dz"> 
+												     						<span class="date-dz-left pull-left comment-time">'+ add_time+ '</span> 
+												     					<div class="date-dz-right pull-right comment-pl-block">
+												     						<a href="javascript:;" class="removeBlock">举报</a>
+												     						<a href="javascript:;" class="delete">删除</a> 
+												     						<a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> 
+												     						<span class="pull-left date-dz-line">|</span> 
+												     						<a href="javascript:;" class="date-dz-z pull-left">
+												     							<i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)
+												     						</a> 
+												     					</div> 
+												     				</div>
+												     			<div class="hf-list-con"></div></div> </div>
+												     		';			
+												}
 											}); 
 											$.ajaxSettings.async = true;  
 											
-											$(this).parents('.reviewArea ')
-											.siblings('.comment-show')
-											.prepend(oHtml);
-											$(this).siblings('.flex-text-wrap')
-											.find('.comment-input')
-											.prop('value', '')
-											.siblings('pre').find(
-													'span').text('');
-											
-											
-											
-											
-											
+											$(this).parents('.reviewArea ').siblings('.comment-show').prepend(oHtml);
+											$(this).siblings('.flex-text-wrap').find('.comment-input').prop('value', '').siblings('pre').find('span').text('');										
 										}
 									});
 				</script>
-				<%}else{ %>
+		</c:if>
+		<c:if test="${userBean.id==aBean.author_id }">
+					<script type="text/javascript">
+					$('.commentAll').on('click','.plBtn',function() {
+								alert("不能给自己留言哟！");
+							});
+					</script>
+		</c:if>
+		<c:if test="${empty userBean }">
 				<script type="text/javascript">
-					$('.commentAll')
-							.on(
-									'click',
-									'.plBtn',
-									function() {
-										window.location.href='${pageContext.request.contextPath}/jsp/login/sign_in.jsp';
+					$('.commentAll').on('click','.plBtn',function() {
+										window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
 									});
 				</script>
-				<%} %>
+		</c:if>
 
 
 		<!--点击回复动态创建回复块-->
@@ -719,114 +731,57 @@ $(function() {
 		    });
 				</script>
 		<!--评论回复块创建-->
-		<%if(login_flag){ %>
+		<c:if test="${not empty userBean }">
 		<script type="text/javascript">
-					$('.comment-show')
-							.on(
-									'click',
-									'.hf-pl',
-									function() {
+					$('.comment-show').on('click','.hf-pl',function() {
 										var oThis = $(this);
 										//获取输入内容
-										var oHfVal = $(this).siblings(
-												'.flex-text-wrap').find(
-												'.hf-input').val();
+										var oHfVal = $(this).siblings('.flex-text-wrap').find('.hf-input').val();
 										console.log("oHfVal");
-										console.log(oHfVal)
-										var oHfName = $(this)
-												.parents('.hf-con').parents(
-														'.date-dz').siblings(
-														'.pl-text').find(
-														'.comment-size-name')
-												.html();
-										
-										var alltext=$(this)
-										.parents('.hf-con').parents(
-										'.date-dz').siblings(
-										'.pl-text').html();
+										console.log(oHfVal);
+										var oHfName = $(this).parents('.hf-con').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').html();										
+										var alltext=$(this).parents('.hf-con').parents('.date-dz').siblings('.pl-text').html();
 										console.log("alltext:");
 										console.log(alltext);
 										var flag;
 										var comment_id;
-										var answer_id=$(this)
-										.parents('.hf-con').parents(
-										'.date-dz').siblings(
-										'.pl-text').find(
-										'.comment-size-name').attr("data");
+										var answer_id=$(this).parents('.hf-con').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').attr("data");
 										if(alltext.indexOf("@")==-1){
 											flag=1;//代表comment_id和answer_id是相重叠的
-											comment_id = $(this)
-											.parents('.hf-con').parents(
-													'.date-dz').siblings(
-													'.pl-text').find(
-													'.comment-size-name').attr("data");
+											comment_id = $(this).parents('.hf-con').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').attr("data");
 											console.log("comment_id:");
-											console.log(comment_id);
-											
+											console.log(comment_id);	
 										}else{
 										flag=0;//代表comment_id和answer_id是不相重叠的
-										comment_id = $(this)
-										.parents('.hf-con').parents(
-												'.date-dz').parents('.all-pl-con').parents('.hf-list-con').
-												siblings(
-												'.pl-text').find(
-												'.comment-size-name').attr("data");
+										comment_id = $(this).parents('.hf-con').parents('.date-dz').parents('.all-pl-con').parents('.hf-list-con').siblings('.pl-text').find('.comment-size-name').attr("data");
 										console.log("comment_id:");
-										console.log(comment_id);
-								
-										
+										console.log(comment_id);																		
 										}
-										var username="<%=user.getUsername()%>"+" : ";
-										
-										
+										var username="<%=userBean.getUsername()%>"+" : ";																				
 										if(oHfName==username){
 											alert("想对自己说什么话，憋在心里就好了");
-											oThis
-											.parents(
-													'.hf-con')
-											.siblings(
-													'.date-dz-right')
-											.find(
-													'.pl-hf')
-											.addClass(
-													'hf-con-block')
-											&& oThis
-													.parents(
-															'.hf-con')
-													.remove();
+											oThis.parents('.hf-con').siblings('.date-dz-right').find('.pl-hf').addClass('hf-con-block')&& oThis.parents('.hf-con').remove();
 													return false;
-										}
-										
+										}									
 										var oAllVal = '回复@' + oHfName;
 										if (oHfVal.replace(/^ +| +$/g, '') == ''
 												|| oHfVal == oAllVal) {
 
 										} else {
-											$
-													.getJSON(
-															"${pageContext.request.contextPath}/json/pl.json",
-															function(data) {
+											$.getJSON("${pageContext.request.contextPath}/json/pl.json",function(data) {
 																var oAt = '';
 																var oHf = '';
-																$
-																		.each(
-																				data,
-																				function(
-																						n,
-																						v) {
+																$.each(data,function(n,v) {
 																					delete v.hfContent;
 																					delete v.atName;
 																					var arr;
 																					var ohfNameArr;
-																					if (oHfVal
-																							.indexOf("@") == -1) {
+																					if (oHfVal.indexOf("@") == -1) {
 																						data['atName'] = '';
 																						data['hfContent'] = oHfVal;
 																					} else {
-																						arr = oHfVal
-																								.split(':');
-																						ohfNameArr = arr[0]
-																								.split('@');
+																						arr = oHfVal.split(':');
+																						ohfNameArr = arr[0].split('@');
 																						data['hfContent'] = arr[1];
 																						data['atName'] = ohfNameArr[1];
 																					}
@@ -843,36 +798,48 @@ $(function() {
 																				});
 
 																var oHtml ;
-																var url = "${pageContext.request.contextPath}/servlet/AddAnswer";
+																var url = "${pageContext.request.contextPath}/CommentServlet?method=addAnswer";
 																var args = {
-																	"author_id":"<%=user.getId()%>",
+																	"author_id":"${userBean.id}",
 																	"comment_id":comment_id,
 																	"flag":flag,
 																	"last_answer_id":answer_id,
-																	"article_id":"<%=article.getId()%>",
+																	"article_id":"${aBean.id}",
 																	"text2":oAt,
-																	"time" : new Date()
 																};
 																console.log("1");
 																console.log(oAt);
 																$.ajaxSettings.async = false;  
-																$.get(url, args,
-																		function(data) {
+																$.get(url, args,function(data) {
+																	if (!data) {
+																		alert("回复出错，抱歉！")
+																	}else{
 																		var result=eval("("+data+")");
 																			var answer_id=result.answer_id;
 																			console.log("answer_id");
 																			console.log(answer_id);
 																			var add_time=result.add_time;
 																			console.log(add_time);
-																			oHtml= '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=user_id%>" class="comment-size-name" data="'
-																				+answer_id+
-																				'"><%=user.getUsername()%> : </a><span class="my-pl-con">'
-																				+ oAt
-																				+ '</span></div><div class="date-dz"> <span class="date-dz-left pull-left comment-time">'
-																				+ add_time
-																				+ '</span> <div class="date-dz-right pull-right comment-pl-block"> <a href="javascript:;" class="removeBlock">举报</a><a href="javascript:;" class="delete">删除</a><a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a> </div> </div></div>';
+																			oHtml= '<div class="all-pl-con">
+																						<div class="pl-text hfpl-text clearfix">
+																							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'+answer_id+'"><%=userBean.getUsername()%> : </a>
+																							<span class="my-pl-con">'+ oAt+ '</span>
+																						</div>
+																						<div class="date-dz"> 
+																							<span class="date-dz-left pull-left comment-time">'+ add_time+ '</span> 
+																							<div class="date-dz-right pull-right comment-pl-block"> 
+																								<a href="javascript:;" class="removeBlock">举报</a>
+																								<a href="javascript:;" class="delete">删除</a>
+																								<a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> 
+																								<span class="pull-left date-dz-line">|</span> 
+																								<a href="javascript:;" class="date-dz-z pull-left">
+																									<i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)
+																								</a> 
+																							</div> 
+																						</div>
+																					</div>';
 																			
-																	     
+																	}     
 																}); 
 																$.ajaxSettings.async = true;  
 																
@@ -915,19 +882,16 @@ $(function() {
 										}
 									});
 				</script>
-				<%}else{ %>
+				</c:if>
+				<c:if test="${empty userBean }">
 				<script type="text/javascript">
-					$('.comment-show')
-							.on(
-									'click',
-									'.hf-pl',
-									function() {
-										window.location.href='${pageContext.request.contextPath}/jsp/login/sign_in.jsp';
+					$('.comment-show').on('click','.hf-pl',function() {
+										window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
 									});
 				</script>
-				<%} %>
+				</c:if>
 		<!--举报评论块  -->
-		<%if(login_flag){ %>
+		<c:if test="${ not empty userBean }">
 		<script type="text/javascript">
 					 $('.commentAll').on('click','.removeBlock',function(){
 						 	var alltext=$(this)
@@ -952,7 +916,8 @@ $(function() {
 
 					}) 
 				</script>
-				<%}else{ %>
+				</c:if>
+				<c:if test="${empty userBean }">
 				<script type="text/javascript">
 					 $('.commentAll').on('click','.removeBlock',function(){
 						 	var alltext=$(this)
@@ -977,7 +942,7 @@ $(function() {
 
 					}) 
 				</script>
-				<%} %>
+				</c:if>
 		<!--删除评论块-->
 		<script type="text/javascript">
 		    $('.commentAll').on('click','.delete',function(){

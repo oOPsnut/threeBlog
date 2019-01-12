@@ -83,6 +83,13 @@ public class ArticleDaoImpl implements ArticleDao {
 		runner.update(sql,collect_num,id);
 	}
 
+	@Override
+	public void updateCommentNumByAId(String article_id, int comment_num) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_article set comment_num=? where id=?;";
+		runner.update(sql,comment_num,article_id);
+	}
+
 	
 
 }

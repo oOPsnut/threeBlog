@@ -3,6 +3,7 @@ package com.threeblog.service;
 import java.sql.Date;
 import java.sql.SQLException;
 
+import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
 
 /**
@@ -77,4 +78,11 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	UserBean findUserInfo(String id)throws SQLException;
+
+	/**
+	 * 添加消息
+	 * @param message
+	 * @throws SQLException
+	 */
+	void addMessage(MessageBean message)throws SQLException;
 }
