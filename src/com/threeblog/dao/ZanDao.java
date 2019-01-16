@@ -42,4 +42,36 @@ public interface ZanDao {
 	 * @throws SQLException
 	 */
 	boolean UpdateArticleZan(ZanBean zan)throws SQLException;
+	
+	/**
+	 * 添加留言点赞
+	 * @param zanBean
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addCommentZan(ZanBean zanBean)throws SQLException;
+	
+	/**
+	 * 取消留言点赞
+	 * @param id
+	 * @param type2
+	 * @throws SQLException
+	 */
+	void cancelCommentZan(String id, String type2)throws SQLException;
+	
+	/**
+	 * 添加留言回复点赞
+	 * @param zanBean
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addAnswerZan(ZanBean zanBean)throws SQLException;
+	
+	/**
+	 * 取消留言回复点赞
+	 * @param id
+	 * @param type2
+	 * @throws SQLException
+	 */
+	void cancelAnswerZan(String id, String type2)throws SQLException;
 }

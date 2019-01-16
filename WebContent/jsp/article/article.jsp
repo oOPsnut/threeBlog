@@ -288,7 +288,12 @@ $(function() {
             			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
             		</c:if>
             		<c:if test="${userBean.id!=aBean.author_id }">
+            			<c:if test="${empty zBean }">
+            				<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
+            			</c:if>
+            			<c:if test="${not empty zBean }">
             			<img  id="like" src="${zBean.zpic}"  title="赞">
+            			</c:if>
             		</c:if>
             		<c:if test="${empty userBean }">
             			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
@@ -304,6 +309,7 @@ $(function() {
 	    						var sender_id="${userBean.id}";//用户id
 	    						var article_title="${aBean.title}";//文章标题
 	    						var id="${zBean.id}";//点赞id
+	    						var zNum=$("#slike").text();//点赞数量
 	    						if(receiver_id != sender_id){
 		                            if($('#like').attr('src')=='${pageContext.request.contextPath}/image/unlike.png'){  	    								
 		    							$.ajax({
@@ -322,7 +328,9 @@ $(function() {
 		    								},
 		    								success:function(data){
 		    									if(data){
-		    										alert("感谢您的赞！");    										
+		    										alert("感谢您的赞！");
+		    										$('#like').attr('src','${pageContext.request.contextPath}/image/like.png');
+		    										$("#slike").text(zNum+1);
 		    									}else{
 		    										alert("点赞失败，心碎！");	    										
 		    									}
@@ -344,9 +352,11 @@ $(function() {
 		    								},
 		    								success:function(data){
 		    									if(data){
-		    										alert("你不喜欢吗？");    										
+		    										alert("你不喜欢吗？");
+		    										$('#like').attr('src','${pageContext.request.contextPath}/image/unlike.png');
+		    										$("#slike").text(zNum-1);
 		    									}else{
-		    										alert("取消点赞失败，心碎！");	    										
+		    										alert("取消点赞失败，心碎！");		    		
 		    									}
 		    								}
 		    							});  
@@ -369,14 +379,19 @@ $(function() {
                 	<c:if test="${userBean.id==aBean.author_id }">
         				<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
         			</c:if>
-        			<c:if test="${userBean.id!=aBean.author_id }">     			
-            			<img  id="favor" src="${cBean.cpic}" title="收藏"/>
+        			<c:if test="${userBean.id!=aBean.author_id }">  
+        				<c:if test="${empty cBean }">  			
+            				<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
+            			</c:if> 
+            			<c:if test="${not empty cBean }">  			
+            				<img  id="favor" src="${cBean.cpic}" title="收藏"/>
+            			</c:if> 
             		</c:if>
             		<c:if test="${empty userBean }">
             			<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
             		</c:if>
                     <span>收藏</span>
-                    <span>${aBean.collect_num }</span>                   
+                    <span id="scollect">${aBean.collect_num }</span>                   
         			<!--收藏图标更换的js-->
         			<c:if test="${not empty userBean }">
 	                    <script type="text/javascript">
@@ -385,6 +400,7 @@ $(function() {
 	    						var author_id="${aBean.author_id}";//作者id
 	    						var user_id="${userBean.id}";//用户id
 	    						var id="${cBean.id}";//点赞id
+	    						var cNum=$("#scollect").text();//收藏数目
 	    						if(author_id != user_id){
 		                            if($('#favor').attr('src')=='${pageContext.request.contextPath}/image/unfavor.png'){  	    								
 		    							$.ajax({
@@ -402,7 +418,9 @@ $(function() {
 		    								},
 		    								success:function(data){
 		    									if(data){
-		    										alert("收藏成功！");    										
+		    										alert("收藏成功！"); 
+		    										$('#favor').attr('src','${pageContext.request.contextPath}/image/favor.png');
+		    										$("#scollect").text(cNum+1);
 		    									}else{
 		    										alert("收藏失败，心碎！");	    										
 		    									}
@@ -424,7 +442,9 @@ $(function() {
 		    								},
 		    								success:function(data){
 		    									if(data){
-		    										alert("你不喜欢吗？");    										
+		    										alert("你不喜欢吗？"); 
+		    										$('#favor').attr('src','${pageContext.request.contextPath}/image/unfavor.png');
+		    										$("#scollect").text(cNum-1);
 		    									}else{
 		    										alert("取消收藏失败，心碎！");	    										
 		    									}
@@ -656,7 +676,8 @@ $(function() {
 													console.log(comment_id);
 													var add_time=result.add_time;
 													console.log(add_time);
-												    oHtml = '<div class="comment-show-con clearfix">
+												    oHtml = 
+												    	'<div  class="comment-show-con clearfix" >
 												     				<div class="comment-show-con-img pull-left" >
 												     					<a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}">
 												     					<img src="${userBean.head}"</a>  alt="">
@@ -678,7 +699,9 @@ $(function() {
 												     						</a> 
 												     					</div> 
 												     				</div>
-												     			<div class="hf-list-con"></div></div> </div>
+												     				<div class="hf-list-con"></div>
+												     			</div> 
+												     			</div>
 												     		';			
 												}
 											}); 
@@ -700,8 +723,8 @@ $(function() {
 		<c:if test="${empty userBean }">
 				<script type="text/javascript">
 					$('.commentAll').on('click','.plBtn',function() {
-										window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
-									});
+							window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
+					});
 				</script>
 		</c:if>
 
@@ -757,7 +780,7 @@ $(function() {
 										console.log("comment_id:");
 										console.log(comment_id);																		
 										}
-										var username="<%=userBean.getUsername()%>"+" : ";																				
+										var username="${userBean.username}"+" : ";																				
 										if(oHfName==username){
 											alert("想对自己说什么话，憋在心里就好了");
 											oThis.parents('.hf-con').siblings('.date-dz-right').find('.pl-hf').addClass('hf-con-block')&& oThis.parents('.hf-con').remove();
@@ -800,12 +823,12 @@ $(function() {
 																var oHtml ;
 																var url = "${pageContext.request.contextPath}/CommentServlet?method=addAnswer";
 																var args = {
-																	"author_id":"${userBean.id}",
-																	"comment_id":comment_id,
-																	"flag":flag,
-																	"last_answer_id":answer_id,
-																	"article_id":"${aBean.id}",
-																	"text2":oAt,
+																	"author_id":"${userBean.id}",	//留言评论者id
+																	"comment_id":comment_id,		//留言id
+																	"flag":flag,					//标志
+																	"last_answer_id":answer_id,		//最新评论者id
+																	"article_id":"${aBean.id}",		//文章id
+																	"text2":oAt,					//评论内容
 																};
 																console.log("1");
 																console.log(oAt);
@@ -822,7 +845,7 @@ $(function() {
 																			console.log(add_time);
 																			oHtml= '<div class="all-pl-con">
 																						<div class="pl-text hfpl-text clearfix">
-																							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'+answer_id+'"><%=userBean.getUsername()%> : </a>
+																							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'+answer_id+'">${userBean.username} : </a>
 																							<span class="my-pl-con">'+ oAt+ '</span>
 																						</div>
 																						<div class="date-dz"> 
@@ -841,43 +864,10 @@ $(function() {
 																			
 																	}     
 																}); 
-																$.ajaxSettings.async = true;  
-																
-																
-																
-																		
-																		
-																		
-																		
-																		
-																		
-																		oThis
-																		.parents(
-																				'.hf-con')
-																		.parents(
-																				'.comment-show-con-list')
-																		.find(
-																				'.hf-list-con')
-																		.css(
-																				'display',
-																				'block')
-																		.prepend(
-																				oHtml)
-																		&& oThis
-																				.parents(
-																						'.hf-con')
-																				.siblings(
-																						'.date-dz-right')
-																				.find(
-																						'.pl-hf')
-																				.addClass(
-																						'hf-con-block')
-																		&& oThis
-																				.parents(
-																						'.hf-con')
-																				.remove();
-																
-																		
+																$.ajaxSettings.async = true;  																																																							
+																		oThis.parents('.hf-con').parents('.comment-show-con-list').find('.hf-list-con').css('display','block').prepend(oHtml)
+																		&& oThis.parents('.hf-con').siblings('.date-dz-right').find('.pl-hf').addClass('hf-con-block')
+																		&& oThis.parents('.hf-con').remove();																	
 															});
 										}
 									});
@@ -894,37 +884,30 @@ $(function() {
 		<c:if test="${ not empty userBean }">
 		<script type="text/javascript">
 					 $('.commentAll').on('click','.removeBlock',function(){
-						 	var alltext=$(this)
-							.parents('.date-dz-right').parents(
-							'.date-dz').siblings(
-							'.pl-text').html();
-						 	var article_id="<%=article_id%>";
-							var comment_id = $(this)
-							.parents('.date-dz-right').parents(
-							'.date-dz').siblings(
-							'.pl-text').find(
-							'.comment-size-name').attr("data");
+						 	var alltext=$(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').html();
+						 	var article_id="${aBean.id}";
+							var comment_id = $(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').attr("data");
 							if(alltext.indexOf("@")==-1){	
 								<!--举报的是评论 -->
-								window.location.href='${pageContext.request.contextPath}/jsp/report_center/reportcenter_comment.jsp?article_id='+article_id+"&comment_id="+comment_id;
+								window.location.href='${pageContext.request.contextPath}/jsp/reportcenter/report_reviews.jsp?article_id='+article_id+"&comment_id="+comment_id;
 	
 							}else{
 								<!--举报的是回复 -->
-								window.location.href='${pageContext.request.contextPath}/jsp/report_center/reportcenter_answer.jsp?article_id='+article_id+"&answer_id="+comment_id;
+								window.location.href='${pageContext.request.contextPath}/jsp/reportcenter/report_reviews.jsp?article_id='+article_id+"&answer_id="+comment_id;
 							
 							}
 
 					}) 
 				</script>
 				</c:if>
-				<c:if test="${empty userBean }">
+		<c:if test="${empty userBean }">
 				<script type="text/javascript">
 					 $('.commentAll').on('click','.removeBlock',function(){
 						 	var alltext=$(this)
 							.parents('.date-dz-right').parents(
 							'.date-dz').siblings(
 							'.pl-text').html();
-						 	var article_id="<%=article_id%>";
+						 	var article_id="${aBean.id}";
 							var comment_id = $(this)
 							.parents('.date-dz-right').parents(
 							'.date-dz').siblings(
@@ -932,12 +915,11 @@ $(function() {
 							'.comment-size-name').attr("data");
 							if(alltext.indexOf("@")==-1){	
 								<!--举报的是评论 -->
-								window.location.href='${pageContext.request.contextPath}/jsp/login/sign_in.jsp';
+								window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
 	
 							}else{
 								<!--举报的是回复 -->
-								window.location.href='${pageContext.request.contextPath}/jsp/login/sign_in.jsp';
-							
+								window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';							
 							}
 
 					}) 
@@ -946,46 +928,34 @@ $(function() {
 		<!--删除评论块-->
 		<script type="text/javascript">
 		    $('.commentAll').on('click','.delete',function(){
-		        
 		    	 var oT = $(this).parents('.date-dz-right').parents('.date-dz').parents('.all-pl-con');
 		    	 var flag=2;
-		        var alltext=$(this)
-				.parents('.date-dz-right').parents(
-				'.date-dz').siblings(
-				'.pl-text').html();
-		        var comment_id = $(this)
-				.parents('.date-dz-right').parents(
-				'.date-dz').siblings(
-				'.pl-text').find(
-				'.comment-size-name').attr("data");
-		        
+		        var alltext=$(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').html();
+		        var comment_id = $(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').attr("data");		        
 		        if(alltext.indexOf("@")==-1){	
 					<!--删除的是评论 -->
-					var url = "${pageContext.request.contextPath}/servlet/DeleteComment";
+					var url = "${pageContext.request.contextPath}/CommentServlet?method=deleteComment";
 					 var args={
-				        		"comment_id" : comment_id,
-								"time" : new Date()
+							 	"article_id" : "${aBean.id}", //文章id
+				        		"comment_id" : comment_id //留言id
 				        }
-					 
-						 $.ajaxSettings.async = false; 
-				        $.get(url, args,
-								function(data) {
+						$.ajaxSettings.async = false; 
+				        $.get(url, args,function(data) {
 						        	var result=eval("("+data+")");
 						        	if(result.bol==1){       
 						        		flag=1;
 						        	}else if(result.bol==2){
 						        		alert("删除失败！由于收到用户举报，该评论暂时被锁定！");
-						        	}
-						        	
+						        	}      	
 						}); 
 				        $.ajaxSettings.async = true; 
 			
 				}else{
 					<!--删除的是回复 -->
-					var url = "${pageContext.request.contextPath}/servlet/DeleteAnswer";
+					var url = "${pageContext.request.contextPath}/CommentServlet?method=deleteAnswer";
 					var args={
-			        		"answer_id" : comment_id,
-							"time" : new Date()
+			        		"answer_id" : comment_id,//回复id
+			        		"article_id" : "${aBean.id}", //文章id
 			        }
 					
 					$.ajaxSettings.async = false; 
@@ -999,29 +969,24 @@ $(function() {
 					        	}
 					        	
 					}); 
-			        $.ajaxSettings.async = true; 
-			
+			        $.ajaxSettings.async = true; 			
 				}
 		        if(flag==1){
 		        	if(oT.siblings('.all-pl-con').length >= 1){
 		                oT.remove();
 		            }else {
-		                $(this).parents('.date-dz-right').parents('.date-dz').parents('.all-pl-con').parents('.hf-list-con').css('display','none')
+		                $(this).parents('.date-dz-right').parents('.date-dz').parents('.all-pl-con').parents('.hf-list-con').css('display','none');
 		                oT.remove();
 		            }
 		            $(this).parents('.date-dz-right').parents('.date-dz').parents('.comment-show-con-list').parents('.comment-show-con').remove();
-		        }
-		        
-		        
-		    })
+		        }		        		        
+		    });
 		</script>		
 				
 		<!--点赞-->
+		<c:if test="${not empty userBean }">
 		<script type="text/javascript">
-					$('.comment-show').on(
-							'click',
-							'.date-dz-z',
-							function() {
+					$('.comment-show').on('click','.date-dz-z',function() {
 								var zNum = $(this).find('.z-num').html();
 								var status;
 								if ($(this).is('.date-dz-z-click')) {
@@ -1029,63 +994,56 @@ $(function() {
 									status="取消点赞";
 									$(this).removeClass('date-dz-z-click red');
 									$(this).find('.z-num').html(zNum);
-									$(this).find('.date-dz-z-click-red')
-											.removeClass('red');
+									$(this).find('.date-dz-z-click-red').removeClass('red');
 								} else {
 									zNum++;
 									status="点赞";
 									$(this).addClass('date-dz-z-click');
 									$(this).find('.z-num').html(zNum);
-									$(this).find('.date-dz-z-click-red')
-											.addClass('red');
-								}
-					
-								var alltext=$(this)
-								.parents('.date-dz-right').parents(
-								'.date-dz').siblings(
-								'.pl-text').html();
-								var comment_id = $(this)
-								.parents('.date-dz-right').parents(
-								'.date-dz').siblings(
-								'.pl-text').find(
-								'.comment-size-name').attr("data");
-								var sender_id="<%=user_id%>";
-								var article_id="<%=article_id%>"
+									$(this).find('.date-dz-z-click-red').addClass('red');
+								}					
+								var alltext=$(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').html();
+								var comment_id = $(this).parents('.date-dz-right').parents('.date-dz').siblings('.pl-text').find('.comment-size-name').attr("data");
+								var sender_id="${userBean.id}";
+								var article_id="${aBean.id}"
 								if(alltext.indexOf("@")==-1){		
 									<!--点赞的是评论表 -->
-									var url = "${pageContext.request.contextPath}/servlet/AddZanToComment";
+									var url = "${pageContext.request.contextPath}/CommentServlet?method=addZanToComment";
 									var args = {
 										"comment_id":comment_id,
 										"sender_id":sender_id,
 										"article_id":article_id,
 										"status":status,
 										"zan":zNum,
-										"time" : new Date()
 									};
 									$.ajaxSettings.async = false;  
 									$.get(url, args); 
 									$.ajaxSettings.async = true;  					
-								}else{
-								
-									var url = "${pageContext.request.contextPath}/servlet/AddZanToAnswer";
+								}else{								
+									var url = "${pageContext.request.contextPath}/CommentServlet?method=addZanToAnswer";
 									var args = {
-										"comment_id":comment_id,
+										"answer_id":comment_id,
 										"sender_id":sender_id,
 										"article_id":article_id,
 										"status":status,
 										"zan":zNum,
-										"time" : new Date()
 									};
 									$.ajaxSettings.async = false;  
 									$.get(url, args); 
 									$.ajaxSettings.async = true;  
 								
-								}
-					
-								
-								
-							})
+								}								
+							});
 				</script>
+			</c:if>
+			<c:if test="${empty userBean }">
+				<script type="text/javascript">
+					$('.comment-show').on('click','.date-dz-z',function() {															
+							window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
+							}								
+					});
+				</script>
+			</c:if>
         </div>
     </div>	
 </div>

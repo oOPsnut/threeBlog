@@ -37,8 +37,38 @@ public class ZanDaoImpl implements ZanDao {
 	@Override
 	public boolean UpdateArticleZan(ZanBean zan) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="update t_zan set zpic=? where id=?";
-		int result = runner.update(sql,zan.getId(),zan.getZpic());  
+		String sql="update t_zan set zpic=? , type=? where id=?";
+		int result = runner.update(sql,zan.getZpic(),zan.getType(),zan.getId());  
 		return result>0;
+	}
+
+	@Override
+	public boolean addCommentZan(ZanBean zanBean) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="insert into t_zan(id,type,receiver_id,sender_id,article_id,text,add_time) values(?,?,?,?,?,?,?);";
+		int result = runner.update(sql,zanBean.getId(),zanBean.getType(),zanBean.getReceiver_id(),zanBean.getSender_id(),zanBean.getArticle_id(),zanBean.getText(),zanBean.getAdd_time());  
+		return result>0;
+	}
+
+	@Override
+	public void cancelCommentZan(String id, String type2) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_zan set type=? where id= ?";
+		runner.update(sql,type2,id);		
+	}
+
+	@Override
+	public boolean addAnswerZan(ZanBean zanBean) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="insert into t_zan(id,type,receiver_id,sender_id,article_id,text,add_time) values(?,?,?,?,?,?,?);";
+		int result = runner.update(sql,zanBean.getId(),zanBean.getType(),zanBean.getReceiver_id(),zanBean.getSender_id(),zanBean.getArticle_id(),zanBean.getText(),zanBean.getAdd_time());  
+		return result>0;
+	}
+
+	@Override
+	public void cancelAnswerZan(String id, String type2) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_zan set type=? where id= ?";
+		runner.update(sql,type2,id);	
 	}
 }

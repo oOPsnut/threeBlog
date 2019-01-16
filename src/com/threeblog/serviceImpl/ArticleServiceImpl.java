@@ -23,7 +23,7 @@ import com.threeblog.domain.CommentBean;
 import com.threeblog.domain.ZanBean;
 import com.threeblog.service.ArticleService;
 
-public class ArticleServiceImpl implements ArticleService {
+public  class ArticleServiceImpl implements ArticleService {
 
 	
 	@Override
@@ -161,7 +161,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<CommentBean> getCommentsFromArticle_id(String aid) throws SQLException {
-		// 通过文章id找到评论
+		// 通过文章id找到留言
 		CommentDao dao = new CommentDaoImpl();
 		List<CommentBean> comments=dao.getCommentsFromArticle_id(aid);
 		return comments;
@@ -169,7 +169,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<AnswerBean> getAnswersFromComment_id(String id) throws SQLException {
-		// 通过评论id找到评论回答
+		// 通过评论id找到留言回答
 		AnswersDao dao = new AnswersDaoImpl();
 		List<AnswerBean> answers=dao.getAnswersFromComment_id(id);
 		return answers;
@@ -177,7 +177,7 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public void updateCommentNumByAId(String article_id, int comment_num) throws SQLException {
-		// 通过文章id，更新评论数目
+		// 通过文章id，更新留言数目
 		ArticleDao dao = new ArticleDaoImpl();
 		dao.updateCommentNumByAId(article_id,comment_num);
 		
@@ -185,10 +185,113 @@ public class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public boolean addArticleComment(CommentBean comment) throws SQLException {
-		// 将文章评论写进表
+		// 将文章留言写进表
 		CommentDao dao=new CommentDaoImpl();
 		boolean result = dao.addArticleComment(comment);
 		return result;
 		
 	}
+
+	@Override
+	public boolean addArticleCommentAnswer(AnswerBean answer) throws SQLException {
+		// 将文章留言回复写进表
+		AnswersDao dao = new AnswersDaoImpl();
+		boolean result = dao.addArticleCommentAnswer(answer);
+		return result;
+	}
+
+	@Override
+	public CommentBean getCommentFromComment_id(String comment_id) throws SQLException {
+		// 通过文章留言id获得留言信息
+		CommentDao dao = new CommentDaoImpl();
+		CommentBean comment = dao.getCommentFromComment_id(comment_id);
+		return comment;
+	}
+
+	@Override
+	public AnswerBean getAnswertFromAnswer_id(String answer_id) throws SQLException {
+		// 通过文章留言回复id获得留言回复信息
+		AnswersDao dao=new AnswersDaoImpl();
+		AnswerBean answer = dao.getAnswertFromAnswer_id(answer_id);
+		return answer;
+	}
+
+	@Override
+	public boolean deleteArticleComment(String comment_id) throws SQLException {
+		// 通过文章留言id删除对应留言信息
+		CommentDao dao = new CommentDaoImpl();
+		boolean result = dao.deleteArticleComment(comment_id);
+		return result;
+	}
+
+	@Override
+	public int findCommentAnswerNum(String comment_id) throws SQLException {
+		// 通过文章留言id查看此留言下有多少条回复
+		AnswersDao dao=new AnswersDaoImpl();
+		int count = dao.findCommentAnswerNum(comment_id);
+		return count;
+	}
+
+	@Override
+	public boolean deleteArticleCommentAnswer(String comment_id) throws SQLException {
+		// 通过文章留言id删除留言下的回复
+		AnswersDao dao=new AnswersDaoImpl();
+		boolean result = dao.deleteArticleCommentAnswer(comment_id);
+		return result;
+	}
+
+	@Override
+	public boolean deleteArticleAnswer(String answer_id) throws SQLException {
+		// 通过文章留言回复id删除回复
+		AnswersDao dao=new AnswersDaoImpl();
+		boolean result = dao.deleteArticleAnswer(answer_id);
+		return result;
+	}
+
+	@Override
+	public boolean UpdateCommentZan(String comment_id, int zan) throws SQLException {
+		// 通过文章留言id更新点赞数目
+		CommentDao dao = new CommentDaoImpl();
+		boolean result = dao.UpdateCommentZan(comment_id, zan);
+		return result;
+	}
+
+	@Override
+	public boolean addCommentZan(ZanBean zanBean) throws SQLException {
+		// 添加留言点赞
+		ZanDao dao=new ZanDaoImpl();
+		boolean result = dao.addCommentZan(zanBean);
+		return result;
+	}
+
+	@Override
+	public void cancelCommentZan(String id, String type2) throws SQLException {
+		// 取消留言点赞
+		ZanDao dao=new ZanDaoImpl();
+		dao.cancelCommentZan(id, type2);		
+	}
+
+	@Override
+	public boolean UpdateAnswerZan(String answer_id, int zan) throws SQLException {
+		// 通过文章留言回复id更新点赞数目
+		AnswersDao dao = new AnswersDaoImpl();
+		boolean result = dao.UpdateAnswerZan(answer_id, zan);
+		return result;
+	}
+
+	@Override
+	public boolean addAnswerZan(ZanBean zanBean) throws SQLException {
+		// 添加留言回复点赞
+		ZanDao dao=new ZanDaoImpl();
+		boolean result = dao.addAnswerZan(zanBean);
+		return result;
+	}
+
+	@Override
+	public void cancelAnswerZan(String id, String type2) throws SQLException {
+		// 取消留言回复点赞
+		ZanDao dao=new ZanDaoImpl();
+		dao.cancelAnswerZan(id, type2);				
+	}
+	
 }

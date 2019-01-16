@@ -24,6 +24,7 @@ import com.threeblog.base.BaseServlet;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
 import com.threeblog.domain.CollectBean;
+import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.domain.ZanBean;
@@ -231,9 +232,9 @@ public class ArticleServlet extends BaseServlet {
 		public void AddArticleZan(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
 				
 			//获取数据
-			String article_id = request.getParameter("article_id");
-			String receiver_id = request.getParameter("receiver_id");
-			String sender_id = request.getParameter("sender_id");
+			String article_id = request.getParameter("article_id");//文章id
+			String receiver_id = request.getParameter("receiver_id");//被点赞者id
+			String sender_id = request.getParameter("sender_id");//点赞者id
 			String text = request.getParameter("text");
 			String zpic=request.getParameter("zpic");
 			
@@ -267,6 +268,25 @@ public class ArticleServlet extends BaseServlet {
 			boolean result = aService.addArticleZan(zan);
 			if (result) {
 				//插入成功
+				//添加点赞消息
+				MessageBean message=new MessageBean();
+				//UUID生成消息id
+				String id1 = UUIDUtils.getId();
+				//生成类型
+				String type1="文章点赞";
+				//生成text2
+				String text2="赞";
+				message.setId(id1);
+				message.setType(type1);
+				message.setReceiver_id(receiver_id);
+				message.setAnswer_id(sender_id);
+				message.setArticle_id(article_id);
+				message.setText1(text);//文章标题
+				message.setText2(text2);//赞
+				message.setAdd_time(add_time);
+				UserService uService = new UserServiceImpl();
+				uService.addMessage(message);
+				
 				//取出赞信息，存到session中
 				ZanBean zBean = aService.findArticleZan(id);
 				request.getSession().setAttribute("zBean", zBean);
@@ -285,7 +305,7 @@ public class ArticleServlet extends BaseServlet {
 			String zpic=request.getParameter("zpic");
 			
 			//通过文章id查找对应文章并将点赞数更新上去
-			ArticleService aService = new ArticleServiceImpl();
+			ArticleService aService = new ArticleServiceImpl();			
 			ArticleBean aBean = aService.findArticle(article_id);
 			int liked_num = aBean.getLiked_num();
 			liked_num-=1;
@@ -295,9 +315,12 @@ public class ArticleServlet extends BaseServlet {
 			request.getSession().setAttribute("aBean", aBean2);
 			
 			//将数据写进点赞表
-			ZanBean zan = new ZanBean();			
+			ZanBean zan = new ZanBean();
+			//生成类型
+			String type1="取消点赞";
 			//将数据封装到zBean中
 			zan.setId(id);
+			zan.setType(type1);
 			zan.setZpic(zpic);
 			boolean result = aService.UpdateArticleZan(zan);
 			if (result) {
@@ -316,14 +339,15 @@ public class ArticleServlet extends BaseServlet {
 				
 			//获取数据
 			String article_id = request.getParameter("article_id");
-			String author_id = request.getParameter("author_id");
-			String user_id = request.getParameter("user_id");
+			String author_id = request.getParameter("author_id");//作者id
+			String user_id = request.getParameter("user_id");//用户id
 			String cpic=request.getParameter("cpic");
 			
 			//通过文章id查找对应文章并将收藏数更新上去
 			ArticleService aService = new ArticleServiceImpl();
 			ArticleBean aBean = aService.findArticle(article_id);
 			int collect_num = aBean.getCollect_num();
+			String text = aBean.getTitle();//文章标题
 			collect_num+=1;
 			aService.updateCollectNumByAId(article_id, collect_num);
 			//取出更新后的值，存到session中
@@ -347,6 +371,26 @@ public class ArticleServlet extends BaseServlet {
 			boolean result = aService.addArticleCollect(collect);
 			if (result) {
 				//收藏成功
+				
+				//添加收藏消息
+				MessageBean message=new MessageBean();
+				//UUID生成消息id
+				String id1 = UUIDUtils.getId();
+				//生成类型
+				String type1="文章收藏";
+				//生成text2
+				String text2="收藏";
+				message.setId(id1);
+				message.setType(type1);
+				message.setReceiver_id(author_id);//作者
+				message.setAnswer_id(user_id);//用户
+				message.setArticle_id(article_id);
+				message.setText1(text);
+				message.setText2(text2);
+				message.setAdd_time(collect_date);
+				UserService uService = new UserServiceImpl();
+				uService.addMessage(message);
+				
 				//取出收藏信息，存到session中
 				CollectBean cBean = aService.findArticleCollect(id);
 				request.getSession().setAttribute("cBean", cBean);

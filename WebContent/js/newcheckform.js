@@ -13,7 +13,6 @@ function checkAll(obj){
 		var md5KeyR= "y7rl1klIeH";
 	    var hash1 = $('#newpasswd1').val()+md5KeyR; 
 		var hash2=MD5(hash1); 
-		alert("(密码+随机数)md5:"+hash2);
 	    $('#newpasswd1').val(hash2);
 	    $('#newpasswd2').val(hash2);    
 	    alert("修改密码成功，将自动返回登录页面");

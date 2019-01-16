@@ -31,7 +31,7 @@ public class CollectDaoImpl implements CollectDao {
 	public boolean UpdateArticleCollect(CollectBean collect) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="update t_collect set cpic=? where id=?";
-		int result = runner.update(sql,collect.getId(),collect.getCpic());  
+		int result = runner.update(sql,collect.getCpic(),collect.getId());  
 		return result>0;
 	}
 

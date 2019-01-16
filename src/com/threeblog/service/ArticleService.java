@@ -156,7 +156,7 @@ public interface ArticleService {
 	CollectBean findACollect(String uid,String id)throws SQLException;
 
 	/**
-	 * 通过文章id找到评论
+	 * 通过文章id找到留言
 	 * @param aid
 	 * @return
 	 * @throws SQLException
@@ -164,7 +164,7 @@ public interface ArticleService {
 	List<CommentBean> getCommentsFromArticle_id(String aid)throws SQLException;
 	
 	/**
-	 * 通过评论id找到评论回答
+	 * 通过留言id找到留言回答
 	 * @param id
 	 * @return
 	 * @throws SQLException
@@ -172,15 +172,121 @@ public interface ArticleService {
 	List<AnswerBean> getAnswersFromComment_id(String id)throws SQLException;
 
 	/**
-	 * 通过文章id，更新评论数目
+	 * 通过文章id，更新留言数目
 	 * @param article_id
 	 * @param comment_num
 	 */
 	void updateCommentNumByAId(String article_id, int comment_num)throws SQLException;
 
 	/**
-	 * 将文章评论写进表
+	 * 将文章留言写进表
 	 * @param comment
 	 */
 	boolean addArticleComment(CommentBean comment)throws SQLException;
+
+	/**
+	 * 将文章留言回复写进表
+	 * @param answer
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addArticleCommentAnswer(AnswerBean answer)throws SQLException;
+
+	/**
+	 * 通过文章留言id获得留言信息
+	 * @param comment_id
+	 * @return
+	 * @throws SQLException
+	 */
+	CommentBean getCommentFromComment_id(String comment_id)throws SQLException;
+
+	/**
+	 * 通过文章留言回复id获得留言回复信息
+	 * @param answer_id
+	 * @return
+	 * @throws SQLException
+	 */
+	AnswerBean getAnswertFromAnswer_id(String answer_id)throws SQLException;
+
+	/**
+	 * 通过文章留言id删除对应留言信息
+	 * @param comment_id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deleteArticleComment(String comment_id)throws SQLException;
+
+	/**
+	 * 通过文章留言id查看此留言下有多少条回复
+	 * @param comment_id
+	 * @return
+	 * @throws SQLException
+	 */
+	int findCommentAnswerNum(String comment_id)throws SQLException;
+
+	/**
+	 * 通过文章留言id删除留言下的回复
+	 * @param comment_id
+	 * @throws SQLException
+	 */
+	boolean deleteArticleCommentAnswer(String comment_id)throws SQLException;
+
+	/**
+	 * 通过文章留言回复id删除回复
+	 * @param answer_id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deleteArticleAnswer(String answer_id)throws SQLException;
+
+	/***
+	 * 通过文章留言id更新点赞数目
+	 * @param comment_id
+	 * @param zan
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean UpdateCommentZan(String comment_id, int zan)throws SQLException;
+
+	/**
+	 * 添加留言点赞
+	 * @param zanBean
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addCommentZan(ZanBean zanBean)throws SQLException;
+
+	/**
+	 * 取消留言点赞
+	 * @param id
+	 * @param type2
+	 * @throws SQLException
+	 */
+	void cancelCommentZan(String id, String type2)throws SQLException;
+
+	/**
+	 * 通过文章留言回复id更新点赞数目
+	 * @param answer_id
+	 * @param zan
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean UpdateAnswerZan(String answer_id, int zan)throws SQLException;
+
+	/**
+	 * 添加留言回复点赞
+	 * @param zanBean
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addAnswerZan(ZanBean zanBean)throws SQLException;
+
+	/**
+	 * 取消留言回复点赞
+	 * @param id
+	 * @param type2
+	 * @throws SQLException
+	 */
+	void cancelAnswerZan(String id, String type2)throws SQLException;
+	
 }
