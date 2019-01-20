@@ -45,9 +45,9 @@ public class CommentServlet extends BaseServlet {
 		int comment_num = aBean.getComment_num();
 		comment_num+=1;
 		aService.updateCommentNumByAId(article_id, comment_num);
-		//取出更新后的值，存到session中
+		//取出更新后的值，将数据传递到页面中
 		ArticleBean aBean2 = aService.findArticle(article_id);
-		request.getSession().setAttribute("aBean", aBean2);
+		request.setAttribute("aBean", aBean2);
 		
 		int zan=0;
 		//UUID生成评论id
@@ -118,9 +118,9 @@ public class CommentServlet extends BaseServlet {
 		int comment_num = aBean.getComment_num();
 		comment_num+=1;
 		aService.updateCommentNumByAId(article_id, comment_num);
-		//取出更新后的值，存到session中
+		//取出更新后的值，将数据传递到页面中
 		ArticleBean aBean2 = aService.findArticle(article_id);
-		request.getSession().setAttribute("aBean", aBean2);
+		request.setAttribute("aBean", aBean2);
 		//初始化赞数目
 		int zan=0;
 		//UUID生成留言回复id
@@ -329,7 +329,7 @@ public class CommentServlet extends BaseServlet {
 		if (result) {
 			//删除成功
 			//查找此留言下有多少条回复
-			int count =  aService.findCommentAnswerNum(comment_id);
+			int count =  Integer.valueOf(aService.findCommentAnswerNum(comment_id).toString());
 			if (count>0) {
 				//有留言回复才删除
 				//删除此留言下的所有回复
@@ -341,9 +341,9 @@ public class CommentServlet extends BaseServlet {
 					int comment_num = aBean.getComment_num();
 					comment_num=comment_num-count-1;
 					aService.updateCommentNumByAId(article_id, comment_num);
-					//取出更新后的值，存到session中
+					//取出更新后的值，将数据传递到页面中
 					ArticleBean aBean2 = aService.findArticle(article_id);
-					request.getSession().setAttribute("aBean", aBean2);				
+					request.setAttribute("aBean", aBean2);				
 				} else {
 					//删除失败
 					System.out.println("删除留言失败");
@@ -356,9 +356,9 @@ public class CommentServlet extends BaseServlet {
 				int comment_num = aBean.getComment_num();
 				comment_num-=1;
 				aService.updateCommentNumByAId(article_id, comment_num);
-				//取出更新后的值，存到session中
+				//取出更新后的值，将数据传递到页面中
 				ArticleBean aBean2 = aService.findArticle(article_id);
-				request.getSession().setAttribute("aBean", aBean2);	
+				request.setAttribute("aBean", aBean2);	
 			}
 			
 			//将结果传回页面
@@ -387,9 +387,9 @@ public class CommentServlet extends BaseServlet {
 			int comment_num = aBean.getComment_num();
 			comment_num-=1;
 			aService.updateCommentNumByAId(article_id, comment_num);
-			//取出更新后的值，存到session中
+			//取出更新后的值，将数据传递到页面中
 			ArticleBean aBean2 = aService.findArticle(article_id);
-			request.getSession().setAttribute("aBean", aBean2);	
+			request.setAttribute("aBean", aBean2);	
 						
 			//将结果传回页面
 			String result3="{'bol':1}";

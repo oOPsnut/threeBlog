@@ -26,12 +26,22 @@ public class CollectDaoImpl implements CollectDao {
 		String sql="select * from t_collect where id = ?";
 		return runner.query(sql, new BeanHandler<CollectBean>(CollectBean.class),id);
 	}
-
+	
+	//方法1：更新收藏图标
+//	@Override
+//	public boolean UpdateArticleCollect(CollectBean collect) throws SQLException {
+//		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+//		String sql="update t_collect set cpic=? where id=?";
+//		int result = runner.update(sql,collect.getCpic(),collect.getId());  
+//		System.out.println(result);
+//		return result>0;
+//	}
+	//方法2：直接删除
 	@Override
 	public boolean UpdateArticleCollect(CollectBean collect) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="update t_collect set cpic=? where id=?";
-		int result = runner.update(sql,collect.getCpic(),collect.getId());  
+		String sql="delete from t_collect where id=?";
+		int result = runner.update(sql,collect.getId());  
 		return result>0;
 	}
 

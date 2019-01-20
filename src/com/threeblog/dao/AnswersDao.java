@@ -42,7 +42,7 @@ public interface AnswersDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	int findCommentAnswerNum(String comment_id)throws SQLException;
+	Long findCommentAnswerNum(String comment_id)throws SQLException;
 	
 	/**
 	 * 通过文章留言id删除留言下的回复

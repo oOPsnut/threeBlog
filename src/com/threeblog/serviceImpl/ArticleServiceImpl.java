@@ -225,10 +225,10 @@ public  class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public int findCommentAnswerNum(String comment_id) throws SQLException {
+	public Long findCommentAnswerNum(String comment_id) throws SQLException {
 		// 通过文章留言id查看此留言下有多少条回复
 		AnswersDao dao=new AnswersDaoImpl();
-		int count = dao.findCommentAnswerNum(comment_id);
+		Long count = dao.findCommentAnswerNum(comment_id);
 		return count;
 	}
 

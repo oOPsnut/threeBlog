@@ -38,10 +38,10 @@ public class AnswersDaoImpl implements AnswersDao {
 	}
 
 	@Override
-	public int findCommentAnswerNum(String comment_id) throws SQLException {
+	public Long findCommentAnswerNum(String comment_id) throws SQLException {
 		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="SELECT COUNT(comment_id) AS commentNum FROM t_answer WHERE comment_id=?";
-		int count =  (int) runner.query(sql,new ScalarHandler(),comment_id);
+		Long count =(Long) runner.query(sql,new ScalarHandler(),comment_id);
 		return count;
 	}
 

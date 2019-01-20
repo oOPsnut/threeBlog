@@ -1,3 +1,4 @@
+<%@page import="com.threeblog.util.UUIDUtils"%>
 <%@page import="java.util.List"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.threeblog.service.*"%>
@@ -8,9 +9,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% 
-	//判断session中是否存在aBean、aTypeBean，存在：表示是自己发表的。不存在：表示别人点击进来的
-	ArticleBean aBean = (ArticleBean)request.getSession().getAttribute("aBean");
-	ArticleTypeBean aTypeBean = (ArticleTypeBean)request.getSession().getAttribute("aTypeBean");
+	//判断是否存在aBean、aTypeBean，存在：表示是自己发表的。不存在：表示别人点击进来的
+	ArticleBean aBean = (ArticleBean)request.getAttribute("aBean");
+	ArticleTypeBean aTypeBean = (ArticleTypeBean)request.getAttribute("aTypeBean");
 	String author_id=null;
 	int click_num;
 	Date pub_time=null;
@@ -28,20 +29,20 @@
 		//找上一篇和下一篇的id
 		ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
 		ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
-		//判断为空,不为空则存到session中
-		if(last_aBean!=null){request.getSession().setAttribute("last_aBean", last_aBean);}
-		if(next_aBean!=null){request.getSession().setAttribute("next_aBean", next_aBean);}
+		//判断为空,不为空则取出
+		if(last_aBean!=null){request.setAttribute("last_aBean", last_aBean);}
+		if(next_aBean!=null){request.setAttribute("next_aBean", next_aBean);}
 		//从userBean中取用户id
 		UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
 		String uid = userBean.getId();
 		//查找用户与赞的关系表
 		ZanBean zBean = aService.findAZan(uid, id);
-		request.getSession().setAttribute("zBean", zBean);
+		request.setAttribute("zBean", zBean);
 		//查找用户与收藏的关系表
 		CollectBean cBean = aService.findACollect(uid, id);
-		request.getSession().setAttribute("cBean", cBean);
+		request.setAttribute("cBean", cBean);
 		//将本篇存在session中
-		request.getSession().setAttribute("aBean", aBean3);
+		request.setAttribute("aBean", aBean3);
 		//从aTypeBean中取文章类型
 		String article_Type = aTypeBean.getArticle_type();		
 	}else{  
@@ -63,21 +64,23 @@
 			//找上一篇和下一篇的id
 			ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
 			ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
-			//判断为空,不为空则存到session中
-			if(last_aBean!=null){request.getSession().setAttribute("last_aBean", last_aBean);}
-			if(next_aBean!=null){request.getSession().setAttribute("next_aBean", next_aBean);}
-			//将上一篇、下一篇和本文章信息和文章类型放到session中
-			request.getSession().setAttribute("aBean", aBean4);
-			request.getSession().setAttribute("aTypeBean", aTypeBean2);
+			//判断为空,不为空则取出
+			if(last_aBean!=null){request.setAttribute("last_aBean", last_aBean);}
+			if(next_aBean!=null){request.setAttribute("next_aBean", next_aBean);}
+			//将上一篇、下一篇和本文章信息和文章类型取出
+			request.setAttribute("aBean", aBean4);
+			request.setAttribute("aTypeBean", aTypeBean2);
 			//从userBean中取用户id
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
-			String uid = userBean.getId();
-			//查找用户与赞的关系表
-			ZanBean zBean = aService.findAZan(uid, id);
-			request.getSession().setAttribute("zBean", zBean);
-			//查找用户与收藏的关系表
-			CollectBean cBean = aService.findACollect(uid, id);
-			request.getSession().setAttribute("cBean", cBean);
+			if(userBean!=null){
+				String uid = userBean.getId();
+				//查找用户与赞的关系表
+				ZanBean zBean = aService.findAZan(uid, id);
+				request.setAttribute("zBean", zBean);
+				//查找用户与收藏的关系表
+				CollectBean cBean = aService.findACollect(uid, id);
+				request.setAttribute("cBean", cBean);
+			}			
 		}else{
 			//文章id不存在
 			response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
@@ -86,10 +89,10 @@
 	//通过作者id取作者的头像、名字
 	UserService uService = new UserServiceImpl();
 	UserBean author = uService.findUserInfo(author_id);
-	//将作者的信息放到session中
-	request.getSession().setAttribute("author", author);
+	//将作者的信息取出
+	request.setAttribute("author", author);
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -104,6 +107,14 @@
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/clipboard.min.js"></script>
+<!--为分享按钮添加本页面网址  -->
+<script type="text/javascript">
+window.onload=function(){
+	var url =  window.location.href;
+	$("#share").attr("data-clipboard-text",url);
+	}
+</script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -284,32 +295,35 @@ $(function() {
             </div>
             <div id="a_down_tools">
             	<div id="tools_like">
-            		<c:if test="${userBean.id==aBean.author_id }">
+            	<c:choose>
+            		<c:when test="${userBean.id==aBean.author_id }">
             			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
-            		</c:if>
-            		<c:if test="${userBean.id!=aBean.author_id }">
+            		</c:when>
+            		<c:when test="${userBean.id!=aBean.author_id }">
             			<c:if test="${empty zBean }">
             				<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
             			</c:if>
             			<c:if test="${not empty zBean }">
             			<img  id="like" src="${zBean.zpic}"  title="赞">
             			</c:if>
-            		</c:if>
-            		<c:if test="${empty userBean }">
+            		</c:when>
+            		<c:when test="${empty userBean }">
             			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
-            		</c:if>
+            		</c:when>
+            	</c:choose>
                     <span>点赞</span>
                     <span id="slike">${aBean.liked_num }</span>
                     <!--点赞图标更换的js-->
                     <c:if test="${not empty userBean }">
 	                    <script type="text/javascript">
 	                    $('#like').click(function(){  
+	                    	//生成点赞id
+	                    	<% String zid = UUIDUtils.getId(); request.setAttribute("zid", zid);%>
 	                            var article_id="${aBean.id}";//文章id
 	    						var receiver_id="${aBean.author_id}";//作者id
 	    						var sender_id="${userBean.id}";//用户id
 	    						var article_title="${aBean.title}";//文章标题
-	    						var id="${zBean.id}";//点赞id
-	    						var zNum=$("#slike").text();//点赞数量
+	    						var id="${zid}";//点赞id
 	    						if(receiver_id != sender_id){
 		                            if($('#like').attr('src')=='${pageContext.request.contextPath}/image/unlike.png'){  	    								
 		    							$.ajax({
@@ -321,7 +335,8 @@ $(function() {
 			    								"receiver_id":receiver_id,
 			    								"sender_id":sender_id,
 			    								"zpic":"/ThreeBlog_V1.0/image/like.png",
-			    								"text":article_title
+			    								"text":article_title,
+			    								"id":id
 			    							},
 		    								error:function(){
 		    									alert("出错！");
@@ -330,7 +345,9 @@ $(function() {
 		    									if(data){
 		    										alert("感谢您的赞！");
 		    										$('#like').attr('src','${pageContext.request.contextPath}/image/like.png');
-		    										$("#slike").text(zNum+1);
+		    										var zNum=$("#slike").text();//点赞数量
+		    										zNum++;
+		    										$("#slike").text(zNum);
 		    									}else{
 		    										alert("点赞失败，心碎！");	    										
 		    									}
@@ -354,7 +371,13 @@ $(function() {
 		    									if(data){
 		    										alert("你不喜欢吗？");
 		    										$('#like').attr('src','${pageContext.request.contextPath}/image/unlike.png');
-		    										$("#slike").text(zNum-1);
+		    										var zNum=$("#slike").text();//点赞数量
+		    										if (zNum>0) {
+		    											zNum--;														
+													} else {
+														zNum=0;	
+													}
+		    										$("#slike").text(zNum);
 		    									}else{
 		    										alert("取消点赞失败，心碎！");		    		
 		    									}
@@ -376,31 +399,35 @@ $(function() {
                     </c:if>
                 </div>
                 <div id="tools_favor">
-                	<c:if test="${userBean.id==aBean.author_id }">
+                <c:choose>
+                	<c:when test="${userBean.id==aBean.author_id }">
         				<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
-        			</c:if>
-        			<c:if test="${userBean.id!=aBean.author_id }">  
+        			</c:when>
+        			<c:when test="${userBean.id!=aBean.author_id }">  
         				<c:if test="${empty cBean }">  			
             				<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
             			</c:if> 
             			<c:if test="${not empty cBean }">  			
             				<img  id="favor" src="${cBean.cpic}" title="收藏"/>
             			</c:if> 
-            		</c:if>
-            		<c:if test="${empty userBean }">
+            		</c:when>
+            		<c:when test="${empty userBean }">
             			<img  id="favor" src="${pageContext.request.contextPath}/image/unfavor.png" title="收藏"/>
-            		</c:if>
+            		</c:when>
+            	</c:choose>
                     <span>收藏</span>
                     <span id="scollect">${aBean.collect_num }</span>                   
         			<!--收藏图标更换的js-->
         			<c:if test="${not empty userBean }">
+        				<%String id  = UUIDUtils.getId(); %>
 	                    <script type="text/javascript">
 	                    $('#favor').click(function(){  
+	                    	//生成收藏id
+	                    	<% String cid = UUIDUtils.getId(); request.setAttribute("cid", cid);%>
 	                            var article_id="${aBean.id}";//文章id
 	    						var author_id="${aBean.author_id}";//作者id
 	    						var user_id="${userBean.id}";//用户id
-	    						var id="${cBean.id}";//点赞id
-	    						var cNum=$("#scollect").text();//收藏数目
+	    						var id="${cid}";//收藏id
 	    						if(author_id != user_id){
 		                            if($('#favor').attr('src')=='${pageContext.request.contextPath}/image/unfavor.png'){  	    								
 		    							$.ajax({
@@ -411,7 +438,8 @@ $(function() {
 		    									"article_id" : article_id,
 			    								"author_id":author_id,
 			    								"user_id":user_id,
-			    								"cpic":"/ThreeBlog_V1.0/image/favor.png"
+			    								"cpic":"/ThreeBlog_V1.0/image/favor.png",
+			    								"id":id
 			    							},
 		    								error:function(){
 		    									alert("出错！");
@@ -420,7 +448,9 @@ $(function() {
 		    									if(data){
 		    										alert("收藏成功！"); 
 		    										$('#favor').attr('src','${pageContext.request.contextPath}/image/favor.png');
-		    										$("#scollect").text(cNum+1);
+		    										var cNum=$("#scollect").text();//收藏数目
+		    										cNum++;																											
+		    										$("#scollect").text(cNum);
 		    									}else{
 		    										alert("收藏失败，心碎！");	    										
 		    									}
@@ -444,7 +474,13 @@ $(function() {
 		    									if(data){
 		    										alert("你不喜欢吗？"); 
 		    										$('#favor').attr('src','${pageContext.request.contextPath}/image/unfavor.png');
-		    										$("#scollect").text(cNum-1);
+		    										var cNum=$("#scollect").text();//收藏数目
+		    										if (cNum>0) {
+		    											cNum--;														
+													} else {
+														cNum=0;	
+													}
+		    										$("#scollect").text(cNum);
 		    									}else{
 		    										alert("取消收藏失败，心碎！");	    										
 		    									}
@@ -466,19 +502,50 @@ $(function() {
                     </c:if>                   
         		</div>
                 <div id="tools_share">	
-                		<img src="${pageContext.request.contextPath}/image/share.png" id="share" onClick="copyLink();" title="分享">
+                		<img src="${pageContext.request.contextPath}/image/share.png" id="share" onClick="copyLink();" title="分享"  data-clipboard-text="">
         				<span>分享</span>
                         <!--分享js-->
-                        <script>
-                        	function copyLink(){
-								 var clipBoardContent="";
-								 clipBoardContent+=document.title;
-								 clipBoardContent+="";
-								 clipBoardContent+=this.location.href;
-								 window.clipboardData.setData("Text",clipBoardContent);
-								 alert("复制成功，请粘贴到你的QQ/WeChat上推荐给你的好友吧！");
-							}	
-                        </script>
+                        <script type="text/javascript">
+		                      //如果是ie8及其以下版本
+		                        function copyLink(){		
+		                           if(judge_ie()<=8&&judge_ie()!=null){
+		                    			 var url =  window.location.href;
+		                                 window.clipboardData.setData("Text",url);
+		                                 alert("你已经复制链接，赶快粘贴给好友吧！");
+		                           }else{
+		                                  //clipboard
+		                    			  //添加一个销毁之前事件的活动
+		                                var clipboard = new ClipboardJS('#share');
+		                                clipboard.on('success', function(e) {
+		                                alert('你已经复制链接，赶快粘贴给好友吧!');			 
+		                    			 e.clearSelection();
+		                    			 clipboard.destroy();
+		                               });
+		                               clipboard.on('error', function(e) {
+		                                alert('很遗憾，您的浏览器版本过低，复制失败，请手动复制链接！');
+		                               });
+		                           }
+		                    	   		   
+		                        }
+		                            
+		                        //判断是否是ie，及ie的版本
+		                        function judge_ie(){
+		                            var win = window;
+		                            var doc = win.document;
+		                            var input = doc.createElement ("input");
+		                            
+		                            var ie = (function (){
+		                                if (win.ActiveXObject === undefined) return null;
+		                                if (!win.XMLHttpRequest) return 6;
+		                                if (!doc.querySelector) return 7;
+		                                if (!doc.addEventListener) return 8;
+		                                if (!win.atob) return 9;
+		                                if (!input.dataset) return 10;
+		                                return 11;
+		                            })();
+		                            return ie;
+		                        }
+						    </script>
         		</div>
                 <div id="tools_report">
                 	<c:if test="${userBean.id!=aBean.author_id }">
@@ -525,50 +592,53 @@ $(function() {
 
 						<%
 							UserBean userBean =(UserBean)request.getSession().getAttribute("userBean");
-							ArticleBean aBean1=(ArticleBean)request.getSession().getAttribute("aBean");
+							ArticleBean aBean1=(ArticleBean)request.getAttribute("aBean");
 							String aid=aBean1.getId();//文章id
 							ArticleService aservice = new ArticleServiceImpl();
 							List<CommentBean> comments = aservice.getCommentsFromArticle_id(aid);
-							//SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//定义格式
+							SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//定义格式
 							if(!comments.isEmpty()){
 								for (int i = 0; i < comments.size(); i++) {
 									CommentBean comment = comments.get(i);
-									UserBean commenterBean = uService.findUserInfo(comment.getAuthor_id());									
+									request.setAttribute("comment", comment);
+									UserBean commenterBean = uService.findUserInfo(comment.getAuthor_id());	
+									request.setAttribute("commenterBean", commenterBean);
 						%>
 						<!--1-->
 						<div class="comment-show-con clearfix">
 							<!--这是头像div-->
 							<div class="comment-show-con-img pull-left">
-							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=comment.getAuthor_id()%>">
-								<img src="<%=commenterBean.getHead()%>" alt="">
+							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${comment.author_id}">
+								<img src="${commenterBean.head }" alt="">
 							</a>
 							</div>
                             <!--这是内容div-->
 							<div class="comment-show-con-list pull-left clearfix">
 								<div class="pl-text clearfix">
 									<!--用户名-->
-									<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=comment.getAuthor_id()%>" class="comment-size-name"
-										data="<%=comment.getId()%>"><%=commenterBean.getUsername()%> : </a>
+									<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${comment.author_id}" class="comment-size-name"
+										data="${comment.id }">${commenterBean.username}: </a>
 									<!--评论内容 -->
-									<%if(!comment.getStatus().equals("屏蔽")){ %>	
-									<span class="my-pl-con"><%=comment.getText()%></span>
-									<%}else{ %>
+									<c:if test="${comment.status != '屏蔽' }">						
+									<span class="my-pl-con">${comment.text}</span>
+									</c:if>
+									<c:if test="${comment.status == '屏蔽' }">
 									<span class="my-pl-con">该评论涉嫌违规内容，已被屏蔽！！</span>
-									<%} %>
+									</c:if>
 								</div>
 								<div class="date-dz">
-									<span class="date-dz-left pull-left comment-time"><%=comment.getAdd_time()%></span>
+									<span class="date-dz-left pull-left comment-time"><%=df.format(comment.getAdd_time())%></span>
 									<div class="date-dz-right pull-right comment-pl-block">
 										
 										<a href="javascript:;" class="removeBlock">举报</a>
-										<%if(commenterBean.getId()==userBean.getId() ){ %>
-										<a href="javascript:;" class="delete">删除</a>
-										<%} %>
+										<c:if test="${commenterBean.id==userBean.id }">
+											<a href="javascript:;" class="delete">删除</a>
+										</c:if>
 										<a href="javascript:;" class="date-dz-pl pl-hf pull-left">回复</a>
 										<span class="pull-left date-dz-line">|</span>
 										<!--赞-->
 										<a href="javascript:;" class="date-dz-z pull-left"><i
-											class="date-dz-z-click-red"></i>赞 (<i class="z-num"><%=comment.getZan() %></i>)</a>
+											class="date-dz-z-click-red"></i>赞 (<i class="z-num">${comment.zan}</i>)</a>
 									</div>
 									
 								</div>
@@ -581,46 +651,44 @@ $(function() {
 										List<AnswerBean> answers=aservice.getAnswersFromComment_id(comment.getId());
 										for(int j=0;j<answers.size();j++){
 											AnswerBean answer=answers.get(j);
+											request.setAttribute("answer", answer);
 											UserBean answerUBean=uService.findUserInfo(answer.getAuthor_id());
+											request.setAttribute("answerUBean", answerUBean);
 									%>
 
 									<div class="all-pl-con">
 										<div class="pl-text hfpl-text clearfix">
-											<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=<%=answer.getAuthor_id()%>" class="comment-size-name" data="<%=answer.getId()%>"><%=answerUBean.getUsername() %> : </a> 
-											
-											<%if(!answer.getStatus().equals("屏蔽")){ %>
-											<span class="my-pl-con"> &nbsp;<%=answer.getText() %></span>
-											<%}else{ %>
+											<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${answer.author_id}" class="comment-size-name" data="${answer.id }">${ answerUBean.username} : </a> 
+											<c:if test="${answer.status != '屏蔽' }">
+											<span class="my-pl-con"> &nbsp;${answer.text}</span>
+											</c:if>
+											<c:if test="${answer.status == '屏蔽' }">
 											<span class="my-pl-con"> &nbsp;该回复涉嫌违规内容，已被屏蔽！！</span>
-											<%} %>
+											</c:if>
 										</div>
 										<div class="date-dz">
-											<span class="date-dz-left pull-left comment-time"><%=answer.getAdd_time()%></span>
+											<span class="date-dz-left pull-left comment-time"><%=df.format(answer.getAdd_time())%></span>
 											<div class="date-dz-right pull-right comment-pl-block">
 												
 												<a href="javascript:;" class="removeBlock">举报</a>
-												<%if(answerUBean.getId()==userBean.getId()){ %>
+												<c:if test="${commenterBean.id==userBean.id }">
 												<a href="javascript:;" class="delete">删除</a>
-												<%} %>
+												</c:if>
 												<a href="javascript:;"
 													class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span
 													class="pull-left date-dz-line">|</span> <a
 													href="javascript:;" class="date-dz-z pull-left"> <i
-													class="date-dz-z-click-red"></i>赞 (<i class="z-num"><%=answer.getZan() %></i>)
+													class="date-dz-z-click-red"></i>赞 (<i class="z-num">${answer.zan}</i>
 												</a>
 											</div>
-						
                                     </div>
                                     <!-- 评论回复内容区域end -->	
 									</div>
-									<%} %>
+									<%}%>
 								</div>
 							</div>
 						</div>
-						<%
-							}
-							}
-						%>
+						<%}}%>
 					</div>
 				</div>
 
@@ -676,33 +744,13 @@ $(function() {
 													console.log(comment_id);
 													var add_time=result.add_time;
 													console.log(add_time);
-												    oHtml = 
-												    	'<div  class="comment-show-con clearfix" >
-												     				<div class="comment-show-con-img pull-left" >
-												     					<a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}">
-												     					<img src="${userBean.head}"</a>  alt="">
-												     				</div> 
-												     				<div class="comment-show-con-list pull-left clearfix">
-												     					<div class="pl-text clearfix"> 
-												     						<a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'+comment_id+'"><%=userBean.getUsername()%> : </a> 
-												     						<span class="my-pl-con">&nbsp;'+ oSize+ '</span> 
-												     					</div> 
-												     					<div class="date-dz"> 
-												     						<span class="date-dz-left pull-left comment-time">'+ add_time+ '</span> 
-												     					<div class="date-dz-right pull-right comment-pl-block">
-												     						<a href="javascript:;" class="removeBlock">举报</a>
-												     						<a href="javascript:;" class="delete">删除</a> 
-												     						<a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> 
-												     						<span class="pull-left date-dz-line">|</span> 
-												     						<a href="javascript:;" class="date-dz-z pull-left">
-												     							<i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)
-												     						</a> 
-												     					</div> 
-												     				</div>
-												     				<div class="hf-list-con"></div>
-												     			</div> 
-												     			</div>
-												     		';			
+												    oHtml ='<div  class="comment-show-con clearfix" ><div class="comment-show-con-img pull-left" ><a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}"><img src="${userBean.head}"</a>  alt=""></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'
+												     						+comment_id+
+												     						'">${userBean.username} : </a><span class="my-pl-con">&nbsp;'
+												     						+ oSize+ 
+												     						'</span></div><div class="date-dz"><span class="date-dz-left pull-left comment-time">'
+												     						+ add_time+
+												     						'</span><div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock">举报</a><a href="javascript:;" class="delete">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a></div></div><div class="hf-list-con"></div></div></div>';			
 												}
 											}); 
 											$.ajaxSettings.async = true;  
@@ -843,24 +891,13 @@ $(function() {
 																			console.log(answer_id);
 																			var add_time=result.add_time;
 																			console.log(add_time);
-																			oHtml= '<div class="all-pl-con">
-																						<div class="pl-text hfpl-text clearfix">
-																							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'+answer_id+'">${userBean.username} : </a>
-																							<span class="my-pl-con">'+ oAt+ '</span>
-																						</div>
-																						<div class="date-dz"> 
-																							<span class="date-dz-left pull-left comment-time">'+ add_time+ '</span> 
-																							<div class="date-dz-right pull-right comment-pl-block"> 
-																								<a href="javascript:;" class="removeBlock">举报</a>
-																								<a href="javascript:;" class="delete">删除</a>
-																								<a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> 
-																								<span class="pull-left date-dz-line">|</span> 
-																								<a href="javascript:;" class="date-dz-z pull-left">
-																									<i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)
-																								</a> 
-																							</div> 
-																						</div>
-																					</div>';
+																			oHtml= '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'
+																							+answer_id+
+																							'">${userBean.username} : </a><span class="my-pl-con">'
+																							+ oAt+ 
+																							'</span></div><div class="date-dz"><span class="date-dz-left pull-left comment-time">'
+																							+ add_time+ 
+																							'</span><div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock">举报</a><a href="javascript:;" class="delete">删除</a><a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a><span class="pull-left date-dz-line">|</span><a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a></div></div></div>';
 																			
 																	}     
 																}); 
@@ -1039,8 +1076,7 @@ $(function() {
 			<c:if test="${empty userBean }">
 				<script type="text/javascript">
 					$('.comment-show').on('click','.date-dz-z',function() {															
-							window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';
-							}								
+							window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';								
 					});
 				</script>
 			</c:if>

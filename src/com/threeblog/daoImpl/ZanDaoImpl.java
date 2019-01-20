@@ -33,15 +33,24 @@ public class ZanDaoImpl implements ZanDao {
 		String sql="select * from t_zan where sender_id = ? and article_id=?";
 		return runner.query(sql, new BeanHandler<ZanBean>(ZanBean.class),uid,id);
 	}
-
-	@Override
+	
+	//方法1：更新赞图标
+/*	@Override
 	public boolean UpdateArticleZan(ZanBean zan) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="update t_zan set zpic=? , type=? where id=?";
 		int result = runner.update(sql,zan.getZpic(),zan.getType(),zan.getId());  
 		return result>0;
+	}*/
+	//方法2：真删除点赞信息
+	@Override
+	public boolean UpdateArticleZan(ZanBean zan) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="delete from t_zan where id=?";
+		int result = runner.update(sql,zan.getId());  
+		return result>0;
 	}
-
+	
 	@Override
 	public boolean addCommentZan(ZanBean zanBean) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());

@@ -182,6 +182,7 @@ $(function() {
             <!--引入ckeditor-->
             <script type="text/javascript">CKEDITOR.replace('editor');</script>
         </div>
+         <p style="color:red">Tips：* 图片格式最大900 * 900 ！</p>
         <p style="color:red">Tips：* 请养成保存的好习惯，每次点击保存按钮，可保存10分钟哟！</p>
         <input  type="button" value="保存" id="publish_a_save" onclick="return save()">
         <input  type="submit" value="发表" id="publish_a_submit" onclick="return checkAll()">

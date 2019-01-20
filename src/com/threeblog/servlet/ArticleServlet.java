@@ -175,9 +175,9 @@ public class ArticleServlet extends BaseServlet {
 				ArticleBean aBean = aService.findArticle(id);
 				//通过类型id，取出类型信息
 				ArticleTypeBean aTypeBean = aService.findArticleType(id2);
-				//更新信息，保存到session中
-				request.getSession().setAttribute("aBean", aBean);
-				request.getSession().setAttribute("aTypeBean", aTypeBean);
+				//更新信息，将数据传到页面中
+				request.setAttribute("aBean", aBean);
+				request.setAttribute("aTypeBean", aTypeBean);
 				response.sendRedirect(request.getContextPath()+"/jsp/article/article.jsp?id="+id);
 				return null;
 			} else {
@@ -237,21 +237,12 @@ public class ArticleServlet extends BaseServlet {
 			String sender_id = request.getParameter("sender_id");//点赞者id
 			String text = request.getParameter("text");
 			String zpic=request.getParameter("zpic");
+			String id = request.getParameter("id");
 			
-			//通过文章id查找对应文章并将点赞数更新上去
 			ArticleService aService = new ArticleServiceImpl();
-			ArticleBean aBean = aService.findArticle(article_id);
-			int liked_num = aBean.getLiked_num();
-			liked_num+=1;
-			aService.updateLikedNumByAId(article_id, liked_num);
-			//取出更新后的值，存到session中
-			ArticleBean aBean2 = aService.findArticle(article_id);
-			request.getSession().setAttribute("aBean", aBean2);
 			
 			//将数据写进点赞表
 			ZanBean zan = new ZanBean();
-			//UUID生成点赞id
-			String id = UUIDUtils.getId();
 			String type="文章点赞";
 			//点赞时间
 			Date now=new Date();
@@ -268,6 +259,16 @@ public class ArticleServlet extends BaseServlet {
 			boolean result = aService.addArticleZan(zan);
 			if (result) {
 				//插入成功
+				
+				//通过文章id查找对应文章并将点赞数更新上去
+				ArticleBean aBean = aService.findArticle(article_id);
+				int liked_num = aBean.getLiked_num();
+				liked_num+=1;
+				aService.updateLikedNumByAId(article_id, liked_num);
+				//取出更新后的值，将数据传到页面中
+				ArticleBean aBean2 = aService.findArticle(article_id);
+				request.setAttribute("aBean", aBean2);
+				
 				//添加点赞消息
 				MessageBean message=new MessageBean();
 				//UUID生成消息id
@@ -287,9 +288,9 @@ public class ArticleServlet extends BaseServlet {
 				UserService uService = new UserServiceImpl();
 				uService.addMessage(message);
 				
-				//取出赞信息，存到session中
+				//取出赞信息，将数据传递到页面中
 				ZanBean zBean = aService.findArticleZan(id);
-				request.getSession().setAttribute("zBean", zBean);
+				request.setAttribute("zBean", zBean);
 				response.getWriter().println(true);
 			} else {
 				response.getWriter().println(false);	
@@ -304,15 +305,7 @@ public class ArticleServlet extends BaseServlet {
 			String id = request.getParameter("id");
 			String zpic=request.getParameter("zpic");
 			
-			//通过文章id查找对应文章并将点赞数更新上去
 			ArticleService aService = new ArticleServiceImpl();			
-			ArticleBean aBean = aService.findArticle(article_id);
-			int liked_num = aBean.getLiked_num();
-			liked_num-=1;
-			aService.updateLikedNumByAId(article_id, liked_num);
-			//取出更新后的值，存到session中
-			ArticleBean aBean2 = aService.findArticle(article_id);
-			request.getSession().setAttribute("aBean", aBean2);
 			
 			//将数据写进点赞表
 			ZanBean zan = new ZanBean();
@@ -325,9 +318,23 @@ public class ArticleServlet extends BaseServlet {
 			boolean result = aService.UpdateArticleZan(zan);
 			if (result) {
 				//更新成功
-				//取出赞信息，存到session中
+				
+				//通过文章id查找对应文章并将点赞数更新上去
+				ArticleBean aBean = aService.findArticle(article_id);
+				int liked_num = aBean.getLiked_num();
+				if (liked_num>0) {
+					liked_num-=1;
+				}else {
+					liked_num=0;
+				}			
+				aService.updateLikedNumByAId(article_id, liked_num);
+				//取出更新后的值，将数据传到页面中
+				ArticleBean aBean2 = aService.findArticle(article_id);
+				request.setAttribute("aBean", aBean2);
+				
+				//取出赞信息，将数据传到页面中                                                                
 				ZanBean zBean = aService.findArticleZan(id);
-				request.getSession().setAttribute("zBean", zBean);
+				request.setAttribute("zBean", zBean);
 				response.getWriter().println(true);
 			} else {
 				response.getWriter().println(false);	
@@ -342,22 +349,11 @@ public class ArticleServlet extends BaseServlet {
 			String author_id = request.getParameter("author_id");//作者id
 			String user_id = request.getParameter("user_id");//用户id
 			String cpic=request.getParameter("cpic");
+			String id = request.getParameter("id");
 			
-			//通过文章id查找对应文章并将收藏数更新上去
 			ArticleService aService = new ArticleServiceImpl();
-			ArticleBean aBean = aService.findArticle(article_id);
-			int collect_num = aBean.getCollect_num();
-			String text = aBean.getTitle();//文章标题
-			collect_num+=1;
-			aService.updateCollectNumByAId(article_id, collect_num);
-			//取出更新后的值，存到session中
-			ArticleBean aBean2 = aService.findArticle(article_id);
-			request.getSession().setAttribute("aBean", aBean2);
-			
 			//将数据写进收藏表
 			CollectBean collect=new CollectBean();
-			//UUID生成收藏id
-			String id = UUIDUtils.getId();
 			//收藏时间
 			Date now=new Date();
 			Date collect_date=new Date(now.getTime());
@@ -371,6 +367,16 @@ public class ArticleServlet extends BaseServlet {
 			boolean result = aService.addArticleCollect(collect);
 			if (result) {
 				//收藏成功
+				
+				//通过文章id查找对应文章并将收藏数更新上去				
+				ArticleBean aBean = aService.findArticle(article_id);
+				int collect_num = aBean.getCollect_num();
+				String text = aBean.getTitle();//文章标题
+				collect_num+=1;
+				aService.updateCollectNumByAId(article_id, collect_num);
+				//取出更新后的值，将数据传递到页面中
+				ArticleBean aBean2 = aService.findArticle(article_id);
+				request.setAttribute("aBean", aBean2);
 				
 				//添加收藏消息
 				MessageBean message=new MessageBean();
@@ -391,9 +397,9 @@ public class ArticleServlet extends BaseServlet {
 				UserService uService = new UserServiceImpl();
 				uService.addMessage(message);
 				
-				//取出收藏信息，存到session中
+				//取出收藏信息，将数据传递到页面中
 				CollectBean cBean = aService.findArticleCollect(id);
-				request.getSession().setAttribute("cBean", cBean);
+				request.setAttribute("cBean", cBean);
 				response.getWriter().println(true);
 			} else {
 				response.getWriter().println(false);	
@@ -407,16 +413,8 @@ public class ArticleServlet extends BaseServlet {
 			String article_id = request.getParameter("article_id");
 			String id = request.getParameter("id");
 			String cpic=request.getParameter("cpic");
-			
-			//通过文章id查找对应文章并将收藏数更新上去
+
 			ArticleService aService = new ArticleServiceImpl();
-			ArticleBean aBean = aService.findArticle(article_id);
-			int collect_num = aBean.getCollect_num();
-			collect_num-=1;
-			aService.updateCollectNumByAId(article_id, collect_num);
-			//取出更新后的值，存到session中
-			ArticleBean aBean2 = aService.findArticle(article_id);
-			request.getSession().setAttribute("aBean", aBean2);
 			
 			//将数据写进收藏表
 			CollectBean collect=new CollectBean();			
@@ -426,9 +424,23 @@ public class ArticleServlet extends BaseServlet {
 			boolean result = aService.UpdateArticleCollect(collect);
 			if (result) {
 				//更新成功
-				//取出赞信息，存到session中
+				
+				//通过文章id查找对应文章并将收藏数更新上去
+				ArticleBean aBean = aService.findArticle(article_id);
+				int collect_num = aBean.getCollect_num();
+				if (collect_num>0) {
+					collect_num-=1;				
+				} else {
+					collect_num=0;
+				}
+				aService.updateCollectNumByAId(article_id, collect_num);
+				//取出更新后的值，将数据传递到页面中
+				ArticleBean aBean2 = aService.findArticle(article_id);
+				request.setAttribute("aBean", aBean2);
+				
+				//取出赞信息，将数据传递到页面中
 				ZanBean zBean = aService.findArticleZan(id);
-				request.getSession().setAttribute("zBean", zBean);
+				request.setAttribute("zBean", zBean);
 				response.getWriter().println(true);
 			} else {
 				response.getWriter().println(false);	
