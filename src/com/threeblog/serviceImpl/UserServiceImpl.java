@@ -6,8 +6,10 @@ import java.sql.SQLException;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
+import com.threeblog.dao.FollowDao;
 import com.threeblog.dao.MessageDao;
 import com.threeblog.dao.UserDao;
+import com.threeblog.daoImpl.FollowDaoImpl;
 import com.threeblog.daoImpl.MessageDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
 import com.threeblog.domain.MessageBean;
@@ -95,6 +97,22 @@ public class UserServiceImpl implements UserService{
 		// 添加消息
 		MessageDao dao= new MessageDaoImpl();
 		dao.addMessage(message);
+	}
+
+	@Override
+	public Long countFollowing(String uid) throws SQLException {
+		// 通过用户id查找关注数
+		FollowDao dao = new FollowDaoImpl();
+		Long count = dao.countFollowing(uid);
+		return count;
+	}
+
+	@Override
+	public Long countFollower(String uid) throws SQLException {
+		// 通过用户id查找粉丝数
+		FollowDao dao = new FollowDaoImpl();
+		Long count = dao.countFollower(uid);
+		return count;
 	}
 
 }

@@ -2,6 +2,7 @@ package com.threeblog.dao;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
@@ -92,4 +93,122 @@ public interface ArticleDao {
 	 */
 	void updateCommentNumByAId(String article_id, int comment_num)throws SQLException;
 	
+	/**
+	 * 通过用户id，统计发表的博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countArticles(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id，统计发表的类型是默认分类的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countMArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是个人心情的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countGArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是杂乱无章的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countZArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是休闲娱乐的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countXArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是游戏漫画的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countYArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是旅游摄影的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countLArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是时尚美食的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countSArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是校园青春的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countQArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是媒体科技的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countKArticles(String uid,String type)throws SQLException;
+	/**
+	 * 通过用户id，统计发表的类型是体育健康的 博文数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countTArticles(String uid,String type)throws SQLException;
+	
+	/**
+	 * 通过用户id查找所有用户文章
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> getArticlesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过文章id删除文章
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deleteArticle(String id)throws SQLException;
+	
+	/**
+	 * 通过文章id找到对应文章类型
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	ArticleTypeBean getArticleTypeByAid(String id)throws SQLException;
+	
+	/**
+	 * 通过文章id删除文章类型
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deleteArticleType(String id)throws SQLException;
+	
+	/**
+	 * 通过用户id查找该用户文章发布的年
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List getAYearsfrom(String uid)throws SQLException;
 }

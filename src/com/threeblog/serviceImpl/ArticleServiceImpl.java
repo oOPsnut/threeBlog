@@ -293,5 +293,133 @@ public  class ArticleServiceImpl implements ArticleService {
 		ZanDao dao=new ZanDaoImpl();
 		dao.cancelAnswerZan(id, type2);				
 	}
+
+	@Override
+	public Long countArticles(String uid) throws SQLException {
+		// 通过用户id，统计发表的博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countArticles(uid);
+		return count;
+	}
+
+	@Override
+	public Long countMArticles(String uid,String type) throws SQLException {
+		// 通过用户id，统计发表的类型是默认分类的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countMArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countGArticles(String uid,String type) throws SQLException {
+		//通过用户id，统计发表的类型是个人心情的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countGArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countZArticles(String uid,String type) throws SQLException {
+		// 通过用户id，统计发表的类型是杂乱无章的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countZArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countXArticles(String uid,String type) throws SQLException {
+		// 通过用户id，统计发表的类型是休闲娱乐的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countXArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countYArticles(String uid,String type) throws SQLException {
+		// 通过用户id，统计发表的类型是游戏漫画的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countYArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countLArticles(String uid,String type) throws SQLException {
+		// 通过用户id，统计发表的类型是旅游摄影的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countLArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countSArticles(String uid,String type) throws SQLException {
+		//通过用户id，统计发表的类型是时尚美食的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countSArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countQArticles(String uid,String type) throws SQLException {
+		// 通过用户id，统计发表的类型是校园青春的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countQArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countKArticles(String uid,String type) throws SQLException {
+		//通过用户id，统计发表的类型是媒体科技的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countKArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public Long countTArticles(String uid,String type) throws SQLException {
+		//通过用户id，统计发表的类型是体育健康的 博文数
+		ArticleDao dao =new ArticleDaoImpl();
+		Long count = dao.countTArticles(uid,type);
+		return count;
+	}
+
+	@Override
+	public List<ArticleBean> getArticlesByUid(String uid) throws SQLException {
+		// 通过用户id查找所有用户文章
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> list = dao.getArticlesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public boolean deleteArticle(String id) throws SQLException {
+		// 通过文章id删除文章
+		ArticleDao dao = new ArticleDaoImpl();
+		boolean result = dao.deleteArticle(id);
+		return result;
+	}
+
+	@Override
+	public ArticleTypeBean getArticleTypeByAid(String id) throws SQLException {
+		//  通过文章id找到对应文章类型
+		ArticleDao dao = new ArticleDaoImpl();
+		ArticleTypeBean atBean = dao.getArticleTypeByAid(id);
+		return atBean;
+	}
+
+	@Override
+	public boolean deleteArticleType(String id) throws SQLException {
+		// 通过文章id删除文章类型
+		ArticleDao dao = new ArticleDaoImpl();
+		boolean r = dao.deleteArticleType(id);
+		return r;
+	}
+
+	@Override
+	public List getAYearsfrom(String uid) throws SQLException {
+		// 通过用户id查找该用户文章发布的年
+		ArticleDao dao = new ArticleDaoImpl();
+		List list = dao.getAYearsfrom(uid);
+		return list;
+	}
 	
 }

@@ -446,4 +446,27 @@ public class ArticleServlet extends BaseServlet {
 				response.getWriter().println(false);	
 			}								
 		}		
+				
+		//删除文章
+		public void DeleteArticle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+			
+			//获取数据
+			String id = request.getParameter("id");//文章id
+			
+			//调用服务删除文章
+			ArticleService aService = new ArticleServiceImpl();
+			//先把文章类型删了
+			boolean r = aService.deleteArticleType(id);
+			if (r) {
+				//再删除文章
+				boolean result = aService.deleteArticle(id);
+				if (result) {
+					response.getWriter().println(true);
+				} else {
+					response.getWriter().println(false);
+				}				
+			} else {
+				response.getWriter().println(false);
+			}
+		}
 }
