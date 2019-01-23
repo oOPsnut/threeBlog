@@ -1,3 +1,9 @@
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.*"%>
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -10,219 +16,104 @@
 </head>
 
 <body>
-
         <!--介绍栏右侧-->
         <div id="introduce_right">
+        <%
+        	UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
+        	String uid = userBean.getId();
+        	UserService uService = new UserServiceImpl();
+        	ArticleService aService = new ArticleServiceImpl();
+        	List<CollectBean> collects = aService.getCollectByUid(uid);
+        	if(collects.isEmpty()){
+        %>
+        	
+        		<div class="introduce_right_articles">
+            		<p style="margin-top: 120px; margin-left: 250px;"><strong>还没有收藏过文章！</strong></p>
+            	</div>                 
+        
+        <% 	}else{
+        		for(int i = 0; i <collects.size();i++){
+        		 	CollectBean collect =collects.get(i);
+        		 	String id =  collect.getAuthor_id();//作者id
+        			String aid=collect.getArticle_id();//文章id
+        			ArticleBean aBean = aService.findArticle(aid);//文章信息
+        			UserBean uBean =  uService.findUserInfo(id);//作者信息
+        			ArticleTypeBean atBean =  aService.getArticleTypeByAid(aid);//文章类型信息
+        			request.setAttribute("cBean", collect);
+        			request.setAttribute("aBean", aBean);
+        			request.setAttribute("uBean", uBean);
+        			request.setAttribute("atBean", atBean);
+        %>
+        	<c:if test="${aBean.status=='正常'|| aBean.status=='举报中'}">
         	<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，小鬼</span></a> 
-                    <span><a href="#">删除</a></span>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title }</span></a> 
+                    <span><a href="javascript:;" onclick="deleteArticle('${cBean.id}')">删除</a></span>
+                    <script type="text/javascript">
+                    	function deleteArticle(id) {
+                    		var cid=id;//收藏id
+                    		var aid="${aBean.id}";
+							var s = confirm("你确定要删除此收藏吗？");
+							if (s) {
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/ArticleServlet?method=UpdateArticleCollect" ,//目标地址
+									data:{
+										"id":cid,
+										"cpic":"/ThreeBlog_V1.0/image/favor.png",
+										"article_id":aid
+									},
+									error:function(){
+										alert("出错！请联系管理员！");
+									},
+									success:function(data){
+										if (data) {
+											alert("删除成功！");
+											window.location.reload();
+										} else {
+											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
+											window.location.reload();
+										}
+									}
+								});
+							}
+						}
+                    </script>
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank">${aBean.author}</a>
+                        <span>${aBean.publish_date }</span>
+                        <span>分类 ： </span><strong>${atBean.article_type}</strong>
+                        <span>标签 ： </span><a href="#">&lt;${aBean.label }&gt;</a>
                     </div>
                 </div>
                 <!--文章middle-->
                 <div class="r_articles_middle">
                 	<div align="center">
-                    <img src="${pageContext.request.contextPath}/image/pic3.jpg">
+                    <img src="${aBean.cover}">
                     </div>
                     <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
+                   		 ${aBean.text }
                     </div>
                 </div>
                 <!--文章down-->
                 <div class="r_articles_down" align="center">
                 	<table>
                     	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
+                        	<td><strong>阅读 ：</strong> <span>${aBean.click_num }</span></td>
+                            <td><strong>评论 ：</strong> <span>${aBean.comment_num }</span></td>
+                            <td><strong>收藏 ： </strong><span>${aBean.collect_num }</span></td>
+                            <td id="down_td"><strong>喜欢 ： </strong><span>${aBean.liked_num}</span></td>
                         </tr>
                     </table>
                 </div>
             </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <span><a href="#">删除</a></span>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">父母</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="${pageContext.request.contextPath}/image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <span><a href="#">删除</a></span>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">父母</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="${pageContext.request.contextPath}/image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <span><a href="#">删除</a></span>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">父母</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="${pageContext.request.contextPath}/image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <span><a href="#">删除</a></span>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">父母</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="${pageContext.request.contextPath}/image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <span><a href="#">删除</a></span>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">父母</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="${pageContext.request.contextPath}/image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+           </c:if>
+            <%}}%>
+            
+            
+            
             
         </div>
 <!--内容end-->

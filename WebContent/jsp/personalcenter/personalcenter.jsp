@@ -1,3 +1,4 @@
+<%@page import="java.util.Date"%>
 <%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
 <%@page import="java.util.Arrays"%>
 <%@page import="java.util.List"%>
@@ -290,24 +291,40 @@ $(function() {
         	<input type="hidden" id="hid7" value="${countQArticle}" /> 
         	<input type="hidden" id="hid8" value="${countKArticle}" /> 
         	<input type="hidden" id="hid9" value="${countTArticle}" /> 
+        	
+   			<%
+           		List<Object[]> years = aService.getAYearsfrom(uid);
+				String start="2019-01-01 00:00:00";
+				String end="2019-12-31 23:59:59";   
+				int y2019 =  Integer.valueOf( aService.countAByYears(uid,start,end).toString());
+				request.setAttribute("y2019", y2019);
+				String start1="2018-01-01 00:00:00";
+				String end1="2018-12-31 23:59:59";   
+				int y2018 =  Integer.valueOf( aService.countAByYears(uid,start1,end1).toString());
+				request.setAttribute("y2018", y2018);   			             			
+               %>
+        	
             <!--日期归档-->
         	<div id="introduce_left_years">
               	<h4>█ 日期归档</h4>
-                <ul>
-                	<%
-                		List<Object[]> years = aService.getAYearsfrom(uid);
-                		//System.out.println(Arrays.toString(years));                		
-                		if(!years.isEmpty()){
-                			for(Object[]year : years){
-                    			System.out.println(year[0]);
-                    		}
-                		}
-                	%>
-                	<li><a href="javascript:;" onclick="myPubT(2019)">2020年</a></li><br>
-                	<li><a href="javascript:;" onclick="myPubT(2019)">2019年</a></li><br>
-                    <li><a href="javascript:;" onclick="myPubT(2018)">2018年</a></li><br>
+                <ul id="years_ul">               	
+                    <li><a href="javascript:;" onclick="myPubT(2019)">2019年(${y2019})</a></li><br>
+                    <li><a href="javascript:;" onclick="myPubT(2018)">2018年(${y2018})</a></li><br>
                     <li><a href="javascript:;" onclick="myPubT(0)">第一条博文</a></li><br>
                 </ul>
+                <!-- 动态创建日期列表 -->
+                <script type="text/javascript">
+							var currentDate=new Date();
+							var currentYear=currentDate.getFullYear();//获取当前年份
+							var currentHtml='<li><a href="javascript:;" onclick="myPubT('+currentYear+')">'+currentYear+'年</a></li><br>';
+							var years_ul=document.getElementById("years_ul").innerHTML;
+							if (years_ul.toString().indexOf(currentYear)>-1) {
+								
+							}else {
+								$("#years_ul").append(currentHtml);
+							}
+						
+                    </script>
         	</div>
         </div>
         <!--介绍栏右侧-->

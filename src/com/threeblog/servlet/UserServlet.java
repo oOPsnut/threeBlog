@@ -40,7 +40,8 @@ public class UserServlet extends BaseServlet {
 	
 	//固定字符串（md5key）用于注册、登陆、自动登陆、修改密码
 	private static final String md5Key = "iwXq4MLs1L";
-	//private static final String md5KeyR = "y7rl1klIeH";
+	//前端加密字段
+	private static final String md5KeyR = "y7rl1klIeH";
 	
 	//用户注册
 	public String UserRegister(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -334,7 +335,7 @@ public class UserServlet extends BaseServlet {
 		return null;
 	}
 	
-	//修改密码
+	//修改密码（忘记密码）
 	public String changePasswd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			
 			//接受表单参数
@@ -463,6 +464,70 @@ public class UserServlet extends BaseServlet {
 					return null;
 			}
 	}
-	
 
+	//检测原密码是否一致
+	public void checkOldPasswd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			//检测密码是否一致
+			String oldpasswd = request.getParameter("oldpasswd");
+			String phone = request.getParameter("phone");
+			//System.out.println(oldpasswd+"++"+phone);
+			
+			//加密对比
+			//String oldPmd5 = oldpasswd+md5KeyR;//第一次加密（前端拼凑）
+			//String oldPmd5R = Md5StringUtils.getMD5Str(oldPmd5+md5Key,null);//第二次加密（前端加密）
+			String password = Md5StringUtils.getMD5Str(oldpasswd+md5Key,null);//第三次加密（后端加密）
+			System.out.println(password);
+			
+			UserService userService=new UserServiceImpl();
+			boolean opisSame = userService.checkOldPasswd(phone,password);;			
+			
+			//通知页面
+			if (opisSame) {
+				response.getWriter().println(true);//原密码一致
+			}else {
+				response.getWriter().println(false);//原密码不一致
+				//response.getWriter().println(1);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}	
+
+	//修改密码（更改密码）
+	public String changePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//接受表单参数
+		String phone = request.getParameter("hid");
+		String fpassword = request.getParameter("newPasswd1");
+		//System.out.println(phone+"++"+fpassword);
+		
+		UserBean user=new UserBean();
+		//MD5加密
+		String password = Md5StringUtils.getMD5Str(fpassword+md5Key,null);	
+		
+		//调用业务层修改密码
+		UserService userService=new UserServiceImpl();
+		try {
+			//修改成功，跳转到登录页
+			boolean result = userService.changePasswd(phone,password);
+			if (result) {
+//				response.setContentType("text/html;charset=utf-8");
+//				response.getWriter().println("<script>alert('修改密码成功，将自动返回登录页面')</script>");
+				return "/jsp/login/login.jsp";
+			}else {
+				//修改失败，跳转到提示页面
+//				response.setContentType("text/html;charset=utf-8");
+//				response.getWriter().print("<script>alert('修改密码失败！')</script>");
+				return "/jsp/error/error.jsp";
+			}
+		} catch (Exception e) {
+			//修改失败，跳转到提示页面
+//			response.setContentType("text/html;charset=utf-8");
+//			response.getWriter().print("<script>alert('未知错误！')</script>");
+			return "/jsp/error/error.jsp";
+		}
+	}
 }

@@ -211,4 +211,22 @@ public interface ArticleDao {
 	 * @throws SQLException
 	 */
 	List getAYearsfrom(String uid)throws SQLException;
+	
+	/**
+	 * 通过作者id和时间找到某个时间范围文章数
+	 * @param uid
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countAByYears(String uid,String start,String end)throws SQLException;
+	
+	/**
+	 * 通过用户id找到用户第一篇文章
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	ArticleBean getFirstArticlesByUid(String id)throws SQLException;
 }

@@ -96,6 +96,15 @@ public class UserDaoImpl implements UserDao{
 		return runner.query(sql, new BeanHandler<UserBean>(UserBean.class),id);
 	}
 
+	@Override
+	public boolean checkOldPasswd(String phone, String password) throws SQLException {
+		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
+		//SELECT * FROM t_user WHERE phone='12345678901' AND PASSWORD='0e02fdf3dd182ebd95c16f1f105a354f'
+		String sql="SELECT count(*) FROM t_user WHERE phone=? AND PASSWORD=?";
+		Long reslut = (Long)runner.query(sql, new ScalarHandler(),phone,password);
+		return reslut>0;
+	}
+
 	
 	
 }

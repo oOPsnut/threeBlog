@@ -421,5 +421,29 @@ public  class ArticleServiceImpl implements ArticleService {
 		List list = dao.getAYearsfrom(uid);
 		return list;
 	}
+
+	@Override
+	public Long countAByYears(String uid, String start, String end) throws SQLException {
+		// 通过作者id和时间找到某个时间范围文章数
+		ArticleDao dao = new ArticleDaoImpl();
+		Long count = dao.countAByYears(uid, start, end);
+		return count;
+	}
+
+	@Override
+	public ArticleBean getFirstArticlesByUid(String id) throws SQLException {
+		// 通过用户id找到用户第一篇文章
+		ArticleDao dao = new ArticleDaoImpl();
+		ArticleBean aBean = dao.getFirstArticlesByUid(id);
+		return aBean;
+	}
+
+	@Override
+	public List<CollectBean> getCollectByUid(String uid) throws SQLException {
+		// 通过用户id找到改用户所有收藏信息
+		CollectDao dao =new CollectDaoImpl();
+		List<CollectBean> list = dao.getCollectByUid(uid);
+		return list;
+	}
 	
 }

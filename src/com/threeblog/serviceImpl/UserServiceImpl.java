@@ -115,4 +115,12 @@ public class UserServiceImpl implements UserService{
 		return count;
 	}
 
+	@Override
+	public boolean checkOldPasswd(String phone, String password) throws SQLException {
+		//通过用户电话和用户原密码检测原密码是否一致
+		UserDao dao  = new UserDaoImpl();
+		boolean result = dao.checkOldPasswd(phone, password);
+		return result;
+	}
+
 }

@@ -1,11 +1,14 @@
 package com.threeblog.daoImpl;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import com.threeblog.dao.CollectDao;
+import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.CollectBean;
 import com.threeblog.domain.ZanBean;
 import com.threeblog.util.JDBCUtil;
@@ -50,6 +53,13 @@ public class CollectDaoImpl implements CollectDao {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="select * from t_collect where user_id = ? and article_id=?";
 		return runner.query(sql, new BeanHandler<CollectBean>(CollectBean.class),uid,id);
+	}
+
+	@Override
+	public List<CollectBean> getCollectByUid(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select * from t_collect where user_id=? order by collect_date DESC";
+		return runner.query(sql,new BeanListHandler<CollectBean>(CollectBean.class),uid);
 	}
 
 }

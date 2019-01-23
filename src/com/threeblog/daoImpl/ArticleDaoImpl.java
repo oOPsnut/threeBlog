@@ -220,6 +220,24 @@ public class ArticleDaoImpl implements ArticleDao {
 		return runner.query(sql, new ArrayListHandler(),uid);
 	}
 
+	@Override
+	public Long countAByYears(String uid, String start, String end) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//SELECT COUNT(publish_date) AS y2019 FROM t_article WHERE publish_date LIKE '2018%' AND author_id='72C5BA19E0C1431BA25D74E9B0D47647'
+		String sql="SELECT COUNT(publish_date) AS year FROM t_article WHERE publish_date >=? AND publish_date <= ? AND author_id=? ";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),start,end,uid);
+		return count;
+	}
+
+	@Override
+	public ArticleBean getFirstArticlesByUid(String id) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//select * from t_article where publish_date>'2019-01-01 00:00:00' and publish_date<'2019-12-31 23:59:59' and author_id='72C5BA19E0C1431BA25D74E9B0D47647'
+		//select * from t_article where publish_date like '2019%' and author_id='72C5BA19E0C1431BA25D74E9B0D47647'
+		String sql="select * from t_article where author_id=? order by publish_date ASC limit 1";
+		return runner.query(sql,new BeanHandler<ArticleBean>(ArticleBean.class),id);
+	}
+
 
 
 	

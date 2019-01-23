@@ -78,4 +78,13 @@ public interface UserDao {
 	 * @throws SQLException
 	 */
 	UserBean findUserInfo(String id)throws SQLException;
+	
+	/**
+	 * 通过用户电话和用户原密码检测原密码是否一致
+	 * @param phone
+	 * @param password
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean checkOldPasswd(String phone, String password)throws SQLException;
 }

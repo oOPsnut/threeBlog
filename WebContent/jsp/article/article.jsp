@@ -9,89 +9,49 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% 
-	//判断是否存在aBean、aTypeBean，存在：表示是自己发表的。不存在：表示别人点击进来的
-	ArticleBean aBean = (ArticleBean)request.getAttribute("aBean");
-	ArticleTypeBean aTypeBean = (ArticleTypeBean)request.getAttribute("aTypeBean");
-	String author_id=null;
-	int click_num;
-	Date pub_time=null;
-	if(aBean!=null && aTypeBean!=null){
-		//从aBean中取文章id、作者id、文章点击次数
-		String id = aBean.getId();
-		author_id= aBean.getAuthor_id();	
-		click_num=aBean.getClick_num();	
-		pub_time = aBean.getPublish_date();
-		//更新点击量
-		click_num+=1;
-		ArticleService aService = new ArticleServiceImpl();
-		aService.updateClickNumByAId(id,click_num);
-		ArticleBean aBean3 = aService.findArticle(id);
-		//找上一篇和下一篇的id
-		ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
-		ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
-		//判断为空,不为空则取出
-		if(last_aBean!=null){request.setAttribute("last_aBean", last_aBean);}
-		if(next_aBean!=null){request.setAttribute("next_aBean", next_aBean);}
-		//从userBean中取用户id
-		UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
-		String uid = userBean.getId();
-		//查找用户与赞的关系表
-		ZanBean zBean = aService.findAZan(uid, id);
-		request.setAttribute("zBean", zBean);
-		//查找用户与收藏的关系表
-		CollectBean cBean = aService.findACollect(uid, id);
-		request.setAttribute("cBean", cBean);
-		//将本篇存在session中
-		request.setAttribute("aBean", aBean3);
-		//从aTypeBean中取文章类型
-		String article_Type = aTypeBean.getArticle_type();		
-	}else{  
-		//从地址栏获取文章id
-		String id =  request.getQueryString().substring(3);
-		//通过文章id获取作者id
-		ArticleService aService = new ArticleServiceImpl();
-		ArticleBean aBean2 =  aService.findArticle(id);
-		if(aBean2!=null){
-			author_id = aBean2.getAuthor_id();
-			click_num = aBean2.getClick_num();
-			pub_time =  aBean2.getPublish_date();
-			//更新点击量
-			click_num+=1;
-			aService.updateClickNumByAId(id,click_num);
-			ArticleBean aBean4 =  aService.findArticle(id);
-			//通过文章id获取文章类型
-			ArticleTypeBean aTypeBean2 = aService.findArticleType(id);
-			//找上一篇和下一篇的id
-			ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
-			ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
-			//判断为空,不为空则取出
-			if(last_aBean!=null){request.setAttribute("last_aBean", last_aBean);}
-			if(next_aBean!=null){request.setAttribute("next_aBean", next_aBean);}
-			//将上一篇、下一篇和本文章信息和文章类型取出
-			request.setAttribute("aBean", aBean4);
-			request.setAttribute("aTypeBean", aTypeBean2);
-			//从userBean中取用户id
-			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
-			if(userBean!=null){
-				String uid = userBean.getId();
-				//查找用户与赞的关系表
-				ZanBean zBean = aService.findAZan(uid, id);
-				request.setAttribute("zBean", zBean);
-				//查找用户与收藏的关系表
-				CollectBean cBean = aService.findACollect(uid, id);
-				request.setAttribute("cBean", cBean);
-			}			
-		}else{
-			//文章id不存在
-			response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
-		}
-	}
-	//通过作者id取作者的头像、名字
-	UserService uService = new UserServiceImpl();
-	UserBean author = uService.findUserInfo(author_id);
-	//将作者的信息取出
-	request.setAttribute("author", author);
-%>
+			UserService uService = new UserServiceImpl();
+			//从地址栏获取文章id
+			String id =  request.getQueryString().substring(3);
+			//通过文章id获取作者id
+			ArticleService aService = new ArticleServiceImpl();
+			ArticleBean aBean =  aService.findArticle(id);
+			if(aBean!=null){
+				String author_id = aBean.getAuthor_id();
+				int click_num = aBean.getClick_num();
+				Date pub_time =  aBean.getPublish_date();
+				//更新点击量
+				click_num+=1;
+				aService.updateClickNumByAId(id,click_num);
+				ArticleBean aBean4 =  aService.findArticle(id);
+				
+				//通过作者id取作者的头像、名字
+				UserBean author = uService.findUserInfo(author_id);
+				//将作者的信息取出
+				request.setAttribute("author", author);
+				
+				//通过文章id获取文章类型
+				ArticleTypeBean aTypeBean = aService.findArticleType(id);
+				//找上一篇和下一篇的id
+				ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
+				ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);
+				//判断为空,不为空则取出
+				if(last_aBean!=null){request.setAttribute("last_aBean", last_aBean);}
+				if(next_aBean!=null){request.setAttribute("next_aBean", next_aBean);}
+				//将上一篇、下一篇和本文章信息和文章类型取出
+				request.setAttribute("aBean", aBean4);
+				request.setAttribute("aTypeBean", aTypeBean);
+				//从userBean中取用户id
+				UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
+				if(userBean!=null){
+					String uid = userBean.getId();
+					//查找用户与赞的关系表
+					ZanBean zBean = aService.findAZan(uid, id);
+					request.setAttribute("zBean", zBean);
+					//查找用户与收藏的关系表
+					CollectBean cBean = aService.findACollect(uid, id);
+					request.setAttribute("cBean", cBean);
+				}
+		%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -243,6 +203,7 @@ $(function() {
 </div>
 </div>
 <!--顶端栏end-->
+		
 <!--内容begin-->
 <div id="article_all">
 	<div id="article_all_content">
@@ -419,7 +380,7 @@ $(function() {
                     <span id="scollect">${aBean.collect_num }</span>                   
         			<!--收藏图标更换的js-->
         			<c:if test="${not empty userBean }">
-        				<%String id  = UUIDUtils.getId(); %>
+        				<%-- <%String id  = UUIDUtils.getId(); %> --%>
 	                    <script type="text/javascript">
 	                    $('#favor').click(function(){  
 	                    	//生成收藏id
@@ -548,21 +509,23 @@ $(function() {
 						    </script>
         		</div>
                 <div id="tools_report">
-                	<c:if test="${userBean.id!=aBean.author_id }">
-        				<a href="${pageContext.request.contextPath}/reportcenter/report_article.jsp?id=${aBean.id}">
-	        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
-	        				<span>举报</span>
-        				</a>
-        			</c:if>	
-        			<c:if test="${userBean.id==aBean.author_id }">       				
-	        			<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报" onclick="reportA()">
-	        			<span>举报</span>
-        				<script type="text/javascript">
-        					function reportA() {
-								alert("别闹，不能举报自己的文章哟！");
-							}
-        				</script>
-        			</c:if>	
+                	<c:if test="${not empty userBean }">
+	                	<c:if test="${userBean.id!=aBean.author_id }">
+	        				<a href="${pageContext.request.contextPath}/reportcenter/report_article.jsp?id=${aBean.id}">
+		        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
+		        				<span>举报</span>
+	        				</a>
+	        			</c:if>	
+	        			<c:if test="${userBean.id==aBean.author_id }">       				
+		        			<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报" onclick="reportA()">
+		        			<span>举报</span>
+	        				<script type="text/javascript">
+	        					function reportA() {
+									alert("别闹，不能举报自己的文章哟！");
+								}
+	        				</script>
+	        			</c:if>	
+        			</c:if>
         			<c:if test="${empty userBean }">
         				<a href="${pageContext.request.contextPath}/RedirectServlet?method=LoginUI">
 	        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
@@ -591,7 +554,7 @@ $(function() {
 					<div class="comment-show">
 
 						<%
-							UserBean userBean =(UserBean)request.getSession().getAttribute("userBean");
+							//UserBean userBean =(UserBean)request.getSession().getAttribute("userBean");
 							ArticleBean aBean1=(ArticleBean)request.getAttribute("aBean");
 							String aid=aBean1.getId();//文章id
 							ArticleService aservice = new ArticleServiceImpl();
@@ -1084,6 +1047,13 @@ $(function() {
     </div>	
 </div>
 <!--内容end-->
+			<%
+				}else{
+					//文章id不存在
+					response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+					//request.getRequestDispatcher("/jsp/error/error.jsp").forward(request,response);
+				}
+			%>
 <!--置顶框begin-->
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/toTop.js"></script>
 <!--置顶框end-->

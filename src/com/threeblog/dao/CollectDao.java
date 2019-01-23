@@ -1,6 +1,7 @@
 package com.threeblog.dao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.threeblog.domain.CollectBean;
 
@@ -43,4 +44,12 @@ public interface CollectDao {
 	 * @throws SQLException
 	 */
 	CollectBean findACollect(String uid,String id)throws SQLException;
+	
+	/**
+	 * 通过用户id找到改用户所有收藏信息
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<CollectBean> getCollectByUid(String uid)throws SQLException;
 }

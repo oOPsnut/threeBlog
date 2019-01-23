@@ -23,6 +23,8 @@
 		request.setAttribute("at", at);
 		String flag =  request.getParameter("flag");
 		request.setAttribute("flag", flag);
+		String year =  request.getParameter("time");
+		request.setAttribute("year", year);
 		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
 		String uid = userBean.getId();//用户id
 		//在博文表查找自己的所有博文及其信息，listBean（按照时间降序）
@@ -30,11 +32,9 @@
 		List<ArticleBean> aBeans =	aService.getArticlesByUid(uid);
 		if(aBeans.isEmpty()){
 		%>
-			<div id="introduce_right">
         		<div class="introduce_right_articles">
             		<p style="margin-top: 120px; margin-left: 250px;"><strong>还没有发表过文章！</strong></p>
-            	</div>                 
-        	</div>		
+            	</div>                      		
 		<% 
 		}else{
 			for(int i = 0; i < aBeans.size();i++){
@@ -52,7 +52,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -117,7 +117,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -182,7 +182,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -247,7 +247,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -312,7 +312,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -377,7 +377,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -442,7 +442,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -507,7 +507,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -572,7 +572,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -637,7 +637,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -702,7 +702,7 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><span>${aBean.title}</span></a> 
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
                     <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
                     <script type="text/javascript">
                     	function deleteArticle(id) {
@@ -762,7 +762,137 @@
                 </div>
             </div>
             </c:if>
-            	 
+				<!--2018年-->
+            	<c:if test="${year=='2018'&& aBean.publish_date<='2018-12-31 23:59:59'&& aBean.publish_date>='2018-01-01 00:00:00'}">
+        		<div class="introduce_right_articles">
+            	<!--文章up-->
+            	<div class="r_articles_top">
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
+                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
+                    <script type="text/javascript">
+                    	function deleteArticle(id) {
+                    		var aid=id;//文章id
+							var s = confirm("你确定要删除此文章吗？");
+							if (s) {
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
+									data:{"id":aid},
+									error:function(){
+										alert("出错！请联系管理员！");
+									},
+									success:function(data){
+										if (data) {
+											alert("删除成功！");
+											window.location.reload();
+										} else {
+											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
+											window.location.reload();
+										}
+									}
+								});
+							}
+						}
+                    </script>
+                    <div class="r_articles_top_l">
+                    	<%
+                    		
+                    	%>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                        <span>${aBean.publish_date}</span>
+                        <span>分类 ： </span><strong>${atBean.article_type}</strong>
+                        <span>标签 ： </span><a href="#">&lt;${aBean.label }&gt;</a>
+                    </div>
+                </div>
+                <!--文章middle-->
+                <div class="r_articles_middle">
+                	<div align="center">
+                    <img src="${aBean.cover }">
+                    </div>
+                    <div id="r_articles_middle_w" align="center">
+                  		 ${aBean.text }
+                    </div>
+                </div>
+                <!--文章down-->
+                <div class="r_articles_down" align="center">
+                	<table>
+                    	<tr>
+                        	<td><strong>阅读 ：</strong> <span>${aBean.click_num }</span></td>
+                            <td><strong>评论 ：</strong> <span>${aBean.comment_num }</span></td>
+                            <td><strong>收藏 ： </strong><span>${aBean.collect_num }</span></td>
+                            <td id="down_td"><strong>喜欢 ： </strong><span>${aBean.liked_num}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </c:if>
+				 <!--2019年-->
+            	<c:if test="${year=='2019'&& aBean.publish_date<='2019-12-31 23:59:59'&& aBean.publish_date>='2019-01-01 00:00:00'}">
+        		<div class="introduce_right_articles">
+            	<!--文章up-->
+            	<div class="r_articles_top">
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
+                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
+                    <script type="text/javascript">
+                    	function deleteArticle(id) {
+                    		var aid=id;//文章id
+							var s = confirm("你确定要删除此文章吗？");
+							if (s) {
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
+									data:{"id":aid},
+									error:function(){
+										alert("出错！请联系管理员！");
+									},
+									success:function(data){
+										if (data) {
+											alert("删除成功！");
+											window.location.reload();
+										} else {
+											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
+											window.location.reload();
+										}
+									}
+								});
+							}
+						}
+                    </script>
+                    <div class="r_articles_top_l">
+                    	<%
+                    		
+                    	%>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                        <span>${aBean.publish_date}</span>
+                        <span>分类 ： </span><strong>${atBean.article_type}</strong>
+                        <span>标签 ： </span><a href="#">&lt;${aBean.label }&gt;</a>
+                    </div>
+                </div>
+                <!--文章middle-->
+                <div class="r_articles_middle">
+                	<div align="center">
+                    <img src="${aBean.cover }">
+                    </div>
+                    <div id="r_articles_middle_w" align="center">
+                  		 ${aBean.text }
+                    </div>
+                </div>
+                <!--文章down-->
+                <div class="r_articles_down" align="center">
+                	<table>
+                    	<tr>
+                        	<td><strong>阅读 ：</strong> <span>${aBean.click_num }</span></td>
+                            <td><strong>评论 ：</strong> <span>${aBean.comment_num }</span></td>
+                            <td><strong>收藏 ： </strong><span>${aBean.collect_num }</span></td>
+                            <td id="down_td"><strong>喜欢 ： </strong><span>${aBean.liked_num}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </c:if>           	 
+            	
             </c:if>         
            <%}} %>
            <!-- 点击的类型文章数目为0 -->
@@ -771,6 +901,76 @@
             		<p style="margin-top: 120px; margin-left: 250px;"><strong>还没有发表过此类文章！</strong></p>
             	</div>                 	
            </c:if>
+   				 <%
+             	 	ArticleBean aBeanF = aService.getFirstArticlesByUid(uid);
+             		String idF = aBeanF.getId();
+             		ArticleTypeBean atBeanF =  aService.getArticleTypeByAid(idF);
+     				request.setAttribute("atBeanF", atBeanF);
+             		request.setAttribute("aBeanF", aBeanF);
+             	%>
+           <!--第一条博文-->         
+            	<c:if test="${year=='0'}">
+        		<div class="introduce_right_articles">
+            	<!--文章up-->
+            	<div class="r_articles_top">
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBeanF.id}" target="_blank"><span>${aBeanF.title}</span></a> 
+                    <span><a href="javascript:;" onclick="deleteArticle('${aBeanF.id}')">删除</a></span>
+                    <script type="text/javascript">
+                    	function deleteArticle(id) {
+                    		var aid=id;//文章id
+							var s = confirm("你确定要删除此文章吗？");
+							if (s) {
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
+									data:{"id":aid},
+									error:function(){
+										alert("出错！请联系管理员！");
+									},
+									success:function(data){
+										if (data) {
+											alert("删除成功！");
+											window.location.reload();
+										} else {
+											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
+											window.location.reload();
+										}
+									}
+								});
+							}
+						}
+                    </script>
+                    <div class="r_articles_top_l">
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                        <span>${aBeanF.publish_date}</span>
+                        <span>分类 ： </span><strong>${atBeanF.article_type}</strong>
+                        <span>标签 ： </span><a href="#">&lt;${aBeanF.label }&gt;</a>
+                    </div>
+                </div>
+                <!--文章middle-->
+                <div class="r_articles_middle">
+                	<div align="center">
+                    <img src="${aBeanF.cover }">
+                    </div>
+                    <div id="r_articles_middle_w" align="center">
+                  		 ${aBeanF.text }
+                    </div>
+                </div>
+                <!--文章down-->
+                <div class="r_articles_down" align="center">
+                	<table>
+                    	<tr>
+                        	<td><strong>阅读 ：</strong> <span>${aBeanF.click_num }</span></td>
+                            <td><strong>评论 ：</strong> <span>${aBeanF.comment_num }</span></td>
+                            <td><strong>收藏 ： </strong><span>${aBeanF.collect_num }</span></td>
+                            <td id="down_td"><strong>喜欢 ： </strong><span>${aBeanF.liked_num}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            </c:if>
+           
         </div>
 </body>
 </html>

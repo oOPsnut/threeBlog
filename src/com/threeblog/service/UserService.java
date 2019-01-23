@@ -101,4 +101,13 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	Long countFollower(String uid)throws SQLException;
+
+	/**
+	 * 通过用户电话和用户原密码检测原密码是否一致
+	 * @param phone
+	 * @param password
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean checkOldPasswd(String phone, String password)throws SQLException;
 }

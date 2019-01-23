@@ -101,12 +101,12 @@
 	}
 	//我的博文时间排序
 	function myPubT(obj){
-		if(obj==1){
-			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp");	
+		if(obj==2019){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?time=2019");	
 		}else if(obj==2018){
 			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?time=2018");	
 		}else if(obj==0){
-			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp");	
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?time=0");	
 		}
 				
 	}
