@@ -16,12 +16,12 @@
 
 	//我的关注
 	function myFollowing() {
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_fans.jsp");		
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_follow.jsp");		
 	}
 
 	//我的粉丝
 	function myFollower() {
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_follow.jsp");		
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_fans.jsp");		
 	}
 	
 	//我的博文类别

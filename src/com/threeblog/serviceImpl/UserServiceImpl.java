@@ -2,6 +2,7 @@ package com.threeblog.serviceImpl;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -12,6 +13,7 @@ import com.threeblog.dao.UserDao;
 import com.threeblog.daoImpl.FollowDaoImpl;
 import com.threeblog.daoImpl.MessageDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
+import com.threeblog.domain.FollowBean;
 import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.UserService;
@@ -120,6 +122,46 @@ public class UserServiceImpl implements UserService{
 		//通过用户电话和用户原密码检测原密码是否一致
 		UserDao dao  = new UserDaoImpl();
 		boolean result = dao.checkOldPasswd(phone, password);
+		return result;
+	}
+
+	@Override
+	public List<FollowBean> getFollowingsByUid(String uid) throws SQLException {
+		// 通过用户id查找关注的用户
+		FollowDao dao = new FollowDaoImpl();
+		List<FollowBean> list=dao.getFollowingsByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<FollowBean> getFollowersByUid(String uid) throws SQLException {
+		// 通过用户id查找粉丝
+		FollowDao dao = new FollowDaoImpl();
+		List<FollowBean> list=dao.getFollowersByUid(uid);
+		return list;
+	}
+
+	@Override
+	public boolean findFollowStatus(String id1, String id2) throws SQLException {
+		// 判断两用户关注状态
+		FollowDao dao = new FollowDaoImpl();
+		boolean r = dao.findFollowStatus(id1, id2);
+		return r;
+	}
+
+	@Override
+	public boolean addFollow(FollowBean follow) throws SQLException {
+		// 添加关注
+		FollowDao dao = new FollowDaoImpl();
+		boolean result = dao.addFollow(follow);
+		return result;
+	}
+
+	@Override
+	public boolean cancelFollow(String following_id, String follower_id)throws SQLException {
+		// 取消关注
+		FollowDao dao = new FollowDaoImpl();
+		boolean result = dao.cancelFollow(following_id,follower_id);
 		return result;
 	}
 

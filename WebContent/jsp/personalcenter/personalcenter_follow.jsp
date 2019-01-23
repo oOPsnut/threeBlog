@@ -1,7 +1,7 @@
+<%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.*"%>
 <%@page import="com.threeblog.service.*"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     <%@page import="com.threeblog.domain.*"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -15,159 +15,63 @@
 <body>
         <!--介绍栏右侧-->
         <div id="introduce_right">
+       	 	<!--粉丝/关注列表-->
+        	<div class="introduce_right_f">
+            	<!--列表up-->
+            	<div class="r_f_top">
+                	<a href="javascript:;"><span>全部关注</span></a>
+                    <span id="r_f_top_span">|</span>
+                </div>
         	<%
         		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
         		String uid = userBean.getId();
         		UserService uService = new UserServiceImpl();
-        		
+        		ArticleService aService = new ArticleServiceImpl();
+        		List<FollowBean> follows = uService.getFollowingsByUid(uid);
+        		if(follows.isEmpty()){   		
         	%>
-        	<!--粉丝/关注列表-->
-        	<div class="introduce_right_f">
-            	<!--列表up-->
-            	<div class="r_f_top">
-                	<a href="#"><span>全部粉丝</span></a>
-                    <span id="r_f_top_span">|</span>
+        		<!--列表middle-->
+                <div class="r_f_middle">
+                	<p style="margin-top: 40px; margin-left: 230px;"><strong>还没有关注过用户！</strong></p>
                 </div>
+        		
+        	<%
+        		}else{
+        			for(int i = 0; i <follows.size();i++) {
+        				FollowBean follow = follows.get(i); 
+        				String followerId = follow.getFollower_id();//关注的用户的id
+        				UserBean followerBean =  uService.findUserInfo(followerId);//关注的用户的信息
+        				request.setAttribute("fBean", followerBean);
+        				int countArticle =  Integer.valueOf( aService.countArticles(followerId).toString());//关注用户的文章数
+        				int countFollowing =  Integer.valueOf(uService.countFollowing(followerId).toString());//关注用户的关注数目
+                		int countFollower =  Integer.valueOf(uService.countFollower(followerId).toString());//关注用户的粉丝数目
+                		request.setAttribute("countArticle", countArticle);
+                		request.setAttribute("countFollowing", countFollowing);
+                		request.setAttribute("countFollower", countFollower);
+        	%>      	
                 <!--列表middle-->
                 <div class="r_f_middle">
                 	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head.png"></a>
+                    	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><img src="${fBean.head}"></a>
                     </div>
                    	<div class="r_f_m_right">
-                    	<a href="#"><span>Jane</span></a>
+                    	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><span>${fBean.username}</span></a>
                         <br>
                         <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
+                        	<span>博文</span><span>${countArticle}</span>
                             <span>|</span>
-                            <span>关注</span><span>12</span>
+                            <span>关注</span><span>${countFollowing}</span>
                             <span>|</span>
-                            <span>粉丝</span><span>12</span>
+                            <span>粉丝</span><span>${countFollower}</span>
                         </div>
                         <div class="r_f_m_right_shortintroduce">
                         <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
+                        <span>▷${fBean.introduction }</span>
                         </div>
                     </div>
                 </div>
-                <div class="r_f_middle">
-                	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head1.png"></a>
-                    </div>
-                   	<div class="r_f_m_right">
-                    	<a href="#"><span>Jane</span></a>
-                        <br>
-                        <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
-                            <span>|</span>
-                            <span>关注</span><span>12</span>
-                            <span>|</span>
-                            <span>粉丝</span><span>12</span>
-                        </div>
-                        <div class="r_f_m_right_shortintroduce">
-                        <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="r_f_middle">
-                	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head1.png"></a>
-                    </div>
-                   	<div class="r_f_m_right">
-                    	<a href="#"><span>CAT</span></a>
-                        <br>
-                        <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
-                            <span>|</span>
-                            <span>关注</span><span>12</span>
-                            <span>|</span>
-                            <span>粉丝</span><span>12</span>
-                        </div>
-                        <div class="r_f_m_right_shortintroduce">
-                        <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="r_f_middle">
-                	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head.png"></a>
-                    </div>
-                   	<div class="r_f_m_right">
-                    	<a href="#"><span>mimi</span></a>
-                        <br>
-                        <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
-                            <span>|</span>
-                            <span>关注</span><span>12</span>
-                            <span>|</span>
-                            <span>粉丝</span><span>12</span>
-                        </div>
-                        <div class="r_f_m_right_shortintroduce">
-                        <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
-                        </div>
-                    </div>
-                </div><div class="r_f_middle">
-                	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head1.png"></a>
-                    </div>
-                   	<div class="r_f_m_right">
-                    	<a href="#"><span>Tom</span></a>
-                        <br>
-                        <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
-                            <span>|</span>
-                            <span>关注</span><span>12</span>
-                            <span>|</span>
-                            <span>粉丝</span><span>12</span>
-                        </div>
-                        <div class="r_f_m_right_shortintroduce">
-                        <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="r_f_middle">
-                	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head.png"></a>
-                    </div>
-                   	<div class="r_f_m_right">
-                    	<a href="#"><span>Tom</span></a>
-                        <br>
-                        <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
-                            <span>|</span>
-                            <span>关注</span><span>12</span>
-                            <span>|</span>
-                            <span>粉丝</span><span>12</span>
-                        </div>
-                        <div class="r_f_m_right_shortintroduce">
-                        <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="r_f_middle">
-                	<div class="r_f_m_left">
-                    	<a href="#"><img src="image/head1.png"></a>
-                    </div>
-                   	<div class="r_f_m_right">
-                    	<a href="#"><span>Tom</span></a>
-                        <br>
-                        <div class="r_f_m_right_total">
-                        	<span>博文</span><span>12</span>
-                            <span>|</span>
-                            <span>关注</span><span>12</span>
-                            <span>|</span>
-                            <span>粉丝</span><span>12</span>
-                        </div>
-                        <div class="r_f_m_right_shortintroduce">
-                        <span><strong>个人简介 : </strong></span>
-                        <span>超喜欢吃西红柿的小伙子！是个程序员，爱打代码，你说怎么办？</span>
-                        </div>
-                    </div>
-                </div>
+                
+                <%}} %>
                 
             </div>
             

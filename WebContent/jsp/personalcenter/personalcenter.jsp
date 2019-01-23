@@ -245,7 +245,7 @@ $(function() {
                         <td class="total_td">
                         <a href="javascript:;" onclick="myFollower()">
                         <span>粉丝</span>
-                        <strong>${countFollower }</strong>
+                        <strong>${countFollower}</strong>
                         </a>
                         </td>
                     </tr>

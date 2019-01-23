@@ -2,7 +2,9 @@ package com.threeblog.service;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
+import com.threeblog.domain.FollowBean;
 import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
 
@@ -110,4 +112,45 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	boolean checkOldPasswd(String phone, String password)throws SQLException;
+	
+	/**
+	 * 通过用户id查找关注的用户
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<FollowBean> getFollowingsByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id查找粉丝
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<FollowBean> getFollowersByUid(String uid)throws SQLException;
+	
+	/**
+	 * 判断两用户关注状态
+	 * @param id1
+	 * @param id2
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean findFollowStatus(String id1,String id2)throws SQLException;
+
+	/**
+	 * 添加关注
+	 * @param follow
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addFollow(FollowBean follow)throws SQLException;
+
+	/**
+	 * 取消关注
+	 * @param following_id
+	 * @param follower_id
+	 * @return
+	 */
+	boolean cancelFollow(String following_id, String follower_id)throws SQLException;
 }

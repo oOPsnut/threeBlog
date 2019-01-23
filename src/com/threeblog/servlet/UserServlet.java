@@ -23,6 +23,8 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import com.threeblog.base.BaseServlet;
 import com.threeblog.domain.ArticleBean;
+import com.threeblog.domain.FollowBean;
+import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.UserService;
 import com.threeblog.serviceImpl.UserServiceImpl;
@@ -514,20 +516,100 @@ public class UserServlet extends BaseServlet {
 			//修改成功，跳转到登录页
 			boolean result = userService.changePasswd(phone,password);
 			if (result) {
-//				response.setContentType("text/html;charset=utf-8");
-//				response.getWriter().println("<script>alert('修改密码成功，将自动返回登录页面')</script>");
 				return "/jsp/login/login.jsp";
 			}else {
 				//修改失败，跳转到提示页面
-//				response.setContentType("text/html;charset=utf-8");
-//				response.getWriter().print("<script>alert('修改密码失败！')</script>");
 				return "/jsp/error/error.jsp";
 			}
 		} catch (Exception e) {
 			//修改失败，跳转到提示页面
-//			response.setContentType("text/html;charset=utf-8");
-//			response.getWriter().print("<script>alert('未知错误！')</script>");
 			return "/jsp/error/error.jsp";
+		}
+	}
+	
+	//添加关注
+	public void addFollow(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//接受表单参数
+		String following_id = request.getParameter("following_id");
+		String follower_id = request.getParameter("follower_id");
+		String text1 = request.getParameter("text1");
+		String text2 = request.getParameter("text2");
+		System.out.println(following_id+"++"+follower_id+"++"+text1+"++"+text2);
+		
+		//UUID生成关注id
+		String id = UUIDUtils.getId();
+		//创建添加关注时间
+		Date now=new Date();
+		Date follow_date=new Date(now.getTime());	
+		
+		FollowBean follow = new FollowBean();
+		follow.setId(id);
+		follow.setFollowing_id(following_id);
+		follow.setFollower_id(follower_id);
+		follow.setFollow_date(follow_date);
+		
+		//调用业务层
+		UserService uService=new UserServiceImpl();
+		try {
+			boolean result = uService.addFollow(follow);
+			if (result) {
+				//添加成功			
+				//添加消息
+				MessageBean message=new MessageBean();
+				//UUID生成消息id
+				String id1 = UUIDUtils.getId();
+				//生成类型
+				String type="用户关注";
+				//生成文章id(由于关注不涉及文章id，所以文章id统一用：FollowNoArticleID)
+				String article_id="FollowNoArticleID";
+				message.setId(id1);
+				message.setType(type);
+				message.setReceiver_id(follower_id);
+				message.setAnswer_id(following_id);
+				message.setArticle_id(article_id);
+				message.setText1(text1);
+				message.setText2(text2);
+				message.setAdd_time(follow_date);
+				uService.addMessage(message);
+				
+				//将结果返回前端
+				response.getWriter().println(true);
+			}else {
+				//添加失败
+				response.getWriter().println(false);
+			}
+		} catch (Exception e) {
+			//出错
+			e.printStackTrace();
+		}
+	}
+	
+	//取消关注
+	public void cancelFollow(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//接受表单参数
+		String following_id = request.getParameter("following_id");
+		String follower_id = request.getParameter("follower_id");
+		System.out.println(following_id+"++"+follower_id);
+				
+		
+		//调用业务层
+		UserService userService=new UserServiceImpl();
+		try {
+			boolean result = userService.cancelFollow(following_id,follower_id);
+			if (result) {
+				//取消成功
+				//将结果返回前端
+				response.getWriter().println(true);
+			}else {
+				//取消失败
+				//将结果返回前端
+				response.getWriter().println(false);
+			}
+		} catch (Exception e) {
+			//出错
+			e.printStackTrace();
 		}
 	}
 }
