@@ -225,7 +225,7 @@ $(function() {
            	</c:if>
                         <span>${aBean.publish_date}</span>
                         <span>分类 : </span><span><strong>${aTypeBean.article_type }</strong></span>
-                        <span>标签 : </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" id="article_a_up_a">&lt;${aBean.label}&gt;</a>
+                        <span>标签 : </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" id="article_a_up_a"  target="_blank">&lt;${aBean.label}&gt;</a>
                         <span>阅读 : </span><span>${aBean.click_num}</span>
             </div>
         </div>

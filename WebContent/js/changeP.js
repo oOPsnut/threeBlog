@@ -7,9 +7,122 @@ function clickfollow(){
 	}	
 }
 
-//js获取地址栏的id
+/*//js获取地址栏的id
 function getQueryString(name){
     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
     var r = window.location.search.substr(1).match(reg);
     if(r!=null)return  unescape(r[2]); return null;
+}*/
+
+var uid=$("#hid").val();
+
+//默认所有博文
+function taChangeP(){
+	$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=all",{"uid":uid});
+}
+//ta的收藏
+function taCollect(){
+	$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taCollect.jsp",{"uid":uid});		
+}
+
+//ta的博文
+function taHome(){
+	$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=all",{"uid":uid});		
+}
+
+//ta的关注
+function taFollowing() {
+	$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_follow.jsp",{"uid":uid});		
+}
+
+//ta的粉丝
+function taFollower() {
+	$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_fans.jsp",{"uid":uid});		
+}
+
+//ta的博文类别
+function taPub(obj){
+	var M=$("#hid0").val();
+	var G=$("#hid1").val();
+	var Z=$("#hid2").val();
+	var X=$("#hid3").val();
+	var Y=$("#hid4").val();
+	var L=$("#hid5").val();
+	var S=$("#hid6").val();
+	var Q=$("#hid7").val();
+	var K=$("#hid8").val();
+	var T=$("#hid9").val();
+	if(obj==1){
+		if(M>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=m&flag=1",{"uid":uid});		    		
+    	}else{
+    		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=m&flag=0",{"uid":uid});
+    	}			
+	}else if(obj==2){
+		if(G>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=g&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=g&flag=0",{"uid":uid});	
+    	}
+	}else if(obj==3){
+		if(Z>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=z&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=z&flag=0",{"uid":uid});		
+    	}
+	}else if(obj==4){
+		if(X>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=x&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=x&flag=0",{"uid":uid});		
+    	}	
+	}else if(obj==5){
+		if(Y>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=y&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=y&flag=0",{"uid":uid});		
+    	}
+	}else if(obj==6){
+		if(L>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=l&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=l&flag=0",{"uid":uid});		
+    	}	
+	}else if(obj==7){
+		if(S>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=s&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=s&flag=0",{"uid":uid});		
+    	}	
+	}else if(obj==8){
+		if(Q>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=q&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=q&flag=0",{"uid":uid});		
+    	}
+	}else if(obj==9){
+		if(K>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=k&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=k&flag=0",{"uid":uid});		
+    	}
+	}else if(obj==0){
+		if(T>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=t&flag=1",{"uid":uid});	
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=t&flag=0",{"uid":uid});		
+    	}	
+	}
+			
+}
+//ta的博文时间排序
+function taPubT(obj){
+	if(obj==2019){
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2019",{"uid":uid});	
+	}else if(obj==2018){
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2018",{"uid":uid});	
+	}else if(obj==0){
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=0",{"uid":uid});	
+	}
+			
 }

@@ -1,17 +1,21 @@
 <%@page import="com.threeblog.domain.*"%>
+<%@page import="java.util.Date"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="java.util.Arrays"%>
+<%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.*"%>
 <%@page import="com.threeblog.service.*"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%   	
-    	//作者是指此个人中心的用户
+    	//作者是指此中心的用户
  		//从地址栏获取作者id
 		String uid =  request.getQueryString().substring(3);
+    	System.out.println(uid);
     	UserService uService = new UserServiceImpl();
     	UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
     	request.setAttribute("uBean", uBean);
-    	UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
+    	UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");//本登录用户
     	if(userBean!=null){
     		String id =  userBean.getId();//登录用户id
         	boolean following = uService.findFollowStatus(id,uid);//用户有没有关注作者
@@ -44,13 +48,9 @@
 <title>${uBean.username}的主页</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
-
-<link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/class.js"></script>
 <script src="${pageContext.request.contextPath}/js/MsgBox.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script src="${pageContext.request.contextPath}/js/changeP.js"></script>
 <!--头部show的js-->
 <script>
@@ -82,7 +82,7 @@ $(function() {
 
 </head>
 
-<body>
+<body onload="taChangeP()">
 <!--顶端栏begin-->
 <div id="index_head">
   <div id="index_head_logo"> <img src="${pageContext.request.contextPath}/image/logo.png"> </div>
@@ -279,9 +279,9 @@ $(function() {
         <!--导航栏-->
         <div id="othercenter_lead">
         	<ul>
-            	<li><span>Ta的主页</span></li>
-                <li><span>Ta的收藏</span></li>
-                <li><span>Ta的相册</span></li>
+            	<li><a href="javascript:;" onclick="taHome()"><span>Ta的主页</span></a></li>
+                <li><a href="javascript:;" onclick="taCollect()"><span>Ta的收藏</span></a></li>
+                <li><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter_ablum.jsp?id=${uBean.id}"><span>Ta的相册</span></a></li>
             </ul>
         </div>
         <!--介绍栏左侧-->
@@ -289,25 +289,63 @@ $(function() {
         <!--统计-->
         <div id="introduce_left">
         	<div id="introduce_left_total">
-            	
+            	<%	
+            		ArticleService  aService = new ArticleServiceImpl();          		
+            		String Mtype="默认分类";
+            		String Gtype="个人心情";
+            		String Ztype="杂乱无章";
+            		String Xtype="休闲娱乐";
+            		String Ytype="游戏漫画";
+            		String Ltype="旅游摄影";
+            		String Stype="时尚美食";
+            		String Qtype="校园青春";
+            		String Ktype="媒体科技";
+            		String Ttype="体育健康";
+            		int countArticle =  Integer.valueOf( aService.countArticles(uid).toString());//全部文章
+            		int countMArticle =  Integer.valueOf( aService.countMArticles(uid,Mtype).toString());//默认分类
+            		int countGArticle =  Integer.valueOf( aService.countGArticles(uid,Gtype).toString());//个人心情
+            		int countZArticle =  Integer.valueOf( aService.countZArticles(uid,Ztype).toString());//杂乱无章
+            		int countXArticle =  Integer.valueOf( aService.countXArticles(uid,Xtype).toString());//休闲娱乐
+            		int countYArticle =  Integer.valueOf( aService.countYArticles(uid,Ytype).toString());//游戏漫画
+            		int countLArticle =  Integer.valueOf( aService.countLArticles(uid,Ltype).toString());//旅游摄影
+            		int countSArticle =  Integer.valueOf( aService.countSArticles(uid,Stype).toString());//时尚美食
+            		int countQArticle =  Integer.valueOf( aService.countQArticles(uid,Qtype).toString());//校园青春
+            		int countKArticle =  Integer.valueOf( aService.countKArticles(uid,Ktype).toString());//媒体科技
+            		int countTArticle =  Integer.valueOf( aService.countTArticles(uid,Ttype).toString());//体育健康
+            		request.setAttribute("countArticle", countArticle);
+            		request.setAttribute("countMArticle", countMArticle);
+            		request.setAttribute("countGArticle", countGArticle);
+            		request.setAttribute("countZArticle", countZArticle);
+            		request.setAttribute("countXArticle", countXArticle);
+            		request.setAttribute("countYArticle", countYArticle);
+            		request.setAttribute("countLArticle", countLArticle);
+            		request.setAttribute("countSArticle", countSArticle);
+            		request.setAttribute("countQArticle", countQArticle);
+            		request.setAttribute("countKArticle", countKArticle);
+            		request.setAttribute("countTArticle", countTArticle);
+            		int countFollowing =  Integer.valueOf(uService.countFollowing(uid).toString());//关注
+            		int countFollower =  Integer.valueOf(uService.countFollower(uid).toString());//粉丝
+            		request.setAttribute("countFollowing", countFollowing);
+            		request.setAttribute("countFollower", countFollower);
+            %>
             	<table>
                 	<tr>
                     	<td class="total_td">
-                        <a href="#">
+                        <a href="javascript:;" onclick="taHome()">
                         <span>博文</span>
-                        <strong >56</strong>
+                        <strong>${countArticle}</strong>
                         </a>
                         </td>
                         <td class="total_td" id="total_td">
-                        <a href="#">
+                        <a href="javascript:;" onclick="taFollowing()">
                         <span>关注</span>
-                        <strong>152</strong>
+                        <strong>${countFollowing}</strong>
                         </a>
                         </td>
                         <td class="total_td">
-                        <a href="#">
+                        <a href="javascript:;" onclick="taFollower()">
                         <span>粉丝</span>
-                        <strong>45625</strong>
+                        <strong>${countFollower}</strong>
                         </a>
                         </td>
                     </tr>
@@ -316,239 +354,83 @@ $(function() {
         	<!--个人信息-->
         	<div id="introduce_left_info_other">					
         	<ul>
-            <li><img src="image/sex.png"><span>男</span></li>
-            <li><img src="image/years_old.png" ><span >20</span></li>
-            <li><img src="image/register_time.png" ><span >2018-05-18</span></li>
-            <li><img src="image/location.png" > <span >广东省韶关市</span></li>
+            <li><img src="${pageContext.request.contextPath}/image/sex.png"><span>${uBean.sex }</span></li>
+            <li><img src="${pageContext.request.contextPath}/image/years_old.png" ><span >${uBean.age}</span></li>
+            <li><img src="${pageContext.request.contextPath}/image/register_time.png" ><span >${uBean.register_time }</span></li>
+            <li><img src="${pageContext.request.contextPath}/image/location.png" > <span >${uBean.province }-${uBean.city }</span></li>
             </ul>
               </div>
         	<!--博文分类-->
         	<div id="introduce_left_classify">
               	<span>█ 博文分类</span>
                 <ul>
-                	<li><a href="#">全部博文(4)</a></li><br>
-                    <li><a href="#">默认分类(2)</a></li><br>
-                    <li><a href="#">游戏(2)</a></li><br>
+                	<li><a href="javascript:;" onclick="taHome()">全部博文(${countArticle})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPub(1)">默认分类(${countMArticle})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPub(2)">个人心情(${countGArticle})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPub(3)">杂乱无章(${countZArticle})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPub(4)">休闲 & 娱乐(${countXArticle})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPub(5)">游戏 & 漫画(${countYArticle})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPub(6)">旅游 & 摄影(${countLArticle})</a></li><br>
+                  	<li><a href="javascript:;" onclick="taPub(7)">时尚 & 美食(${countSArticle})</a></li><br>
+                  	<li><a href="javascript:;" onclick="taPub(8)">校园 & 青春(${countQArticle})</a></li><br>
+                  	<li><a href="javascript:;" onclick="taPub(9)">媒体 & 科技(${countKArticle})</a></li><br>
+                  	<li><a href="javascript:;" onclick="taPub(0)">体育 & 健康(${countTArticle})</a></li><br>
                 </ul>
         	</div>
+        	<input type="hidden" id="hid" value="${uBean.id}" />
+        	<input type="hidden" id="hid0" value="${countMArticle}" /> 
+        	<input type="hidden" id="hid1" value="${countGArticle}" /> 
+        	<input type="hidden" id="hid2" value="${countZArticle}" /> 
+        	<input type="hidden" id="hid3" value="${countXArticle}" /> 
+        	<input type="hidden" id="hid4" value="${countYArticle}" /> 
+        	<input type="hidden" id="hid5" value="${countLArticle}" /> 
+        	<input type="hidden" id="hid6" value="${countSArticle}" /> 
+        	<input type="hidden" id="hid7" value="${countQArticle}" /> 
+        	<input type="hidden" id="hid8" value="${countKArticle}" /> 
+        	<input type="hidden" id="hid9" value="${countTArticle}" /> 
+        	
+        	<%
+           		List<Object[]> years = aService.getAYearsfrom(uid);
+				String start="2019-01-01 00:00:00";
+				String end="2019-12-31 23:59:59";   
+				int y2019 =  Integer.valueOf( aService.countAByYears(uid,start,end).toString());
+				request.setAttribute("y2019", y2019);
+				String start1="2018-01-01 00:00:00";
+				String end1="2018-12-31 23:59:59";   
+				int y2018 =  Integer.valueOf( aService.countAByYears(uid,start1,end1).toString());
+				request.setAttribute("y2018", y2018);   
+				String start2="2020-01-01 00:00:00";
+				String end2="2020-12-31 23:59:59";   
+				int y2020 =  Integer.valueOf( aService.countAByYears(uid,start2,end2).toString());
+				request.setAttribute("y2020", y2020);
+               %>
             <!--日期归档-->
         	<div id="introduce_left_years">
               	<h4>█ 日期归档</h4>
                 <ul>
-                	<li><a href="#">最近(4)</a></li><br>
-                    <li><a href="#">2018年(2)</a></li><br>
-                    <li><a href="#">2017年(2)</a></li><br>
-                    <li><a href="#">第一条博文</a></li><br>
+                	<<li><a href="javascript:;" onclick="taPubT(2019)">2019年(${y2019})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPubT(2018)">2018年(${y2018})</a></li><br>
+                    <li><a href="javascript:;" onclick="taPubT(0)">第一条博文</a></li><br>
                 </ul>
+                <!-- 动态创建日期列表 -->
+                <script type="text/javascript">
+							var currentDate=new Date();
+							var currentYear=currentDate.getFullYear();//获取当前年份
+							var currentHtml='<li><a href="javascript:;" onclick="myPubT('+currentYear+')">'+currentYear+'年(${y2020})</a></li><br>';
+							var years_ul=document.getElementById("years_ul").innerHTML;
+							if (years_ul.toString().indexOf(currentYear)>-1) {
+								
+							}else {
+								$("#years_ul").append(currentHtml);
+							}						
+                 </script>
         	</div>
         </div>
         <!--介绍栏右侧-->
-        <div id="introduce_right">
-        	<div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="introduce_right_articles">
-            	<!--文章up-->
-            	<div class="r_articles_top">
-                	<a href="#"><span>闹心的孩子千遍一律，智慧的父母万里挑一</span></a> 
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="#">oopx</a>
-                        <span>2018-10-02 18:41</span>
-                        <span>分类 ： </span><a href="#">默认分类</a>
-                        <span>标签 ： </span><a href="#">&lt;父母&gt;</a>
-                    </div>
-                </div>
-                <!--文章middle-->
-                <div class="r_articles_middle">
-                	<div align="center">
-                    <img src="image/pic3.jpg">
-                    </div>
-                    <div id="r_articles_middle_w" align="center">
-                    <p>我小时候在农村长大，村里的娱乐活动不多，大人们盘腿坐在炕上打麻将，我就坐小板凳上写作业，成绩基本稳定在全校前十。全村都夸我爹妈运气好，白捡了个好孩子。后来我家有了二胎，妹妹学习不太好，大家担心她考本科都悬，我妈仍然一意孤行地执行“放养”策略。结果我妹一路逆袭，现在模拟考试的名次已经在考入985/211水平。
-
-每次我妈向别人夸耀，说自己特别会带孩子，我内心就吐槽，你会啥啊，就会打麻将吧。后来慢慢读了一些养育孩子的书，发现我妈“农村妇女”身份的背后，其实是一个教育孩子的高手。</p>
-                    </div>
-                </div>
-                <!--文章down-->
-                <div class="r_articles_down" align="center">
-                	<table>
-                    	<tr>
-                        	<td><strong>阅读 ：</strong> <span>70</span></td>
-                            <td><strong>评论 ：</strong> <span>70</span></td>
-                            <td><strong>收藏 ： </strong><span>70</span></td>
-                            <td id="down_td"><strong>喜欢 ： </strong><span>70</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
+        <div id="introduce_right_Frame">
+        	<div id="introduce_right">    	
             
+        	</div>           
         </div>
      </div>
 </div>

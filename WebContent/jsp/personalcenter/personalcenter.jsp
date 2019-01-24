@@ -18,11 +18,8 @@
 <title>个人中心</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
 
-<link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script src="${pageContext.request.contextPath}/js/changePage.js"></script>
 <!--头部show的js-->
 <script>
@@ -257,7 +254,7 @@ $(function() {
             <li><img src="${pageContext.request.contextPath}/image/sex.png"><span>${userBean.sex }</span></li>
             <li><img src="${pageContext.request.contextPath}/image/years_old.png" ><span >${userBean.age }</span></li>
             <li><img src="${pageContext.request.contextPath}/image/register_time.png" ><span >${userBean.register_time }</span></li>
-            <li><img src="${pageContext.request.contextPath}/image/location.png" > <span >${userBean.province }${userBean.city }</span></li>
+            <li><img src="${pageContext.request.contextPath}/image/location.png" > <span >${userBean.province }-${userBean.city }</span></li>
             </ul>
               </div>
              <div id="info_edit" align="center">
@@ -301,7 +298,11 @@ $(function() {
 				String start1="2018-01-01 00:00:00";
 				String end1="2018-12-31 23:59:59";   
 				int y2018 =  Integer.valueOf( aService.countAByYears(uid,start1,end1).toString());
-				request.setAttribute("y2018", y2018);   			             			
+				request.setAttribute("y2018", y2018);   	
+				String start2="2020-01-01 00:00:00";
+				String end2="2020-12-31 23:59:59";   
+				int y2020 =  Integer.valueOf( aService.countAByYears(uid,start2,end2).toString());
+				request.setAttribute("y2020", y2020);
                %>
         	
             <!--日期归档-->
@@ -316,15 +317,14 @@ $(function() {
                 <script type="text/javascript">
 							var currentDate=new Date();
 							var currentYear=currentDate.getFullYear();//获取当前年份
-							var currentHtml='<li><a href="javascript:;" onclick="myPubT('+currentYear+')">'+currentYear+'年</a></li><br>';
+							var currentHtml='<li><a href="javascript:;" onclick="myPubT('+currentYear+')">'+currentYear+'年(${y2020})</a></li><br>';
 							var years_ul=document.getElementById("years_ul").innerHTML;
 							if (years_ul.toString().indexOf(currentYear)>-1) {
 								
 							}else {
 								$("#years_ul").append(currentHtml);
-							}
-						
-                    </script>
+							}						
+                 </script>
         	</div>
         </div>
         <!--介绍栏右侧-->

@@ -12,28 +12,34 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/changePage.js"></script>
+<script src="${pageContext.request.contextPath}/js/changeP.js"></script>
 </head>
 
 <body>	
 	<!--介绍栏右侧-->
         <div id="introduce_right">
 	<%
+		//获取地址栏的信息
 		String at = request.getParameter("article_type");
 		request.setAttribute("at", at);
 		String flag =  request.getParameter("flag");
 		request.setAttribute("flag", flag);
 		String year =  request.getParameter("time");
 		request.setAttribute("year", year);
-		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
-		String uid = userBean.getId();//用户id
-		//在博文表查找自己的所有博文及其信息，listBean（按照时间降序）
+		//作者是指此中心的用户
+		String uid =  request.getParameter("uid");//作者id
+		System.out.println(at+"+"+flag+"+"+year+"+"+uid);
+		UserService uService = new UserServiceImpl();
+    	UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
+    	request.setAttribute("uBean", uBean);
+    	
+		//在博文表查找ta的所有博文及其信息，listBean（按照时间降序）
 		ArticleService aService = new ArticleServiceImpl();
 		List<ArticleBean> aBeans =	aService.getArticlesByUid(uid);
 		if(aBeans.isEmpty()){
 		%>
         		<div class="introduce_right_articles">
-            		<p style="margin-top: 120px; margin-left: 250px;"><strong>还没有发表过文章！</strong></p>
+            		<p style="margin-top: 120px; margin-left: 250px;"><strong>Ta还没有发表过文章！</strong></p>
             	</div>                      		
 		<% 
 		}else{
@@ -41,6 +47,9 @@
 				ArticleBean aBean = aBeans.get(i);
 				request.setAttribute("aBean", aBean);
 				String aid =  aBean.getId();//取文章id
+				String authorId= aBean.getAuthor_id();//取每篇文章对应的作者
+				UserBean authorBean =  uService.findUserInfo(authorId);//取每篇文章对应的作者信息
+				request.setAttribute("authorBean", authorBean);
 				ArticleTypeBean atBean =  aService.getArticleTypeByAid(aid);
 				request.setAttribute("atBean", atBean);				
 	%>	        
@@ -52,36 +61,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
+                    <div class="r_articles_top_l">                    	
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -114,36 +96,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
+                    <div class="r_articles_top_l">                    	
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -176,36 +131,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                   
+                    <div class="r_articles_top_l">                  	
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -238,36 +166,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -300,36 +201,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
+                    <div class="r_articles_top_l">                   	
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -362,36 +236,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
-                    <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
+                    <div class="r_articles_top_l">                   	
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -424,39 +271,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<%
-                    		
-                    	%>
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -489,36 +306,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -551,36 +341,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -613,36 +376,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -675,36 +411,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -737,36 +446,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -799,36 +481,9 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBean.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><span>${aBean.title}</span></a>                    
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBean.publish_date}</span>
                         <span>分类: </span><strong>${atBean.article_type}</strong>
                         <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}" target="_blank">&lt;${aBean.label }&gt;</a>
@@ -862,7 +517,7 @@
            <!-- 点击的类型文章数目为0 -->
             <c:if test="${flag==0 }">         	
         		<div class="introduce_right_articles">
-            		<p style="margin-top: 120px; margin-left: 250px;"><strong>还没有发表过此类文章！</strong></p>
+            		<p style="margin-top: 120px; margin-left: 250px;"><strong>Ta还没有发表过此类文章！</strong></p>
             	</div>                 	
            </c:if>
    				 <%
@@ -877,39 +532,12 @@
         		<div class="introduce_right_articles">
             	<!--文章up-->
             	<div class="r_articles_top">
-                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBeanF.id}" target="_blank"><span>${aBeanF.title}</span></a> 
-                    <span><a href="javascript:;" onclick="deleteArticle('${aBeanF.id}')">删除</a></span>
-                    <script type="text/javascript">
-                    	function deleteArticle(id) {
-                    		var aid=id;//文章id
-							var s = confirm("你确定要删除此文章吗？");
-							if (s) {
-								$.ajax({
-									type:"POST",//用post方式传输
-									dataType:"json",//数据格式:JSON
-									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
-									data:{"id":aid},
-									error:function(){
-										alert("出错！请联系管理员！");
-									},
-									success:function(data){
-										if (data) {
-											alert("删除成功！");
-											window.location.reload();
-										} else {
-											alert("删除失败，本文可能处于屏蔽或非正常状态！");		
-											window.location.reload();
-										}
-									}
-								});
-							}
-						}
-                    </script>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBeanF.id}" target="_blank"><span>${aBeanF.title}</span></a>                     
                     <div class="r_articles_top_l">
-                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
+                    	<span>作者 : </span><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${authorBean.id}" target="_blank">${authorBean.username}</a>
                         <span>${aBeanF.publish_date}</span>
                         <span>分类: </span><strong>${atBeanF.article_type}</strong>
-                        <span>标签: </span><a href="#">&lt;${aBeanF.label }&gt;</a>
+                        <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBeanF.label}" target="_blank">&lt;${aBeanF.label }&gt;</a>
                     </div>
                 </div>
                 <!--文章middle-->
