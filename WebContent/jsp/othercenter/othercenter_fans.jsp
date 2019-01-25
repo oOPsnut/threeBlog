@@ -23,8 +23,8 @@
                     <span id="r_f_top_span">|</span>
                 </div>
         		<%
-	        		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
-	        		String uid = userBean.getId();
+        			//作者是指此中心的用户
+        			String uid =  request.getParameter("uid");//作者id
 	        		UserService uService = new UserServiceImpl();
 	        		ArticleService aService = new ArticleServiceImpl();
 	        		List<FollowBean> follows = uService.getFollowersByUid(uid);
@@ -52,11 +52,35 @@
                	%>            
                  <!--列表middle-->
                 <div class="r_f_middle">
+                	<c:if test="${not empty userBean}">
+	                	<c:if test="${userBean.id==fBean.id }">
+		                	<div class="r_f_m_left">
+		                    	<a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI" target="_blank"><img src="${fBean.head}"></a>
+		                    </div>
+	                    </c:if>
+	                    <c:if test="${userBean.id!=fBean.id }">
+		                	<div class="r_f_m_left">
+		                    	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><img src="${fBean.head}"></a>
+		                    </div>
+	                    </c:if>
+                    </c:if>
+                    <c:if test="${empty userBean}">
                 	<div class="r_f_m_left">
                     	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><img src="${fBean.head}"></a>
                     </div>
+                    </c:if>
                    	<div class="r_f_m_right">
-                    	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><span>${fBean.username}</span></a>
+                   		<c:if test="${not empty userBean}">
+                   			<c:if test="${userBean.id!=fBean.id }">
+                    			<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><span>${fBean.username}</span></a>
+                    		</c:if>
+                    		<c:if test="${userBean.id==fBean.id }">
+                    			<a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI" target="_blank"><span>${fBean.username}</span></a>
+                    		</c:if>
+                    	</c:if>
+                    	<c:if test="${empty userBean}">
+                    		<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${fBean.id}" target="_blank"><span>${fBean.username}</span></a>
+                    	</c:if>
                         <br>
                         <div class="r_f_m_right_total">
                         	<span>博文</span><span>${countArticle}</span>

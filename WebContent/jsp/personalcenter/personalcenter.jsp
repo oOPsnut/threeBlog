@@ -1,6 +1,4 @@
 <%@page import="java.util.Date"%>
-<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
-<%@page import="java.util.Arrays"%>
 <%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
 <%@page import="com.threeblog.service.ArticleService"%>
@@ -19,7 +17,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
 
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
+
+<link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script src="${pageContext.request.contextPath}/js/changePage.js"></script>
 <!--头部show的js-->
 <script>
@@ -182,7 +184,7 @@ $(function() {
         <!--统计-->
         <div id="introduce_left">
         	<div id="introduce_left_total">
-            	<%	//取用户的信息
+            	<%	 //取用户的信息
             		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
             		String uid = userBean.getId();
             		ArticleService  aService = new ArticleServiceImpl();
@@ -335,7 +337,7 @@ $(function() {
      </div>
      </div>
 </div>
-<!--内容end-->
+<!--内容end-->		
 <!--置顶框begin-->
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/toTop.js"></script>
 <!--置顶框end-->

@@ -28,7 +28,6 @@
 		request.setAttribute("year", year);
 		//作者是指此中心的用户
 		String uid =  request.getParameter("uid");//作者id
-		System.out.println(at+"+"+flag+"+"+year+"+"+uid);
 		UserService uService = new UserServiceImpl();
     	UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
     	request.setAttribute("uBean", uBean);

@@ -1,44 +1,48 @@
-<%@page import="com.threeblog.domain.*"%>
+<%@page import="com.threeblog.domain.UserBean"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
+<%@page import="com.threeblog.service.UserService"%>
 <%@page import="java.util.Date"%>
-<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
-<%@page import="java.util.Arrays"%>
+<%@page import="org.apache.jasper.tagplugins.jstl.core.Choose"%>
 <%@page import="java.util.List"%>
-<%@page import="com.threeblog.serviceImpl.*"%>
-<%@page import="com.threeblog.service.*"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%   	
     	//作者是指此中心的用户
  		//从地址栏获取作者id
 		String uid =  request.getQueryString().substring(3);
-    	System.out.println(uid);
     	UserService uService = new UserServiceImpl();
     	UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
     	request.setAttribute("uBean", uBean);
-    	UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");//本登录用户
+    	 UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");//本登录用户
     	if(userBean!=null){
-    		String id =  userBean.getId();//登录用户id
-        	boolean following = uService.findFollowStatus(id,uid);//用户有没有关注作者
-        	boolean follower = uService.findFollowStatus(uid,id);//作者有没有关注我
-        	if(following && follower){
-        		//相互关注 eachfollow
-        		String eachf="相互关注";
-        		request.setAttribute("eachf", eachf);
-        	}else if(following && !follower){
-        		//用户关注了作者UserFollowAuthor
-        		String ufa="用户关注了作者";
-        		request.setAttribute("ufa", ufa);
-        	}else if(!following && follower){
-        		//作者关注了用户AuthorFollowUser
-        		String afu="作者关注了用户";
-        		request.setAttribute("afu", afu);
-        	}else if(!following && !follower){
-        		//均未关注对方notfollow
-        		String notf="均未关注对方";
-        		request.setAttribute("notf", notf);
-        	}
-    	}
-    	
+    		String userId = userBean.getId();
+    		if(userId.equals(uid)){  
+    			response.sendRedirect(request.getContextPath()+"/RedirectServlet?method=personalCenterUI");
+    		}else{	
+	    		String id =  userBean.getId();//登录用户id
+	        	boolean following = uService.findFollowStatus(id,uid);//用户有没有关注作者
+	        	boolean follower = uService.findFollowStatus(uid,id);//作者有没有关注我
+	        	if(following && follower){
+	        		//相互关注 eachfollow
+	        		String eachf="相互关注";
+	        		request.setAttribute("eachf", eachf);
+	        	}else if(following && !follower){
+	        		//用户关注了作者UserFollowAuthor
+	        		String ufa="用户关注了作者";
+	        		request.setAttribute("ufa", ufa);
+	        	}else if(!following && follower){
+	        		//作者关注了用户AuthorFollowUser
+	        		String afu="作者关注了用户";
+	        		request.setAttribute("afu", afu);
+	        	}else if(!following && !follower){
+	        		//均未关注对方notfollow
+	        		String notf="均未关注对方";
+	        		request.setAttribute("notf", notf);
+	        	}  				        	
+    		}
+        }
     %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -50,7 +54,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
 <script src="${pageContext.request.contextPath}/js/class.js"></script>
 <script src="${pageContext.request.contextPath}/js/MsgBox.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
+
+<link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script src="${pageContext.request.contextPath}/js/changeP.js"></script>
 <!--头部show的js-->
 <script>
@@ -196,52 +204,49 @@ $(function() {
               	<span><strong>个人简介:</strong></span><br>
                 <span>▷${uBean.introduction}</span>
             </div>
+            <div id="head_follow_oo">
             <div id="head_follow_o" align="center">
 	            <c:if test="${empty userBean }">
 	            	<a href="javascript:;" onclick="clickfollow()"><img title="关注" src="${pageContext.request.contextPath}/image/canfollow.png" ></a>
 	            </c:if>
 	            <c:if test="${not empty userBean }">
 	            	<c:choose>
-	            		<c:if test="${not empty eachf}">
-	            			<a href="javascript:;" onclick="cancelfollow()"><img title="取消关注" src="${pageContext.request.contextPath}image/cancelfollow.png" ></a>
-            				<a href="javascript:;"><img title="相互关注" src="${pageContext.request.contextPath}image/followtogether.png" ></a>
-	            		</c:if>
-	            		<c:if test="${not empty ufa}">
-	            			<a href="javascript:;" onclick="cancelfollow()"><img title="取消关注" src="${pageContext.request.contextPath}image/cancelfollow.png" ></a>
-             				<a href="javascript:;"><img title="我关注了Ta" src="${pageContext.request.contextPath}image/follow.png" ></a>
-	            		</c:if>
-	            		<c:if test="${not empty afu}">
+	            		<c:when test="${not empty eachf}">
+	            			<a href="javascript:;" onclick="cancelfollow()"><img title="取消关注" src="${pageContext.request.contextPath}/image/cancelfollow.png" ></a>
+            				<a href="javascript:;"><img title="相互关注" src="${pageContext.request.contextPath}/image/followtogether.png" ></a>
+	            		</c:when>
+	            		<c:when test="${not empty ufa}">
+	            			<a href="javascript:;" onclick="cancelfollow()"><img title="取消关注" src="${pageContext.request.contextPath}/image/cancelfollow.png" ></a>
+             				<a href="javascript:;"><img title="我关注了Ta" src="${pageContext.request.contextPath}/image/follow.png" ></a>
+	            		</c:when>
+	            		<c:when test="${not empty afu}">
 	            			<a href="javascript:;" onclick="follow()"><img title="关注" src="${pageContext.request.contextPath}/image/canfollow.png" ></a>
-             				<a href="javascript:;"><img title="Ta关注了我" src="${pageContext.request.contextPath}image/Tafollow.png" ></a>
-	            		</c:if>
-	            		<c:if test="${not empty notf}">
+             				<a href="javascript:;"><img title="Ta关注了我" src="${pageContext.request.contextPath}/image/Tafollow.png" ></a>
+	            		</c:when>
+	            		<c:when test="${not empty notf}">
 	            			<a href="javascript:;" onclick="follow()"><img title="关注" src="${pageContext.request.contextPath}/image/canfollow.png" ></a>            				
-	            		</c:if>
+	            		</c:when>
 	            	</c:choose>	            	
 	            </c:if>	            
             	<script type="text/javascript">
             		function follow(){
             			var id = "${userBean.id}";//用户id
-            			var username="${userBean.username}";//用户名
             			var author_id="${uBean.id}";//获取作者id
-            			var author_name="${uBean.username}";//获取作者名
-            			alert(uid+"+"+author_id+"+"+username+"+"+author_name);
             			$.ajax({
             				type:"POST",//用post方式传输
             				dataType:"json",//数据格式:JSON
             				url:"/ThreeBlog_V1.0/UserServlet?method=addFollow" ,//目标地址
             				data:{
             					"following_id":id,
-            					"follower_id":author_id,
-            					"text1":author_name,
-            					"text2":username
+            					"follower_id":author_id
             				},
             				error:function(){
             					alert("出错！");
             				},
             				success:function(data){
             					if(data){
-            						alert("关注成功！");          					
+            						alert("关注成功！");    
+            						$("#head_follow_oo").load(location.href+" #head_follow_o");
             					}else{
             						alert("关注失败！");
             					}
@@ -252,7 +257,6 @@ $(function() {
             		function cancelfollow() {
             			var id = "${userBean.id}";//用户id
             			var author_id="${uBean.id}";//作者id
-            			alert(uid+"+"+author_id);
             			$.ajax({
             				type:"POST",//用post方式传输
             				dataType:"json",//数据格式:JSON
@@ -266,7 +270,8 @@ $(function() {
             				},
             				success:function(data){
             					if(data){
-            						alert("取消关注成功！");          					
+            						alert("取消关注成功！");  
+            						$("#head_follow_oo").load(location.href+" #head_follow_o");
             					}else{
             						alert("取消关注失败！");
             					}
@@ -274,6 +279,7 @@ $(function() {
             			});
 					}
             	</script>
+            </div>
             </div>
     	</div>
         <!--导航栏-->
@@ -289,7 +295,7 @@ $(function() {
         <!--统计-->
         <div id="introduce_left">
         	<div id="introduce_left_total">
-            	<%	
+            	 <%	
             		ArticleService  aService = new ArticleServiceImpl();          		
             		String Mtype="默认分类";
             		String Gtype="个人心情";
@@ -327,7 +333,7 @@ $(function() {
             		int countFollower =  Integer.valueOf(uService.countFollower(uid).toString());//粉丝
             		request.setAttribute("countFollowing", countFollowing);
             		request.setAttribute("countFollower", countFollower);
-            %>
+            %> 
             	<table>
                 	<tr>
                     	<td class="total_td">
@@ -407,11 +413,14 @@ $(function() {
             <!--日期归档-->
         	<div id="introduce_left_years">
               	<h4>█ 日期归档</h4>
-                <ul>
-                	<<li><a href="javascript:;" onclick="taPubT(2019)">2019年(${y2019})</a></li><br>
+                <ul id="years_ul">
+                	<li><a href="javascript:;" onclick="taPubT(2019)">2019年(${y2019})</a></li><br>
                     <li><a href="javascript:;" onclick="taPubT(2018)">2018年(${y2018})</a></li><br>
                     <li><a href="javascript:;" onclick="taPubT(0)">第一条博文</a></li><br>
                 </ul>
+                <input type="hidden" id="y2018" value="${y2018}" /> 
+	        	<input type="hidden" id="y2019" value="${y2019}" /> 
+	        	<input type="hidden" id="y2020" value="${y2020}" /> 
                 <!-- 动态创建日期列表 -->
                 <script type="text/javascript">
 							var currentDate=new Date();
@@ -422,7 +431,7 @@ $(function() {
 								
 							}else {
 								$("#years_ul").append(currentHtml);
-							}						
+							}							
                  </script>
         	</div>
         </div>
@@ -436,11 +445,11 @@ $(function() {
 </div>
 <!--内容end-->
 <!--置顶框begin-->
-	<script type="text/javascript" src="js/toTop.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/toTop.js"></script>
 <!--置顶框end-->
 <!--底部begin-->
 <footer>
-	<img src="image/footer_logo.png">
+	<img src="${pageContext.request.contextPath}/image/footer_logo.png">
     <div id="footer_about">
     <p>&emsp;关于我们 | 意见反馈 | 服务条例 | 隐私政策</p>
     <p>Copyright © 2018 | Three Blog | All Right Reserved</p>

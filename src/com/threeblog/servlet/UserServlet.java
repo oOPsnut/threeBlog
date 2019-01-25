@@ -26,7 +26,9 @@ import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.FollowBean;
 import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
+import com.threeblog.service.ArticleService;
 import com.threeblog.service.UserService;
+import com.threeblog.serviceImpl.ArticleServiceImpl;
 import com.threeblog.serviceImpl.UserServiceImpl;
 import com.threeblog.util.DateDiffUtil;
 import com.threeblog.util.Md5StringUtils;
@@ -533,9 +535,6 @@ public class UserServlet extends BaseServlet {
 		//接受表单参数
 		String following_id = request.getParameter("following_id");
 		String follower_id = request.getParameter("follower_id");
-		String text1 = request.getParameter("text1");
-		String text2 = request.getParameter("text2");
-		System.out.println(following_id+"++"+follower_id+"++"+text1+"++"+text2);
 		
 		//UUID生成关注id
 		String id = UUIDUtils.getId();
@@ -555,7 +554,9 @@ public class UserServlet extends BaseServlet {
 			boolean result = uService.addFollow(follow);
 			if (result) {
 				//添加成功			
-				//添加消息
+				//*由于消息列表需要添加文章id，且表添加了外键，不能随便定义id。而关注不涉及文章，因此不添加到message表中。
+				
+/* 				//添加消息
 				MessageBean message=new MessageBean();
 				//UUID生成消息id
 				String id1 = UUIDUtils.getId();
@@ -572,7 +573,8 @@ public class UserServlet extends BaseServlet {
 				message.setText2(text2);
 				message.setAdd_time(follow_date);
 				uService.addMessage(message);
-				
+*/
+								
 				//将结果返回前端
 				response.getWriter().println(true);
 			}else {
@@ -591,8 +593,6 @@ public class UserServlet extends BaseServlet {
 		//接受表单参数
 		String following_id = request.getParameter("following_id");
 		String follower_id = request.getParameter("follower_id");
-		System.out.println(following_id+"++"+follower_id);
-				
 		
 		//调用业务层
 		UserService userService=new UserServiceImpl();

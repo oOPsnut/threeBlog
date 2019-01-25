@@ -13,9 +13,11 @@ function getQueryString(name){
     var r = window.location.search.substr(1).match(reg);
     if(r!=null)return  unescape(r[2]); return null;
 }*/
+var uid=null;
 
-var uid=$("#hid").val();
-
+$(function(){
+	uid=$("#hid").val();
+});
 //默认所有博文
 function taChangeP(){
 	$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?article_type=all",{"uid":uid});
@@ -117,10 +119,27 @@ function taPub(obj){
 }
 //ta的博文时间排序
 function taPubT(obj){
+	var y2018=$("#y2018").val();
+	var y2019=$("#y2019").val();
+	var y2020=$("#y2020").val();
 	if(obj==2019){
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2019",{"uid":uid});	
+		if(y2019>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2019&flag=1",{"uid":uid});				
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2019&flag=0",{"uid":uid});		
+		}
 	}else if(obj==2018){
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2018",{"uid":uid});	
+		if(y2018>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2018&flag=1",{"uid":uid});				
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2018&flag=0",{"uid":uid});		
+		}
+	}else if(obj==2020){
+		if(y2020>0){
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2020&flag=1",{"uid":uid});				
+		}else{
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=2020&flag=0",{"uid":uid});		
+		}
 	}else if(obj==0){
 		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/othercenter/othercenter_taHome.jsp?time=0",{"uid":uid});	
 	}
