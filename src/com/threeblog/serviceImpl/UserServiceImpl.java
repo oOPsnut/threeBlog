@@ -7,12 +7,15 @@ import java.util.List;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
+import com.threeblog.dao.AblumDao;
 import com.threeblog.dao.FollowDao;
 import com.threeblog.dao.MessageDao;
 import com.threeblog.dao.UserDao;
+import com.threeblog.daoImpl.AblumDaoImpl;
 import com.threeblog.daoImpl.FollowDaoImpl;
 import com.threeblog.daoImpl.MessageDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
+import com.threeblog.domain.AblumBean;
 import com.threeblog.domain.FollowBean;
 import com.threeblog.domain.MessageBean;
 import com.threeblog.domain.UserBean;
@@ -163,6 +166,14 @@ public class UserServiceImpl implements UserService{
 		FollowDao dao = new FollowDaoImpl();
 		boolean result = dao.cancelFollow(following_id,follower_id);
 		return result;
+	}
+
+	@Override
+	public List<AblumBean> findUserPhotosByUid(String uid) throws SQLException {
+		// 通过用户id，查找到所有相册图片信息，返回list 集合
+		AblumDao dao = new AblumDaoImpl();
+		List<AblumBean> list = dao.findUserPhotosByUid(uid);
+		return list;
 	}
 
 }

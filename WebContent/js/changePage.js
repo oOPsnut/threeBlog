@@ -2,26 +2,26 @@
 //<!--导航栏切换-->
 	//默认是所有博文
     function myChangePage(){  	
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=all");
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=all");
     }
 	//我的收藏
 	function myCollect(){
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myCollect.jsp");		
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myCollect.jsp");		
 	}
 
 	//我的全部博文
 	function myHome(){
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=all");		
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=all");		
 	}
 
 	//我的关注
 	function myFollowing() {
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_follow.jsp");		
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_follow.jsp");		
 	}
 
 	//我的粉丝
 	function myFollower() {
-		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_fans.jsp");		
+		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_fans.jsp");		
 	}
 	
 	//我的博文类别
@@ -38,75 +38,92 @@
 		var T=$("#hid9").val();
 		if(obj==1){
 			if(M>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=m&flag=1");		    		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=m&flag=1");		    		
 	    	}else{
-	    		$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=m&flag=0");
+	    		$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=m&flag=0");
 	    	}			
 		}else if(obj==2){
 			if(G>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=g&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=g&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=g&flag=0");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=g&flag=0");	
 	    	}
 		}else if(obj==3){
 			if(Z>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=z&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=z&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=z&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=z&flag=0");		
 	    	}
 		}else if(obj==4){
 			if(X>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=x&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=x&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=x&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=x&flag=0");		
 	    	}	
 		}else if(obj==5){
 			if(Y>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=y&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=y&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=y&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=y&flag=0");		
 	    	}
 		}else if(obj==6){
 			if(L>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=l&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=l&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=l&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=l&flag=0");		
 	    	}	
 		}else if(obj==7){
 			if(S>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=s&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=s&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=s&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=s&flag=0");		
 	    	}	
 		}else if(obj==8){
 			if(Q>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=q&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=q&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=q&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=q&flag=0");		
 	    	}
 		}else if(obj==9){
 			if(K>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=k&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=k&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=k&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=k&flag=0");		
 	    	}
 		}else if(obj==0){
 			if(T>0){
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=t&flag=1");	
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=t&flag=1");	
 			}else{
-				$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?article_type=t&flag=0");		
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?article_type=t&flag=0");		
 	    	}	
 		}
 				
 	}
 	//我的博文时间排序
 	function myPubT(obj){
+		var y2018=$("#y2018").val();
+		var y2019=$("#y2019").val();
+		var y2020=$("#y2020").val();
 		if(obj==2019){
-			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?time=2019");	
+			if(y2019>0){
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=2019&flag=1");				
+			}else{
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=2019&flag=0");		
+			}
 		}else if(obj==2018){
-			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?time=2018");	
+			if(y2018>0){
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=2018&flag=1");				
+			}else{
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=2018&flag=0");		
+			}
+		}else if(obj==2020){
+			if(y2020>0){
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=2020&flag=1");				
+			}else{
+				$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=2020&flag=0");		
+			}
 		}else if(obj==0){
-			$("#introduce_right_Frame").load("/ThreeBlog_V1.0//jsp/personalcenter/personalcenter_myHome.jsp?time=0");	
+			$("#introduce_right_Frame").load("/ThreeBlog_V1.0/jsp/personalcenter/personalcenter_myHome.jsp?time=0");	
 		}
 				
 	}

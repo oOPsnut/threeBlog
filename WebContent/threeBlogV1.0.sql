@@ -236,3 +236,18 @@ CREATE TABLE `t_articleType` (
   CONSTRAINT `t_articleType_ibfk_1` FOREIGN KEY (`article_id`) REFERENCES `t_article` (`id`),
   CONSTRAINT `t_articleType_ibfk_2` FOREIGN KEY (`author_id`) REFERENCES `t_user` (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+
+/*--------------------------------- 
+	t_ablum表
+-----------------------------------*/
+DROP TABLE IF EXISTS `t_ablum`;
+CREATE TABLE `t_ablum` (
+  `id` VARCHAR(32) NOT NULL,
+  `user_id` VARCHAR(32) NOT NULL,
+  `photo` VARCHAR(512) NOT NULL,
+  `upload_date` DATETIME NOT NULL,
+  `status` VARCHAR(6) DEFAULT '正常',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `t_ablum_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;

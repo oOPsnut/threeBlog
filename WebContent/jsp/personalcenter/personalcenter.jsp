@@ -315,6 +315,9 @@ $(function() {
                     <li><a href="javascript:;" onclick="myPubT(2018)">2018年(${y2018})</a></li><br>
                     <li><a href="javascript:;" onclick="myPubT(0)">第一条博文</a></li><br>
                 </ul>
+                <input type="hidden" id="y2018" value="${y2018}" /> 
+	        	<input type="hidden" id="y2019" value="${y2019}" /> 
+	        	<input type="hidden" id="y2020" value="${y2020}" /> 
                 <!-- 动态创建日期列表 -->
                 <script type="text/javascript">
 							var currentDate=new Date();

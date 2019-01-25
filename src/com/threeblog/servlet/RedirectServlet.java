@@ -93,7 +93,13 @@ public class RedirectServlet extends BaseServlet{
 	public String PablumUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "/jsp/personalcenter/personalcenter_ablum.jsp";
 	}
-	//跳转到我的相册
+	
+	//跳转到上传相册
+	public String PUploadAblumUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/jsp/personalcenter/personalcenter_uploadalbum.jsp";
+	}
+	
+	//跳转到修改个人信息
 	public String PchangeInfoUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "/jsp/personalcenter/personalcenter_changeinfo.jsp";
 	}
