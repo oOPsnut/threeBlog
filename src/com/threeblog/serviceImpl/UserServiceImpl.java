@@ -176,4 +176,12 @@ public class UserServiceImpl implements UserService{
 		return list;
 	}
 
+	@Override
+	public boolean addAblum(AblumBean ablum) throws SQLException {
+		//  添加照片
+		AblumDao dao = new AblumDaoImpl();
+		boolean result = dao.addAblum(ablum);
+		return result;
+	}
+
 }

@@ -19,4 +19,12 @@ public interface AblumDao {
 	 * @throws SQLException
 	 */
 	List<AblumBean> findUserPhotosByUid(String uid)throws SQLException;
+	
+	/**
+	 * 添加照片
+	 * @param ablum
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addAblum(AblumBean ablum)throws SQLException;
 }

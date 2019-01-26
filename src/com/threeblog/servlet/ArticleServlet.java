@@ -71,6 +71,7 @@ public class ArticleServlet extends BaseServlet {
 			UserBean userBean = (UserBean) session.getAttribute("userBean");
 			String author_id = userBean.getId();
 			String author = userBean.getUsername();
+			String phone = userBean.getPhone();
 			
 			while(iterator.hasNext()){
 				FileItem item=(FileItem)iterator.next();
@@ -89,18 +90,21 @@ public class ArticleServlet extends BaseServlet {
 					}
 				}else{
 					//当前处理item里面封装的上传文件（文章封面）
-					//用当前时间作为文件名
+					//用用户手机号+当前时间作为文件名
 					Date date=new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-					//时间+格式   20171201194110.jepg
-					String filename = sdf.format(date)+"."+item.getContentType().substring(6);
+					//手机号+时间+格式   136xxxx2211_20171201194110.jepg
+					String filename = phone+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
 					//获取实际存储路径
-					String t1 = request.getServletContext().getRealPath("") + "\\image\\images"; 	
+					String t1 = request.getServletContext().getRealPath("") + "\\image\\articlecover"; 	
 					String realFile=t1  +File.separator+ filename;
 					File saveFile = new File(realFile);
+					if (!saveFile.exists()) {
+						saveFile.createNewFile();
+					}
 					try {
 						item.write(saveFile);// 把上传的内容写到一个文件中
-						publish_fm="/ThreeBlog_V1.0/image/images/"+filename;
+						publish_fm="/ThreeBlog_V1.0/image/articlecover/"+filename;
 	                } catch (Exception e) {
 	                    e.printStackTrace();
 	                }

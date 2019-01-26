@@ -375,7 +375,11 @@ public class UserServlet extends BaseServlet {
 	
 	//修改个人信息
 	public String PchangeInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-				
+			
+			//获取用户手机号码
+			UserBean  userBean =(UserBean) request.getSession().getAttribute("userBean");
+			String phone = userBean.getPhone();
+			
 			//创建工厂
 			DiskFileItemFactory factory = new DiskFileItemFactory();
 			//通过工厂创建解析器ServletFileUpload
@@ -418,18 +422,21 @@ public class UserServlet extends BaseServlet {
 					}
 				}else {
 					//当前处理item里面封装的上传文件（用户头像）
-					//用当前时间作为文件名
+					//用 用户手机号+当前时间 作为文件名
 					Date date=new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-					//时间+格式   20171201194110.jepg
-					String filename = sdf.format(date)+"."+item.getContentType().substring(6);
+					//用户手机号+时间+格式   136xxxx1122_20171201194110.jepg
+					String filename = phone+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
 					//获取实际存储路径
-					String t1 = request.getServletContext().getRealPath("") + "\\image"; 	
+					String t1 = request.getServletContext().getRealPath("") + "\\image\\userhead"; 	
 					String realFile=t1  +File.separator+ filename;
 					File saveFile = new File(realFile);
+					if (!saveFile.exists()) {
+						saveFile.createNewFile();
+					}
 					try {
 						item.write(saveFile);// 把上传的内容写到一个文件中
-	                    head="/ThreeBlog_V1.0/image/"+filename;
+	                    head="/ThreeBlog_V1.0/image/userhead/"+filename;
 	                } catch (Exception e) {
 	                    //System.out.println("文件为空，未修改头像");
 	                	e.printStackTrace();
@@ -437,8 +444,6 @@ public class UserServlet extends BaseServlet {
 				}				
 			}
 			//在session中获取用户id
-			HttpSession session = request.getSession();
-			UserBean userBean = (UserBean) session.getAttribute("userBean");
 			String id = userBean.getId();
 
 			//把数据封装到user

@@ -184,7 +184,7 @@ $(function() {
             	<h3 id="changeinfo_head">█ 上传照片</h3>
                	<div id="upload_pic">
                 	<div id="upload_input">
-                    	<input type="submit" value="立即上传" id="upload_now">
+                    	<input type="submit" value="立即上传" id="upload_now" class="submit">
                         <span>Tips : 支持上传jpg/png/jpeg格式。</span>
                     </div>
                     <div id="upload_content">
@@ -192,12 +192,19 @@ $(function() {
                     </div>
                     <script>
 					var options = {
-						path: '/',
+						path: '${pageContext.request.contextPath}/AblumServlet?method=uploadPhotos',
 						onSuccess: function (res) {
 							console.log(res);
+							var result =confirm("上传成功！确定:回到相册;取消:继续上传");
+							if (result) {
+								window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=PablumUI'; 
+							} else {
+								location.reload();
+							}
 						},
 						onFailure: function (res) {
 							console.log(res);
+							alert("出错，请稍后再试...");
 						}
 					}
 					

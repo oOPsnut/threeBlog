@@ -19,4 +19,12 @@ public class AblumDaoImpl implements AblumDao {
 		return  runner.query(sql, new BeanListHandler<AblumBean>(AblumBean.class),uid);		
 	}
 
+	@Override
+	public boolean addAblum(AblumBean ablum) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="insert into t_ablum(id,user_id,photo,upload_date) values(?,?,?,?)";
+		int result = runner.update(sql,ablum.getId(),ablum.getUser_id(),ablum.getPhoto(),ablum.getUpload_date());
+		return result>0;
+	}
+
 }
