@@ -43,7 +43,7 @@ public class UploadUtils {
 		int i = name.hashCode();
 		//将hash码转成16禁止的字符串
 		String hex = Integer.toHexString(i);
-		System.out.println(hex);
+		//System.out.println(hex);
 		int j=hex.length();
 		for(int k=0;k<8-j;k++){
 			hex="0"+hex;

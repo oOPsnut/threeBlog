@@ -202,30 +202,55 @@ $(function() {
 		                      	<p><strong>未上传过照片</strong></p>
 		                      </div>
                       </div>	        	
-		        	<%		
-		        			
-		        		}else{
-							for(int i=0;i<photos.size();i++){
-		        				AblumBean photo=photos.get(i);//拿到每张图片信息
-		        				request.setAttribute("photo", photo);
-		        	%>
-		        	<c:if test="${photo.upload_date<='2019-12-31 23:59:59' && photo.upload_date>='2019-01-01 00:00:00' }">                	
+			        <%}else{%>
+                        <!--2019年图片  -->
                       <div class="gallery_years">
-                      <span>2019</span><br>
-                      	<a href="${photo.photo }" title="${photo.upload_date }"><div class="gallery_div" style="background:url(${photo.photo }) no-repeat center;"></div></a>                     
-                      </div>
-                     </c:if>
-                     <c:if test="${photo.upload_date<='2018-12-31 23:59:59' && photo.upload_date>='2018-01-01 00:00:00' }">     
-                    <div class="gallery_years">
-                    <span>2018</span><br>
-                      <a href="${photo.photo }" title="${photo.upload_date }"><div class="gallery_div" style="background:url(${photo.photo }) no-repeat center;"></div></a>                   
-                      </div>
-                      </c:if>
+	                    <span>2019</span><br>			                    	        	
+			        	<%	
+			        		int y2019=2019;
+	        				List<AblumBean> ps2019 = uService.findPhotosByUidYear(uid,y2019);
+			        		if(ps2019.isEmpty()){
+			        	%>
+			        	
+			        		<div align="center">
+		                      	<p><strong>此年未上传过照片</strong></p>
+		                    </div>
+		                    
+			        	<%	
+			        		}else{
+								for(int i=0;i<ps2019.size();i++){
+			        				AblumBean photo2019=ps2019.get(i);//拿到 2019年 每张图片信息
+			        				request.setAttribute("photo2019", photo2019);
+			        	%>
+			        	<%-- <c:when test="${photo.upload_date<='2019-12-31 23:59:59' && photo.upload_date>='2019-01-01 00:00:00' }">  --%>               	
+	                      	<a href="${photo2019.photo }" title="${photo2019.upload_date }"><div class="gallery_div" style="background:url(${photo2019.photo }) no-repeat center;"></div></a>                     
+	                    <%--  </c:when> --%> 
+	                   <%}}%>
+	                    </div>
+	                   	 <!--2018年图片  -->
+	                   <div class="gallery_years">	
+                       	 <span>2018</span><br>
+	                    <%	
+			        		int y2018=2018;
+	        				List<AblumBean> ps2018 = uService.findPhotosByUidYear(uid,y2018);
+			        		if(ps2018.isEmpty()){
+			        	%>
+			        	
+			        		<div align="center">
+		                      	<p><strong>此年未上传过照片</strong></p>
+		                    </div>
+		                    
+			        	<%	
+			        		}else{
+								for(int i=0;i<ps2018.size();i++){
+			        				AblumBean photo2018=ps2018.get(i);//拿到 2019年 每张图片信息
+			        				request.setAttribute("photo2018", photo2018);
+			        	%>              	
+	                      	<a href="${photo2018.photo }" title="${photo2018.upload_date }"><div class="gallery_div" style="background:url(${photo2018.photo }) no-repeat center;"></div></a>                     
+	                   	<%	}}%>
+                      </div>              
+	                <%}%>
                 </div>
-                <%
-							}
-		        		}
-				%>
 				<script>
                 $('#gallery2').rebox({ selector: 'a' });
                 </script>

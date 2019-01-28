@@ -3,7 +3,9 @@ package com.threeblog.servlet;
 import com.threeblog.base.BaseServlet;
 import com.threeblog.domain.AblumBean;
 import com.threeblog.domain.UserBean;
+import com.threeblog.service.ArticleService;
 import com.threeblog.service.UserService;
+import com.threeblog.serviceImpl.ArticleServiceImpl;
 import com.threeblog.serviceImpl.UserServiceImpl;
 import com.threeblog.util.UUIDUtils;
 import com.threeblog.util.UploadUtils;
@@ -37,7 +39,7 @@ import org.apache.commons.io.IOUtils;
 public class AblumServlet extends BaseServlet {
 	
 	//上传照片
-	public boolean uploadPhotos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+	public void uploadPhotos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 			
 		//获取用户id和电话
 		UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
@@ -63,8 +65,11 @@ public class AblumServlet extends BaseServlet {
 		}
 		//创建迭代器
 		Iterator iterator=list.iterator();
-		//boolean success=false;
+		int count=0;
+		
+		if (iterator.hasNext()) {
 		//遍历获取到的每张图片（多张照片）
+		//System.out.println(iterator.hasNext());
 		while (iterator.hasNext()) {
 			FileItem item=(FileItem)iterator.next();
 			if (!item.isFormField()) {
@@ -106,7 +111,7 @@ public class AblumServlet extends BaseServlet {
 				//UUID生成照片id
 				String id=UUIDUtils.getId();
 				String photo="/ThreeBlog_V1.0/image/userablum/"+phone+"/"+dir+"/"+newFileName;
-				System.out.println(photo);
+				//System.out.println(photo);
 				
 				//将数据封装到ablum中
 				ablum.setId(id);
@@ -114,24 +119,39 @@ public class AblumServlet extends BaseServlet {
 				ablum.setPhoto(photo);
 				ablum.setUpload_date(upload_date);
 				
-				boolean result = uService.addAblum(ablum);
+				boolean result = uService.addAblum(ablum);		
 				if (result) {
-					response.getWriter().println(true);//上传成功
-					return true;//上传成功
-				}else {
-					response.getWriter().println(false);//上传失败
-					return false;//上传失败
+					count++;
 				}
 			}		
 		}
-		/*if (success) {
-			response.getWriter().println(true);//上传成功
-		} else {
-			response.getWriter().println(false);//上传失败
-		}*/
-		response.getWriter().println(false);//上传失败
-		return false;//上传失败
+		//System.out.println(iterator.hasNext());
+		if (count==list.size()) {
+			response.getWriter().println(1);//上传成功
+			//return true;//上传成功
+		}else {
+			response.getWriter().println(-1);//上传失败
+			//return false;//上传失败
+		}	
+	}else{
+			response.getWriter().println(0);//没上传图
+		}
+	}
+	
+	//删除照片
+	public void DeletePhoto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
 		
+		//获取数据
+		String id = request.getParameter("id");//照片id
+		
+		//调用服务删除照片
+		UserService uService = new UserServiceImpl();
+		boolean r = uService.deletePhoto(id);
+		if (r) {			
+				response.getWriter().println(true);							
+		} else {
+			response.getWriter().println(false);
+		}
 	}
 
 }

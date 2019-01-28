@@ -66,7 +66,7 @@
 										"article_id":aid
 									},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {

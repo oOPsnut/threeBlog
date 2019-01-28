@@ -1,3 +1,8 @@
+<%@page import="com.threeblog.domain.AblumBean"%>
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.UserBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -195,12 +200,19 @@ $(function() {
 						path: '${pageContext.request.contextPath}/AblumServlet?method=uploadPhotos',
 						onSuccess: function (res) {
 							console.log(res);
-							var result =confirm("上传成功！确定:回到相册;取消:继续上传");
-							if (result) {
-								window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=PablumUI'; 
-							} else {
-								location.reload();
+							if (res==0) {
+								alert("你还未添加任何图片！");
+							}else if(res==1){
+								var result =confirm("上传成功！确定:回到相册;取消:继续上传");
+								if (result) {
+									window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=PablumUI'; 
+								} else {
+									window.location.reload();
+								}
+							}else if (res==-1) {
+								alert("出错，请稍后再试...");
 							}
+							
 						},
 						onFailure: function (res) {
 							console.log(res);
@@ -221,36 +233,59 @@ $(function() {
                 <h3 id="changeinfo_head">█ 删除照片</h3>
                 <div id="delete_pic">
                 	<ul>
+                	<%
+		        		UserBean userBean=(UserBean)request.getSession().getAttribute("userBean");
+		        		String uid = userBean.getId();//获取用户id
+		        		UserService uService=new UserServiceImpl();
+		        		List<AblumBean> photos = uService.findUserPhotosByUid(uid);
+		        		if(photos.isEmpty()){		        			
+		        	%>
+		        		<li style="width: 100%;">
+                            <div align="center">
+		                      	<p><strong>未上传过照片</strong></p>
+		                      </div>
+                        </li>	        	  	        	
+		        	<%		
+		        			
+		        		}else{
+							for(int i=0;i<photos.size();i++){
+		        				AblumBean photo=photos.get(i);//拿到每张图片信息
+		        				request.setAttribute("photo", photo);
+		        	%>
+		        		<c:if test="${photo.status=='正常'}">
                     	<li>
-                            <div class="delete_pic_n" style="background:url(image/2.jpg) no-repeat center;">
-							<button onClick="return confirm('您确定要删除?');">删 除</button>
+                            <div class="delete_pic_n" style="background:url(${photo.photo}) no-repeat center;">
+								<a href="javascript:;" onclick="deletePhoto('${photo.id}')">删除</a>
                             </div>
+                            <script type="text/javascript">
+                            	function deletePhoto(id) {
+                            		var pid=id;//照片id
+        							var s = confirm("你确定要删除此照片吗？");
+        							if (s) {
+        								$.ajax({
+        									type:"POST",//用post方式传输
+        									dataType:"json",//数据格式:JSON
+        									url:"/ThreeBlog_V1.0/AblumServlet?method=DeletePhoto" ,//目标地址
+        									data:{"id":pid},
+        									error:function(){
+        										alert("出错！请稍后再试...");
+        									},
+        									success:function(data){
+        										if (data) {
+        											alert("删除成功！");
+        											window.location.reload();
+        										} else {
+        											alert("删除失败，本照片可能处于屏蔽或非正常状态！");		
+        											window.location.reload();
+        										}
+        									}
+        								});
+        							}
+								}
+                            </script>
                         </li>
-                        <li>
-                            <div class="delete_pic_n" style="background:url(image/1.jpg) no-repeat center;">
-							<button onClick="return confirm('您确定要删除?');">删 除</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="delete_pic_n" style="background:url(image/3.jpg) no-repeat center;">
-							<button onClick="return confirm('您确定要删除?');">删 除</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="delete_pic_n" style="background:url(image/pic2.jpg) no-repeat center;">
-							<button onClick="return confirm('您确定要删除?');">删 除</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="delete_pic_n" style="background:url(image/pic4.jpg) no-repeat center;">
-							<button onClick="return confirm('您确定要删除?');">删 除</button>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="delete_pic_n" style="background:url(image/pic3.jpg) no-repeat center;">
-							<button onClick="return confirm('您确定要删除?');">删 除</button>
-                            </div>
-                        </li>
+                        </c:if>
+                        <%}} %>
                     </ul>
                 </div>	
             </div>

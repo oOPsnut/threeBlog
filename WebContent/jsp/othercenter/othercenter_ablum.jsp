@@ -1,24 +1,66 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.AblumBean"%>
+<%@page import="com.threeblog.domain.UserBean"%> 
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.List"%>  
+    	<%
+		  	//作者是指此中心的用户
+			//从地址栏获取作者id
+			String uid =  request.getQueryString().substring(3);
+			UserService uService = new UserServiceImpl();
+			UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
+			request.setAttribute("uBean", uBean);
+			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");//本登录用户
+		    	if(userBean!=null){
+		    		String userId = userBean.getId();
+		    		if(userId.equals(uid)){  
+		    			response.sendRedirect(request.getContextPath()+"/RedirectServlet?method=PablumUI");
+		    		}else{	
+			    		String id =  userBean.getId();//登录用户id
+			        	boolean following = uService.findFollowStatus(id,uid);//用户有没有关注作者
+			        	boolean follower = uService.findFollowStatus(uid,id);//作者有没有关注我
+			        	if(following && follower){
+			        		//相互关注 eachfollow
+			        		String eachf="相互关注";
+			        		request.setAttribute("eachf", eachf);
+			        	}else if(following && !follower){
+			        		//用户关注了作者UserFollowAuthor
+			        		String ufa="用户关注了作者";
+			        		request.setAttribute("ufa", ufa);
+			        	}else if(!following && follower){
+			        		//作者关注了用户AuthorFollowUser
+			        		String afu="作者关注了用户";
+			        		request.setAttribute("afu", afu);
+			        	}else if(!following && !follower){
+			        		//均未关注对方notfollow
+			        		String notf="均未关注对方";
+			        		request.setAttribute("notf", notf);
+			        	}  				        	
+		    		}
+		        }
+   		 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="toTop" content="true">
-<title>ta的相册</title>
-<link rel="stylesheet" href="css/homepage.css" type="text/css"/>
-<link rel="stylesheet" href="css/personalcenter.css" type="text/css"/>
-<link rel="stylesheet" href="css/calendar.css">
+<title>${uBean.username}的相册</title>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
 
-<link href="css/owl.carousel.css" rel="stylesheet">
-<script src="js/class.js"></script>
-<script src="js/MsgBox.js"></script>
-<script src="js/jquery-1.min.js"></script>
-<script src="js/owl.carousel.js"></script>
-<link rel="stylesheet" href="css/jquery-rebox.css"/>
-
-<script src="js/jquery-rebox.js"></script>
+<link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
+<script src="${pageContext.request.contextPath}/js/class.js"></script>
+<script src="${pageContext.request.contextPath}/js/MsgBox.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-rebox.css"/>
+<script src="${pageContext.request.contextPath}/js/changeP.js"></script>
+<script src="${pageContext.request.contextPath}/js/jquery-rebox.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -152,61 +194,167 @@ $(function() {
 		<!--头部栏-->
     	<div id="personalcenter_head">
    			<div id="head_pic" align="center">
-         		<img src="image/head.png">	
+         		<img src="${uBean.head}">	
             </div>			   			
             <div id="head_name" align="center">
-            	<span>Tom</span>		 				
+            	<span>${uBean.username}</span>		 				
             </div>
             
             <div id="head_introduce_o" align="center">
               
               	<span><strong>个人简介:</strong></span><br>
-                <span>心灵美才是真的美丽！</span>
+                <span>▷${uBean.introduction}</span>
             </div>
+            <div id="head_follow_oo">
             <div id="head_follow_o" align="center">
-            	<a href="#"><img title="取消关注" src="image/cancelfollow.png" ></a>
-             <a href="#"><img title="相互关注" src="image/followtogether.png" ></a>
+	            <c:if test="${empty userBean }">
+	            	<a href="javascript:;" onclick="clickfollow()"><img title="关注" src="${pageContext.request.contextPath}/image/canfollow.png" ></a>
+	            </c:if>
+	            <c:if test="${not empty userBean }">
+	            	<c:choose>
+	            		<c:when test="${not empty eachf}">
+	            			<a href="javascript:;" onclick="cancelfollow()"><img title="取消关注" src="${pageContext.request.contextPath}/image/cancelfollow.png" ></a>
+            				<a href="javascript:;"><img title="相互关注" src="${pageContext.request.contextPath}/image/followtogether.png" ></a>
+	            		</c:when>
+	            		<c:when test="${not empty ufa}">
+	            			<a href="javascript:;" onclick="cancelfollow()"><img title="取消关注" src="${pageContext.request.contextPath}/image/cancelfollow.png" ></a>
+             				<a href="javascript:;"><img title="我关注了Ta" src="${pageContext.request.contextPath}/image/follow.png" ></a>
+	            		</c:when>
+	            		<c:when test="${not empty afu}">
+	            			<a href="javascript:;" onclick="follow()"><img title="关注" src="${pageContext.request.contextPath}/image/canfollow.png" ></a>
+             				<a href="javascript:;"><img title="Ta关注了我" src="${pageContext.request.contextPath}/image/Tafollow.png" ></a>
+	            		</c:when>
+	            		<c:when test="${not empty notf}">
+	            			<a href="javascript:;" onclick="follow()"><img title="关注" src="${pageContext.request.contextPath}/image/canfollow.png" ></a>            				
+	            		</c:when>
+	            	</c:choose>	            	
+	            </c:if>	            
+            	<script type="text/javascript">
+            		function follow(){
+            			var id = "${userBean.id}";//用户id
+            			var author_id="${uBean.id}";//获取作者id
+            			$.ajax({
+            				type:"POST",//用post方式传输
+            				dataType:"json",//数据格式:JSON
+            				url:"/ThreeBlog_V1.0/UserServlet?method=addFollow" ,//目标地址
+            				data:{
+            					"following_id":id,
+            					"follower_id":author_id
+            				},
+            				error:function(){
+            					alert("出错！");
+            				},
+            				success:function(data){
+            					if(data){
+            						alert("关注成功！");    
+            						$("#head_follow_oo").load(location.href+" #head_follow_o");
+            					}else{
+            						alert("关注失败！");
+            					}
+            				}
+            			});
+					}
+            		
+            		function cancelfollow() {
+            			var id = "${userBean.id}";//用户id
+            			var author_id="${uBean.id}";//作者id
+            			$.ajax({
+            				type:"POST",//用post方式传输
+            				dataType:"json",//数据格式:JSON
+            				url:"/ThreeBlog_V1.0/UserServlet?method=cancelFollow" ,//目标地址
+            				data:{
+            					"following_id":id,
+            					"follower_id":author_id
+            				},
+            				error:function(){
+            					alert("出错！");
+            				},
+            				success:function(data){
+            					if(data){
+            						alert("取消关注成功！");  
+            						$("#head_follow_oo").load(location.href+" #head_follow_o");
+            					}else{
+            						alert("取消关注失败！");
+            					}
+            				}
+            			});
+					}
+            	</script>
+            </div>
             </div>
     	</div>
         <!--导航栏-->
         <div id="othercenter_lead">
         	<ul>
-            	<li><span>Ta的主页</span></li>
-                <li><span>Ta的收藏</span></li>
-                <li><span>Ta的相册</span></li>
+            	<li><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" ><span>Ta的主页</span></a></li>
+                <li><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}""><span>Ta的收藏</span></a></li>
+                <li><a href="javascript:;"><span>Ta的相册</span></a></li>
             </ul>
         </div>
          <!--相册-->
         <div id="introduce_all">
         	<div id="personalcenter_ablum">
-            	<span>█ 相册</span>
-                
+            	<span>█ 相册</span>               
                 <div id="gallery2" class="gallery">
+                <%
+	                //UserService uService=new UserServiceImpl();
+	        		List<AblumBean> photos = uService.findUserPhotosByUid(uid);
+	        		if(photos.isEmpty()){		        			
+	        			Calendar c=Calendar.getInstance();
+	        			int nowYear = c.get(Calendar.YEAR);
+	        			request.setAttribute("nowYear", nowYear);
+        		%>
+	        	  <div class="gallery_years">
+	                      <span>${nowYear}</span><br>
+	                      <div align="center">
+	                      	<p><strong>未上传过照片</strong></p>
+	                      </div>
+	              </div>	        	
+	        	<%}else{%>
+	        		<!--2019年图片  -->
                 	<div class="gallery_years">
-                    <span>2018</span><br>
-                    <a href="image/pic2.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/pic2.jpg) no-repeat center;"></div></a>
-                    <a href="image/pic3.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/pic3.jpg) no-repeat center;"></div></a>
-                    <a href="image/pic4.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/pic4.jpg) no-repeat center;"></div></a>
-                    </div>
-                    <div class="gallery_years">
-                    <span>2017</span><br>
-                     <a href="image/2.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/2.jpg) no-repeat center;"></div></a>
-                      <a href="image/3.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/3.jpg) no-repeat center;"></div></a>
-                      <a href="image/1.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/1.jpg) no-repeat center;"></div></a>
-                      </div>
-                      <div class="gallery_years">
-                      <span>2016</span><br>
-                      <a href="image/background_1.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/background_1.jpg) no-repeat center;"></div></a>
-                      <a href="image/background_2.jpg" title="2018-05-04"><div  class="gallery_div" style="background:url(image/background_2.jpg) no-repeat center;"></div></a>
-                      <a href="image/background_3.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/background_3.jpg) no-repeat center;"></div></a>
-                      <a href="image/background_4.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/background_4.jpg) no-repeat center;"></div></a>
-                      <a href="image/background_5.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/background_5.jpg) no-repeat center;"></div></a>
-                      </div>
-                    <div class="gallery_years">
-                    <span>2015</span><br>
-                      <a href="image/background_6.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/background_6.jpg) no-repeat center;"></div></a>
-                      <a href="image/background_7.jpg" title="2018-05-04"><div class="gallery_div" style="background:url(image/background_7.jpg) no-repeat center;"></div></a>
-                      </div>
+                    <span>2019</span><br>
+                    <%	
+			        		int y2019=2019;
+	        				List<AblumBean> ps2019 = uService.findPhotosByUidYear(uid,y2019);
+			        		if(ps2019.isEmpty()){
+			        	%>
+			        	
+			        		<div align="center">
+		                      	<p><strong>此年未上传过照片</strong></p>
+		                    </div>		                    
+			        	<%	
+			        		}else{
+								for(int i=0;i<ps2019.size();i++){
+			        				AblumBean photo2019=ps2019.get(i);//拿到 2019年 每张图片信息
+			        				request.setAttribute("photo2019", photo2019);
+			        	%>             	
+	                      	<a href="${photo2019.photo }" title="${photo2019.upload_date }"><div class="gallery_div" style="background:url(${photo2019.photo }) no-repeat center;"></div></a>                     
+	                   <%}}%>
+	                    </div>
+                    	<!--2018年图片  -->
+	                   <div class="gallery_years">	
+                       	 <span>2018</span><br>
+	                    <%	
+			        		int y2018=2018;
+	        				List<AblumBean> ps2018 = uService.findPhotosByUidYear(uid,y2018);
+			        		if(ps2018.isEmpty()){
+			        	%>
+			        	
+			        		<div align="center">
+		                      	<p><strong>此年未上传过照片</strong></p>
+		                    </div>
+		                    
+			        	<%	
+			        		}else{
+								for(int i=0;i<ps2018.size();i++){
+			        				AblumBean photo2018=ps2018.get(i);//拿到 2019年 每张图片信息
+			        				request.setAttribute("photo2018", photo2018);
+			        	%>              	
+	                      	<a href="${photo2018.photo }" title="${photo2018.upload_date }"><div class="gallery_div" style="background:url(${photo2018.photo }) no-repeat center;"></div></a>                     
+	                   	<%	}}%>
+	                   	</div>
+                     <%} %>
                 </div>
 				<script>
                 $('#gallery2').rebox({ selector: 'a' });

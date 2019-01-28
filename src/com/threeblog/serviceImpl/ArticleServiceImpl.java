@@ -9,17 +9,20 @@ import com.threeblog.dao.AnswersDao;
 import com.threeblog.dao.ArticleDao;
 import com.threeblog.dao.CollectDao;
 import com.threeblog.dao.CommentDao;
+import com.threeblog.dao.ReportDao;
 import com.threeblog.dao.ZanDao;
 import com.threeblog.daoImpl.AnswersDaoImpl;
 import com.threeblog.daoImpl.ArticleDaoImpl;
 import com.threeblog.daoImpl.CollectDaoImpl;
 import com.threeblog.daoImpl.CommentDaoImpl;
+import com.threeblog.daoImpl.ReportDaoImpl;
 import com.threeblog.daoImpl.ZanDaoImpl;
 import com.threeblog.domain.AnswerBean;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
 import com.threeblog.domain.CollectBean;
 import com.threeblog.domain.CommentBean;
+import com.threeblog.domain.ReportBean;
 import com.threeblog.domain.ZanBean;
 import com.threeblog.service.ArticleService;
 
@@ -445,5 +448,23 @@ public  class ArticleServiceImpl implements ArticleService {
 		List<CollectBean> list = dao.getCollectByUid(uid);
 		return list;
 	}
+
+	@Override
+	public boolean addArticleReport(ReportBean report) throws SQLException {
+		// 添加文章举报信息
+		ReportDao dao = new ReportDaoImpl();
+		boolean result = dao.addArticleReport(report);
+		return result;
+	}
+
+	@Override
+	public boolean addReviewsReport(ReportBean report) throws SQLException {
+		// 添加留言/回复举报信息
+		ReportDao dao = new ReportDaoImpl();
+		boolean result = dao.addReviewsReport(report);
+		return result;
+	}
+
+	
 	
 }

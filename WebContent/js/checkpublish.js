@@ -134,13 +134,13 @@ function checkAll(){
 				url:"/ThreeBlog_V1.0/ArticleServlet?method=CheckSensitiveWd" ,//目标地址
 				data:{"bt":tbt,"labels":tlabels,"dy":tdy,"aTxt":articleTxt},
 				error:function(){
-					alert("出错！请联系管理员！");
+					alert("出错！请稍后再试...");
 				},
 				success:function(data){
 					if(data==0){
 						var msg=confirm("发表后不能再修改哟！");
 						if(msg){
-							alert("发布成功，正在为您跳转...");
+							alert("发布成功，点击确定为您跳转...");
 							return true;
 						}else{
 							return false;

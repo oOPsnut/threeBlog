@@ -10,14 +10,17 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import com.threeblog.dao.AblumDao;
 import com.threeblog.dao.FollowDao;
 import com.threeblog.dao.MessageDao;
+import com.threeblog.dao.ReportDao;
 import com.threeblog.dao.UserDao;
 import com.threeblog.daoImpl.AblumDaoImpl;
 import com.threeblog.daoImpl.FollowDaoImpl;
 import com.threeblog.daoImpl.MessageDaoImpl;
+import com.threeblog.daoImpl.ReportDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
 import com.threeblog.domain.AblumBean;
 import com.threeblog.domain.FollowBean;
 import com.threeblog.domain.MessageBean;
+import com.threeblog.domain.ReportBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.UserService;
 import com.threeblog.util.JDBCUtil;
@@ -182,6 +185,46 @@ public class UserServiceImpl implements UserService{
 		AblumDao dao = new AblumDaoImpl();
 		boolean result = dao.addAblum(ablum);
 		return result;
+	}
+
+	@Override
+	public boolean deletePhoto(String id) throws SQLException {
+		// 删除照片
+		AblumDao dao = new AblumDaoImpl();
+		boolean result = dao.deletePhoto(id);
+		return result;
+	}
+
+	@Override
+	public List<AblumBean> findPhotosByUidYear(String uid, int year) throws SQLException {
+		// 通过用户id和年份查找此用户某年内的照片
+		AblumDao dao = new AblumDaoImpl();
+		List<AblumBean> list = dao.findPhotosByUidYear(uid, year);
+		return list;
+	}
+
+	@Override
+	public List<ReportBean> getMyIllegalsByUid(String uid) throws SQLException {
+		// 通过用户id找到所有用户的违规情况
+		ReportDao dao =new ReportDaoImpl();
+		List<ReportBean> list = dao.getMyIllegalsByUid(uid);
+		return list;
+	}
+
+	@Override
+	public boolean ensureReport(String id) throws SQLException {
+		// 确认举报信息
+		ReportDao dao = new ReportDaoImpl();
+		boolean b = dao.ensureReport(id);
+		return b;
+	}
+
+	@Override
+	public List<ReportBean> getMyReportsByUid(String uid) throws SQLException {
+		// 通过用户id找到所有用户的举报情况
+		ReportDao dao = new ReportDaoImpl();
+		List<ReportBean> list = dao.getMyReportsByUid(uid);
+		return list;
 	}
 
 }

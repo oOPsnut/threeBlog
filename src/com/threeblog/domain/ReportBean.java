@@ -1,5 +1,7 @@
 package com.threeblog.domain;
 
+import java.util.Date;
+
 public class ReportBean {
 	
 	private String id;
@@ -13,6 +15,8 @@ public class ReportBean {
 	private String author_id;
 	private String user_id;
 	private String content_id;
+	private Date add_time;
+	private Date notice_time;
 	private String status1;
 	private String status2;
 	private String status3;
@@ -82,6 +86,18 @@ public class ReportBean {
 	public void setContent_id(String content_id) {
 		this.content_id = content_id;
 	}
+	public Date getAdd_time() {
+		return add_time;
+	}
+	public void setAdd_time(Date add_time) {
+		this.add_time = add_time;
+	}
+	public Date getNotice_time() {
+		return notice_time;
+	}
+	public void setNotice_time(Date notice_time) {
+		this.notice_time = notice_time;
+	}
 	public String getStatus1() {
 		return status1;
 	}
@@ -105,12 +121,12 @@ public class ReportBean {
 		return "ReportBean [id=" + id + ", username=" + username + ", type=" + type + ", content=" + content
 				+ ", simple_reason=" + simple_reason + ", all_reason=" + all_reason + ", feedback_reason="
 				+ feedback_reason + ", url=" + url + ", author_id=" + author_id + ", user_id=" + user_id
-				+ ", content_id=" + content_id + ", status1=" + status1 + ", status2=" + status2 + ", status3="
-				+ status3 + "]";
+				+ ", content_id=" + content_id + ", add_time=" + add_time + ", notice_time=" + notice_time
+				+ ", status1=" + status1 + ", status2=" + status2 + ", status3=" + status3 + "]";
 	}
 	public ReportBean(String id, String username, String type, String content, String simple_reason, String all_reason,
-			String feedback_reason, String url, String author_id, String user_id, String content_id, String status1,
-			String status2, String status3) {
+			String feedback_reason, String url, String author_id, String user_id, String content_id, Date add_time,
+			Date notice_time, String status1, String status2, String status3) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -123,6 +139,8 @@ public class ReportBean {
 		this.author_id = author_id;
 		this.user_id = user_id;
 		this.content_id = content_id;
+		this.add_time = add_time;
+		this.notice_time = notice_time;
 		this.status1 = status1;
 		this.status2 = status2;
 		this.status3 = status3;

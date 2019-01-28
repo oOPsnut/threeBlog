@@ -218,7 +218,7 @@ $(function() {
            	</a>
            	</c:if>
            	<c:if test="${userBean.id != aBean.author_id }">
-            <a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${author.id}">
+            <a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${author.id}">
               <img src="${author.head }"/>
               <span>${aBean.author}</span>
            	</a>
@@ -256,22 +256,23 @@ $(function() {
             </div>
             <div id="a_down_tools">
             	<div id="tools_like">
-            	<c:choose>
-            		<c:when test="${userBean.id==aBean.author_id }">
+            	<c:if test="${not empty userBean }">
+            		<c:if test="${userBean.id==aBean.author_id }">
             			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
-            		</c:when>
-            		<c:when test="${userBean.id!=aBean.author_id }">
+            		</c:if>
+            		<c:if test="${userBean.id!=aBean.author_id }">
             			<c:if test="${empty zBean }">
             				<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
             			</c:if>
             			<c:if test="${not empty zBean }">
             			<img  id="like" src="${zBean.zpic}"  title="赞">
             			</c:if>
-            		</c:when>
-            		<c:when test="${empty userBean }">
+            		</c:if>
+            	</c:if>
+            		<c:if test="${empty userBean }">
             			<img  id="like" src="${pageContext.request.contextPath}/image/unlike.png"  title="赞">
-            		</c:when>
-            	</c:choose>
+            		</c:if>
+            	
                     <span>点赞</span>
                     <span id="slike">${aBean.liked_num }</span>
                     <!--点赞图标更换的js-->
@@ -300,7 +301,7 @@ $(function() {
 			    								"id":id
 			    							},
 		    								error:function(){
-		    									alert("出错！");
+		    									alert("出错！请稍后再试...");
 		    								},
 		    								success:function(data){
 		    									if(data){
@@ -322,11 +323,11 @@ $(function() {
 		    								url:"/ThreeBlog_V1.0/ArticleServlet?method=UpdateArticleZan" ,//目标地址
 		    								data:{
 		    									"article_id":article_id,
-		    									"id": id,
+		    									"id": "${zBean.id}",
 		    									"zpic":"/ThreeBlog_V1.0/image/unlike.png"
 			    								},
 		    								error:function(){
-		    									alert("出错！");
+		    									alert("出错！请稍后再试...");
 		    								},
 		    								success:function(data){
 		    									if(data){
@@ -403,7 +404,7 @@ $(function() {
 			    								"id":id
 			    							},
 		    								error:function(){
-		    									alert("出错！");
+		    									alert("出错！请稍后再试...");
 		    								},
 		    								success:function(data){
 		    									if(data){
@@ -425,11 +426,11 @@ $(function() {
 		    								url:"/ThreeBlog_V1.0/ArticleServlet?method=UpdateArticleCollect" ,//目标地址
 		    								data:{
 		    									"article_id":article_id,
-		    									"id": id,
+		    									"id": "${cBean.id}",
 		    									"cpic":"/ThreeBlog_V1.0/image/unfavor.png"
 			    								},
 		    								error:function(){
-		    									alert("出错！");
+		    									alert("出错！请稍后再试...");
 		    								},
 		    								success:function(data){
 		    									if(data){
@@ -511,7 +512,7 @@ $(function() {
                 <div id="tools_report">
                 	<c:if test="${not empty userBean }">
 	                	<c:if test="${userBean.id!=aBean.author_id }">
-	        				<a href="${pageContext.request.contextPath}/reportcenter/report_article.jsp?id=${aBean.id}">
+	        				<a href="${pageContext.request.contextPath}/jsp/reportcenter/report_article.jsp?id=${aBean.id}">
 		        				<img src="${pageContext.request.contextPath}/image/report.png" id="report" title="举报">
 		        				<span>举报</span>
 	        				</a>
@@ -592,16 +593,22 @@ $(function() {
 								<div class="date-dz">
 									<span class="date-dz-left pull-left comment-time"><%=df.format(comment.getAdd_time())%></span>
 									<div class="date-dz-right pull-right comment-pl-block">
-										
-										<a href="javascript:;" class="removeBlock">举报</a>
-										<c:if test="${commenterBean.id==userBean.id }">
-											<a href="javascript:;" class="delete">删除</a>
-										</c:if>
-										<a href="javascript:;" class="date-dz-pl pl-hf pull-left">回复</a>
-										<span class="pull-left date-dz-line">|</span>
+										<c:if test="${not empty userBean }">
+											<c:if test="${commenterBean.id!=userBean.id }">
+												<a href="javascript:;" class="removeBlock">举报</a>
+											</c:if>																			
+											<c:if test="${commenterBean.id==userBean.id }">
+												<a href="javascript:;" class="delete">删除</a>
+											</c:if>
+											<c:if test="${commenterBean.id!=userBean.id }">
+												<a href="javascript:;" class="date-dz-pl pl-hf pull-left">回复</a>
+											</c:if>
+											<span class="pull-left date-dz-line">|</span>
+										</c:if>	
 										<!--赞-->
-										<a href="javascript:;" class="date-dz-z pull-left"><i
-											class="date-dz-z-click-red"></i>赞 (<i class="z-num">${comment.zan}</i>)</a>
+											<a href="javascript:;" class="date-dz-z pull-left">
+											<i class="date-dz-z-click-red"></i>赞 (<i class="z-num">${comment.zan}</i>)</a>
+										
 									</div>
 									
 								</div>
@@ -632,16 +639,20 @@ $(function() {
 										<div class="date-dz">
 											<span class="date-dz-left pull-left comment-time"><%=df.format(answer.getAdd_time())%></span>
 											<div class="date-dz-right pull-right comment-pl-block">
-												
-												<a href="javascript:;" class="removeBlock">举报</a>
-												<c:if test="${commenterBean.id==userBean.id }">
-												<a href="javascript:;" class="delete">删除</a>
+											<c:if test="${not empty userBean }">
+												<c:if test="${answerUBean.id!=userBean.id }">
+													<a href="javascript:;" class="removeBlock">举报</a>
 												</c:if>
-												<a href="javascript:;"
-													class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span
-													class="pull-left date-dz-line">|</span> <a
-													href="javascript:;" class="date-dz-z pull-left"> <i
-													class="date-dz-z-click-red"></i>赞 (<i class="z-num">${answer.zan}</i>
+												<c:if test="${answerUBean.id==userBean.id }">
+													<a href="javascript:;" class="delete">删除</a>
+												</c:if>
+												<c:if test="${answerUBean.id!=userBean.id }">
+													<a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> 
+												</c:if>
+												<span class="pull-left date-dz-line">|</span> 
+											</c:if>	
+												<a href="javascript:;" class="date-dz-z pull-left">
+												 <i class="date-dz-z-click-red"></i>赞 (<i class="z-num">${answer.zan})</i>
 												</a>
 											</div>
                                     </div>
@@ -713,7 +724,7 @@ $(function() {
 												     						+ oSize+ 
 												     						'</span></div><div class="date-dz"><span class="date-dz-left pull-left comment-time">'
 												     						+ add_time+
-												     						'</span><div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock">举报</a><a href="javascript:;" class="delete">删除</a> <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a></div></div><div class="hf-list-con"></div></div></div>';			
+												     						'</span><div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="delete">删除</a> <span class="pull-left date-dz-line">|</span> <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a></div></div><div class="hf-list-con"></div></div></div>';			
 												}
 											}); 
 											$.ajaxSettings.async = true;  
@@ -860,7 +871,7 @@ $(function() {
 																							+ oAt+ 
 																							'</span></div><div class="date-dz"><span class="date-dz-left pull-left comment-time">'
 																							+ add_time+ 
-																							'</span><div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="removeBlock">举报</a><a href="javascript:;" class="delete">删除</a><a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a><span class="pull-left date-dz-line">|</span><a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a></div></div></div>';
+																							'</span><div class="date-dz-right pull-right comment-pl-block"><a href="javascript:;" class="delete">删除</a><span class="pull-left date-dz-line">|</span><a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">0</i>)</a></div></div></div>';
 																			
 																	}     
 																}); 

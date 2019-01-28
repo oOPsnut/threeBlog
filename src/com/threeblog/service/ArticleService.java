@@ -10,6 +10,7 @@ import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
 import com.threeblog.domain.CollectBean;
 import com.threeblog.domain.CommentBean;
+import com.threeblog.domain.ReportBean;
 import com.threeblog.domain.ZanBean;
 
 /**
@@ -433,4 +434,22 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	List<CollectBean> getCollectByUid(String uid)throws SQLException;
+
+	/**
+	 * 添加文章举报信息
+	 * @param report
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addArticleReport(ReportBean report)throws SQLException;
+
+	/**
+	 * 添加留言/回复举报信息
+	 * @param report
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addReviewsReport(ReportBean report)throws SQLException;
+
+	
 }

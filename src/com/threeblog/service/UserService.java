@@ -7,6 +7,7 @@ import java.util.List;
 import com.threeblog.domain.AblumBean;
 import com.threeblog.domain.FollowBean;
 import com.threeblog.domain.MessageBean;
+import com.threeblog.domain.ReportBean;
 import com.threeblog.domain.UserBean;
 
 /**
@@ -170,4 +171,45 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	boolean addAblum(AblumBean ablum)throws SQLException;
+
+	/**
+	 * 删除照片
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deletePhoto(String id)throws SQLException;
+	
+	/**
+	 * 通过用户id和年份查找此用户某年内的照片
+	 * @param uid
+	 * @param year
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AblumBean> findPhotosByUidYear(String uid,int year)throws SQLException;
+	
+	/**
+	 * 通过用户id找到所有用户的违规情况
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ReportBean> getMyIllegalsByUid(String uid)throws SQLException;
+	
+	/**
+	 * 确认举报信息
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ensureReport(String id)throws SQLException;
+	
+	/**
+	 * 通过用户id找到所有用户的举报情况
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ReportBean> getMyReportsByUid(String uid)throws SQLException;
 }

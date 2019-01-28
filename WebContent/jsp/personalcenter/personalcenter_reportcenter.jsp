@@ -6,11 +6,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="toTop" content="true">
-<title>个人中心</title>
+<title>举报中心</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
-<link rel="stylesheet" href="css/calendar.css">
-
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
+<script src="${pageContext.request.contextPath}/js/changePage.js"></script>
+<script src="${pageContext.request.contextPath}/js/changePageR.js"></script>
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/class.js"></script>
 <script src="${pageContext.request.contextPath}/js/MsgBox.js"></script>
@@ -46,7 +47,7 @@ $(function() {
 
 </head>
 
-<body>
+<body onload="myReport()">
 <!--顶端栏begin-->
 <div id="index_head">
   <div id="index_head_logo"> <img src="${pageContext.request.contextPath}/image/logo.png"> </div>
@@ -155,8 +156,7 @@ $(function() {
             	<span>${userBean.username}</span>		 				
             </div>
             
-            <div id="head_introduce" align="center">
-              
+            <div id="head_introduce" align="center">           
               	<span><strong>个人简介:</strong></span><br>
                 <span>▷${userBean.introduction }
                 </span>
@@ -175,81 +175,13 @@ $(function() {
            <div id="personalcenter_reportcenter">
         		<!--列表up-->
             	<div class="reportcenter_top">
-                	<a href="#"><span>我的举报</span></a>
+                	<a href="javascript:;" onclick="myReport()"><span>我的举报</span></a>
                     <span id="reportcenter_top_span">|</span>
-                   	<a href="#"><span>我的违规</span></a>
+                   	<a href="javascript:;" onclick="myillegal()"><span>我的违规</span></a>
                 </div>
                 <!--列表down-->
                 <div class="reportcenter_down">
-                	<table border="1" id="down_report">
-                        <tr>
-                        <th width="15%">被举报人</th>
-                        <th width="45%">被举报内容与说明</th>
-                        <th width="20%">举报类型</th>
-                        <th width="20%">处理状态</th>
-                        </tr>
-                        <tr>
-                            <td>jerry</td>
-                            <td>被举报博文：“我们是时间的旅行者”；详细理由：这个人开挂</td>
-                            <td>其他</td>
-                            <td>博文已删除</td>
-                        </tr>
-                        <tr>
-                            <td>用户007</td>
-                            <td>被举报评论:“丢”；详细理由：</td>
-                            <td>违反社会主义核心价值观</td>
-                            <td>等待处理</td>
-                        </tr>
-                        <tr>
-                            <td>shui</td>
-                            <td>被举报评论:“丢”；详细理由：</td>
-                            <td>违反社会主义核心价值观</td>
-                            <td>等待处理</td>
-                        </tr>
-                        <tr>
-                            <td>456</td>
-                            <td>被举报评论:“haha”；详细理由：</td>
-                            <td>违反社会主义核心价值观</td>
-                            <td>等待处理</td>
-                        </tr>
-                    </table>
-                    
-                    <table id="down_illegal" border="1">
-                    <tr>
-                        <th width="55%">违规通知</th>
-                        <th width="25%">通知时间</th>
-                        <th width="30%">处理</th>
-                    </tr>
-                    <tr>
-                        <td>你在博文“···”下的评论因涉嫌违规，已被删除</td>
-                        <td>2018-05-15</td>
-                        <td>
-                        	<input type="button" value="确定"/>
-                            <a href="feedback_reviews.html">反馈</a></td>
-                    </tr>
-                    <tr>
-                    <td>你的博文“···”因涉嫌违规，已被删除</td>
-                    <td>2018-05-30</td>
-                    <td>
-                    	<input type="button" value="确定" />
-                    	<a href="feedback_article.html">反馈</a></td>
-                    </tr>
-                    <tr>
-                    <td>你多次涉嫌违规，账号已被锁定，限制时间：<span>2018-05-30到2019-05-01</span></td>
-                    <td>2018-06-01</td>
-                    <td><input type="button" value="确定" /><a href="feedback_user.html">反馈</a></td>
-                    </tr>
-                    <tr>
-                    <td>你的博文“···”因涉嫌违规，已被删除</td>
-                    <td>2018-04-30</td>
-                    <td><span>已确定</span></td>
-                    </tr>
-                    <tr>
-                    <td>你的博文“···”因涉嫌违规，已被删除</td>
-                    <td>2018-03-03</td>
-                    <td><span>反馈等待审核</span></td>
-                    </tr>
-                    </table>
+                	
                 </div>
         	</div>  
         </div>

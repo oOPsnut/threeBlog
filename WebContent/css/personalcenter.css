@@ -472,13 +472,13 @@
 	width:270px; 
 	height:210px;
 	margin-bottom:30px;}
-.delete_pic_n button{
+.delete_pic_n a{
+	text-align:center;
+	float:left;
 	width:270px;
 	background-color:#FF6464; 
-	border:1px solid #FF6464; 
 	color:#FFF; 
-	cursor:pointer; 
-	margin-top:200px;
+	margin-top:190px;
 	}
 .introduce_right_f{
 	width:640px;

@@ -27,4 +27,21 @@ public interface AblumDao {
 	 * @throws SQLException
 	 */
 	boolean addAblum(AblumBean ablum)throws SQLException;
+	
+	/**
+	 * 删除照片
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deletePhoto(String id)throws SQLException;
+	
+	/**
+	 * 通过用户id和年份查找此用户某年内的照片
+	 * @param uid
+	 * @param year
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AblumBean> findPhotosByUidYear(String uid,int year)throws SQLException;
 }

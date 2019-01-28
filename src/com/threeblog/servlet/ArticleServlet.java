@@ -309,6 +309,7 @@ public class ArticleServlet extends BaseServlet {
 			String id = request.getParameter("id");
 			String zpic=request.getParameter("zpic");
 			
+			//System.out.println(article_id+"="+id+"="+zpic);
 			ArticleService aService = new ArticleServiceImpl();			
 			
 			//将数据写进点赞表

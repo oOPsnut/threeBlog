@@ -65,7 +65,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -127,7 +127,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -189,7 +189,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -251,7 +251,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -313,7 +313,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -375,7 +375,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -437,7 +437,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -502,7 +502,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -564,7 +564,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -626,7 +626,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -688,7 +688,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -750,7 +750,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -812,7 +812,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
@@ -890,7 +890,7 @@
 									url:"/ThreeBlog_V1.0/ArticleServlet?method=DeleteArticle" ,//目标地址
 									data:{"id":aid},
 									error:function(){
-										alert("出错！请联系管理员！");
+										alert("出错！请稍后再试...");
 									},
 									success:function(data){
 										if (data) {
