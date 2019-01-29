@@ -18,7 +18,7 @@
 </head>
 
 <body>
-                	<table border="1" id="down_report">
+                	<table border="1" id="down_report" style="width: 100%">
                         <tr>
                         <th width="15%">被举报人</th>
                         <th width="45%">被举报内容与说明</th>
@@ -34,7 +34,7 @@
 	                    	if(reports.isEmpty()){
                    		%>
                    		<tr>
-                        	<td colspan="4" style="padding: 20px;"><strong>没有违规记录！</strong></td>                     
+                        	<td colspan="4" style="padding: 20px;"><strong>没有举报记录！</strong></td>                     
                     	</tr>
 	                    <%		
 	                    }else{
@@ -44,33 +44,56 @@
 	                    		String aid = rBean.getContent_id();//文章id
 	                    		ArticleBean aBean = aService.findArticle(aid);
 	                    		request.setAttribute("aBean", aBean);
+	                    		//System.out.println(rBean);
 	                    %>
+	                    <c:if test="${rBean.type=='举报文章' }">	  	                                   
                         <tr>
                             <td>${rBean.username }</td>
-                            <td>被举报博文:<a href="${rBean.url}" target="_blank">《${aBean.title}》</a>;█ 详细理由:${rBean.all_reason}</td>
+                            <td>被举报博文：<a href="${rBean.url}" target="_blank"><strong>《${aBean.title}》</strong></a>；█ 详细理由：${rBean.all_reason}</td>
                             <td>${rBean.simple_reason}</td>
-                            <c:if test="">
-                            	<td>博文已删除</td>
+                            <c:if test="${rBean.status1=='未处理' }">
+                            	<td>等待处理</td>
+                            </c:if>
+                            <c:if test="${rBean.status1=='已处理'&&rBean.status2=='屏蔽' }">
+                            	<td>该博文已被屏蔽</td>
+                            </c:if>
+                            <c:if test="${rBean.status1=='已处理'&&rBean.status2=='正常'}">
+                            	<td>该博文未检测到违规</td>
                             </c:if>
                         </tr>
+                        </c:if>
+                        <c:if test="${rBean.type=='举报留言'}">
                         <tr>
-                            <td>用户007</td>
-                            <td>被举报评论:“丢”；详细理由：</td>
-                            <td>违反社会主义核心价值观</td>
-                            <td>等待处理</td>
+                            <td>${rBean.username }</td>
+                            <td>被举报评论：“<a href="${rBean.url}" target="_blank"><strong>${rBean.content }</strong></a>”；█ 详细理由：${rBean.all_reason }</td>
+                            <td>${rBean.simple_reason}</td>
+                            <c:if test="${rBean.status1=='未处理' }">
+                            	<td>等待处理</td>
+                            </c:if>
+                            <c:if test="${rBean.status1=='已处理'&&rBean.status2=='屏蔽' }">
+                            	<td>该留言已被屏蔽</td>
+                            </c:if>
+                            <c:if test="${rBean.status1=='已处理'&&rBean.status2=='正常'}">
+                            	<td>该留言未检测到违规</td>
+                            </c:if>
                         </tr>
+                        </c:if>
+                        <c:if test="${rBean.type=='举报回复' }">
                         <tr>
-                            <td>shui</td>
-                            <td>被举报评论:“丢”；详细理由：</td>
-                            <td>违反社会主义核心价值观</td>
-                            <td>等待处理</td>
+                            <td>${rBean.username }</td>
+                            <td>被举报评论：“<a href="${rBean.url}" target="_blank"><strong>${rBean.content.substring(rBean.content.indexOf(":",rBean.content.indexOf(":")+1)+3) }</strong></a>”；█ 详细理由：${rBean.all_reason }</td>
+                            <td>${rBean.simple_reason}</td>
+                            <c:if test="${rBean.status1=='未处理' }">
+                            	<td>等待处理</td>
+                            </c:if>
+                            <c:if test="${rBean.status1=='已处理'&&rBean.status2=='屏蔽' }">
+                            	<td>该回复已被屏蔽</td>
+                            </c:if>
+                            <c:if test="${rBean.status1=='已处理'&&rBean.status2=='正常'}">
+                            	<td>该回复未检测到违规</td>
+                            </c:if>
                         </tr>
-                        <tr>
-                            <td>456</td>
-                            <td>被举报评论:“haha”；详细理由：</td>
-                            <td>违反社会主义核心价值观</td>
-                            <td>等待处理</td>
-                        </tr>
+                        </c:if>
                         <%}} %>
                     </table>
                     

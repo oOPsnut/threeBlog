@@ -605,14 +605,16 @@
 	border:none;
 	background-color:#E9EAEC;
 	}
+.reportcenter_down table tr td{
+	padding:15px;
+	}
 #down_illegal tr td input{
 	cursor:pointer;
 	background-color:#FFF;
 	font-size:14px;
 	margin-right:20px;
 	border:1px solid;}
-#down_illegal tr td a{
-	border:1px solid; 
+#down_illegal tr td a{	
 	color:#333;
 	font-size:15px;
 	padding:1px 3px;}

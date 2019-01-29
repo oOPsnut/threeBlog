@@ -211,7 +211,7 @@ CREATE TABLE `t_report` (
   `content_id` VARCHAR(32) NOT NULL,
   `add_time` DATETIME NOT NULL , 
   `notice_time` DATETIME NULL,
-  `status` VARCHAR(6) DEFAULT '未处理',
+  `status1` VARCHAR(6) DEFAULT '未处理',
   `status2` VARCHAR(6) DEFAULT '正常',
   `status3` VARCHAR(6) DEFAULT '未确定',
   PRIMARY KEY (`id`),

@@ -40,9 +40,10 @@ public class ReportServlet extends BaseServlet {
 		//从session中获取用户id等信息
 		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
 		String user_id = userBean.getId();
-		//生成举报文章id、举报类型
+		//生成举报文章id、举报类型,反馈原因
 		String id = UUIDUtils.getId();
 		String type="举报文章";
+		String feedback_reason="空";
 		//举报时间
 		Date now=new Date();
 		Date add_time=new Date(now.getTime());
@@ -54,6 +55,7 @@ public class ReportServlet extends BaseServlet {
 		report.setContent(content);
 		report.setSimple_reason(simple_reason);
 		report.setAll_reason(all_reason);
+		report.setFeedback_reason(feedback_reason);
 		report.setUrl(url);
 		report.setAuthor_id(author_id);
 		report.setUser_id(user_id);
@@ -95,8 +97,9 @@ public class ReportServlet extends BaseServlet {
 		//从session中获取用户名等信息
 		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
 		String user_id = userBean.getId();
-		//生成举报文章id、举报类型
+		//生成举报文章id、举报类型,反馈原因
 		String id = UUIDUtils.getId();
+		String feedback_reason="空";
 		//判断是留言还是回复
 		String type=null;
 		if("comment".equals(flag)) {			
@@ -112,6 +115,7 @@ public class ReportServlet extends BaseServlet {
 		report.setContent(content);
 		report.setSimple_reason(simple_reason);
 		report.setAll_reason(all_reason);
+		report.setFeedback_reason(feedback_reason);
 		report.setUrl(url);
 		report.setAuthor_id(author_id);
 		report.setUser_id(user_id);
@@ -136,7 +140,7 @@ public class ReportServlet extends BaseServlet {
 	}
 	
 	
-	//举报确定
+	//举报确定(接受惩罚)
 	public void EnsureReport(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
 		
 		//获取表单数据
@@ -149,6 +153,28 @@ public class ReportServlet extends BaseServlet {
 			response.getWriter().println(true);
 		} else {
 			response.getWriter().println(false);
+		}
+		
+	}	
+	
+	
+	//博文反馈
+	public String Feedback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取表单数据
+		String id = request.getParameter("rid");//违规id
+		String feedback_reason = request.getParameter("feedback_reason");
+		//改变status3
+		String status3="等待审核";
+		//调用服务
+		UserService uService = new UserServiceImpl();
+		boolean result = uService.feedback(id,feedback_reason,status3);
+		if (result) {
+			response.sendRedirect(request.getContextPath()+"/RedirectServlet?method=personalCenterUI");
+			return null;
+		} else {
+			response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+			return null;
 		}
 		
 	}	

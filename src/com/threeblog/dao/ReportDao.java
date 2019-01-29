@@ -51,4 +51,22 @@ public interface ReportDao {
 	 * @throws SQLException
 	 */
 	List<ReportBean> getMyReportsByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过举报id找到对应的举报信息
+	 * @param rid
+	 * @return
+	 * @throws SQLException
+	 */
+	ReportBean getReportByRid(String rid)throws SQLException;
+	
+	/**
+	 * 添加反馈理由
+	 * @param id
+	 * @param feedback_reason
+	 * @param status3
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean feedback(String id, String feedback_reason,String status3)throws SQLException;
 }

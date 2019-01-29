@@ -227,4 +227,52 @@ public class UserServiceImpl implements UserService{
 		return list;
 	}
 
+	@Override
+	public ReportBean getReportByRid(String rid) throws SQLException {
+		// 通过举报id找到对应的举报信息
+		ReportDao dao =new ReportDaoImpl();
+		ReportBean reportBean = dao.getReportByRid(rid);
+		return reportBean;
+	}
+
+	@Override
+	public boolean feedback(String id, String feedback_reason,String status3) throws SQLException {
+		// 添加反馈理由
+		ReportDao dao =new ReportDaoImpl();
+		boolean feedback = dao.feedback(id, feedback_reason,status3);
+		return feedback;
+	}
+
+	@Override
+	public Long countReviews(String uid) throws SQLException {
+		// 通过用户id获取评论消息数目
+		MessageDao dao = new MessageDaoImpl();
+		Long count = dao.countReviews(uid);
+		return count;
+	}
+
+	@Override
+	public Long countFollows(String uid) throws SQLException {
+		// 通过用户id获取关注消息数目
+		MessageDao dao = new MessageDaoImpl();
+		Long count = dao.countFollows(uid);
+		return count;
+	}
+
+	@Override
+	public Long countCollects(String uid) throws SQLException {
+		// 通过用户id获取收藏消息数目
+		MessageDao dao = new MessageDaoImpl();
+		Long count = dao.countCollects(uid);
+		return count;
+	}
+
+	@Override
+	public Long countZans(String uid) throws SQLException {
+		//通过用户id获取点赞消息数目
+		MessageDao dao = new MessageDaoImpl();
+		Long count = dao.countZans(uid);
+		return count;
+	}
+
 }

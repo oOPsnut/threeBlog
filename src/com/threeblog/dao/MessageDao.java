@@ -17,4 +17,36 @@ public interface MessageDao {
 	 * @throws SQLException
 	 */
 	void addMessage(MessageBean message)throws SQLException;
+	
+	/**
+	 * 通过用户id获取评论消息数目
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countReviews(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取关注消息数目
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countFollows(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取收藏消息数目
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countCollects(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取点赞消息数目
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countZans(String uid)throws SQLException;
 }

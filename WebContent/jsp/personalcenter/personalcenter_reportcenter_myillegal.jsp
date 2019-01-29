@@ -18,7 +18,7 @@
 </head>
 
 <body>                    
-                    <table id="down_illegal" border="1">
+                    <table id="down_illegal" border="1" style="width: 100%">
                     <tr>
                         <th width="55%">违规通知</th>
                         <th width="25%">通知时间</th>
@@ -43,11 +43,12 @@
                     		String aid = rBean.getContent_id();//文章id
                     		ArticleBean aBean = aService.findArticle(aid);
                     		request.setAttribute("aBean", aBean);
+                    		//System.out.println(rBean);
                     %>
-                    <c:if test="${rBean.status=='已处理'&&rBean.status2=='屏蔽'}">
+                    <c:if test="${rBean.status1=='已处理'&&rBean.status2=='屏蔽'}">
                     	<c:if test="${rBean.type=='举报文章' }">
 	                    <tr>
-	                        <td>你的博文<a href="${rBean.url}" target="_blank">《${aBean.title}》</a>因涉嫌违规，已被屏蔽</td>
+	                        <td>你的博文“<a href="${rBean.url}" target="_blank"><strong>《${aBean.title}》</strong></a>”因涉嫌违规，已被屏蔽</td>
 	                        <td>${rBean.notice_time}</td>
 	                        <c:if test="${rBean.status3=='未确定'}">
 		                        <td>
@@ -75,9 +76,9 @@
 														}
 													}
 												});
-										}
+										}}
 		                        	</script>
-		                            <a href="${pageContext.request.contextPath}/jsp/feedback/feedback.jsp?id=${aBean.id}">反馈</a>
+		                            <a href="${pageContext.request.contextPath}/jsp/feedback/feedback.jsp?aid=${aBean.id}&rid=${rBean.id}" style="border:1px solid; ">反馈</a>
 		                        </td>
 	                        </c:if>
 	                        <c:if test="${rBean.status3=='等待审核' ||rBean.status3=='审核不通过'||rBean.status3=='已确定'}">
@@ -90,7 +91,7 @@
 	                    </c:if>
 	                    <c:if test="${rBean.type=='举报留言' ||rBean.type=='举报回复' }">
 	                    <tr>
-	                        <td>你在博文<a href="${rBean.url}" target="_blank">《${aBean.title}》</a>下的评论因涉嫌违规，已被屏蔽</td>
+	                        <td>你在博文<a href="${rBean.url}" target="_blank"><strong>《${aBean.title}》</strong></a>下的评论因涉嫌违规，已被屏蔽</td>
 	                        <td>${rBean.notice_time}</td>
 	                        <c:if test="${rBean.status3=='未确定'}">
 	                        <td>
@@ -118,7 +119,7 @@
 														}
 													}
 												});
-										}
+											}}
 		                        	</script>
 	                        </td>
 	                       </c:if>
@@ -127,6 +128,11 @@
 	                       </c:if>
 	                    </tr>
 	                    </c:if>	                    
+                    </c:if>
+                    <c:if test="${rBean.status1=='未处理'||rBean.status2=='正常'}">
+                    	<tr>
+                        	<td colspan="3" style="padding: 20px;"><strong>没有违规记录！</strong></td>                     
+                    	</tr>
                     </c:if>
                     <%}} %>
                    

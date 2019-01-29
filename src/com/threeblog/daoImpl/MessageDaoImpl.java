@@ -17,4 +17,29 @@ public class MessageDaoImpl implements MessageDao {
 		runner.update(sql, message.getId(),message.getType(),message.getReceiver_id(),message.getAnswer_id(),message.getArticle_id(),message.getText1(),message.getText2(),message.getAdd_time());
 	}
 
+	@Override
+	public Long countReviews(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select count(type) as Rtype from t_message where receiver_id=? and status='未读' and type like '%留言%' ";
+		return null;
+	}
+
+	@Override
+	public Long countFollows(String uid) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Long countCollects(String uid) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Long countZans(String uid) throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
