@@ -19,6 +19,8 @@
 <script src="${pageContext.request.contextPath}/js/MsgBox.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/messagechangeP.js"></script>
+
 <!--头部show的js-->
 <script>
 $(function(){
@@ -49,7 +51,7 @@ $(function() {
 
 </head>
 
-<body>
+<body onload="Read()">
 <!--顶端栏begin-->
 <div id="index_head">
   <div id="index_head_logo"> <img src="${pageContext.request.contextPath}/image/logo.png"> </div>
@@ -78,14 +80,47 @@ $(function() {
     	<a href="javascript:;">
         	<div style="float:left; position:relative;">
     			<img src="${pageContext.request.contextPath}/image/message.png"/>
-                	<span  id="tools_messagenumber">0</span>
+    			<c:if test="${countAll<100 }">
+                	<span  id="tools_messagenumber">${countAll }</span>
+                </c:if>
+                <c:if test="${countAll>99 }">
+                	<span  id="tools_messagenumber">...</span>
+                </c:if>
              </div>
          </a> 
          <ul class="index_tools_messages">
-         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a>
+         	<c:if test="${countReviews<99 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >${countReviews }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >...</span>
+         	</c:if>
+         	</li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a>
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">${countFollows }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a>	        	
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >${countCollects }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a>	        
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >${countZans }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >...</span>
+         	</c:if>
+	        </li>
          </ul>
     </li>
     <li>
@@ -154,30 +189,50 @@ $(function() {
         		<!--列表up-->
            	<div id="messagecenter_up">
             	<div class="up_labels">
-                    <a href="#"><span>评论消息</span></a>
-                    <span class="up_labels_num">0</span>
+                    <a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI"><span>评论消息</span></a>
+                    <c:if test="${countReviews<100 }">
+                    	<span class="up_labels_num">${countReviews }</span>
+                    </c:if>
+                    <c:if test="${countReviews>99 }">
+                    	<span class="up_labels_num">...</span>
+                    </c:if>
              	</div>
                 <span id="messagecenter_up_span">|</span>
                 <div class="up_labels">
-                    <a href="#"><span>关注消息</span></a>
-                    <span class="up_labels_num">0</span>
+                    <a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI"><span>关注消息</span></a>
+                    <c:if test="${countFollows<100 }">
+                    	<span class="up_labels_num">${countFollows }</span>
+                    </c:if>
+                    <c:if test="${countFollows>99 }">
+                    	<span class="up_labels_num">...</span>
+                    </c:if>
              	</div>
                 <span id="messagecenter_up_span">|</span>
                 <div class="up_labels">
-                    <a href="#"><span>收藏消息</span></a>
-                    <span class="up_labels_num">0</span>
+                    <a href="javascript:;"><span>收藏消息</span></a>
+                    <c:if test="${countCollects<100 }">
+                    	<span class="up_labels_num">${countCollects }</span>
+                    </c:if>
+                    <c:if test="${countCollects>99 }">
+                    	<span class="up_labels_num">...</span>
+                    </c:if>
              	</div>
                 <span id="messagecenter_up_span">|</span>
                 <div class="up_labels">
-                    <a href="#"><span>点赞消息</span></a>
-                    <span class="up_labels_num">0</span>
+                    <a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI"><span>点赞消息</span></a>
+                    <c:if test="${countZans<100 }">
+                    	<span class="up_labels_num">${countZans }</span>
+                    </c:if>
+                    <c:if test="${countZans>99 }">
+                    	<span class="up_labels_num">...</span>
+                    </c:if>
              	</div>
            	</div>
                 <!--列表down-->
             <div id="messagecenter_down">
             	<span id="messagecenter_down_id">█ 收藏消息</span>
-            <select>
-    			<option value="notread">未读</option>
+            <select id="selectRead" onchange="Readselect()">
+    			<option value="notread" selected="selected">未读</option>
     			<option value="read">已读</option>
     	    </select>
             <br>
@@ -247,11 +302,11 @@ $(function() {
 </div>
 <!--内容end-->
 <!--置顶框begin-->
-	<script type="text/javascript" src="js/toTop.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/toTop.js"></script>
 <!--置顶框end-->
 <!--底部begin-->
 <footer>
-	<img src="image/footer_logo.png">
+	<img src="${pageContext.request.contextPath}/image/footer_logo.png">
     <div id="footer_about">
     <p>&emsp;关于我们 | 意见反馈 | 服务条例 | 隐私政策</p>
     <p>Copyright © 2018 | Three Blog | All Right Reserved</p>

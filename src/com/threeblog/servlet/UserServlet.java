@@ -103,7 +103,6 @@ public class UserServlet extends BaseServlet {
 				//response.getWriter().println(1);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -126,7 +125,6 @@ public class UserServlet extends BaseServlet {
 				//response.getWriter().println(1);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}	
@@ -188,7 +186,6 @@ public class UserServlet extends BaseServlet {
 				response.getWriter().println(false);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -500,7 +497,6 @@ public class UserServlet extends BaseServlet {
 				//response.getWriter().println(1);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}	

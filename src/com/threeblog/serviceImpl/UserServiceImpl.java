@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Long countFollows(String uid) throws SQLException {
 		// 通过用户id获取关注消息数目
-		MessageDao dao = new MessageDaoImpl();
+		FollowDao dao = new FollowDaoImpl();
 		Long count = dao.countFollows(uid);
 		return count;
 	}
@@ -273,6 +273,54 @@ public class UserServiceImpl implements UserService{
 		MessageDao dao = new MessageDaoImpl();
 		Long count = dao.countZans(uid);
 		return count;
+	}
+
+	@Override
+	public List<MessageBean> findMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有消息
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public boolean Read(String id) throws SQLException {
+		// 将未读改成已读
+		MessageDao dao = new MessageDaoImpl();
+		boolean read = dao.Read(id);
+		return read;
+	}
+
+	@Override
+	public List<MessageBean> findnotReadReviewsMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有未读消息（评论）
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findnotReadReviewsMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<MessageBean> findReadReviewsMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有已读消息（评论）
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findReadReviewsMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<MessageBean> findnotReadZanMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有未读消息（点赞）
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findnotReadZanMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<MessageBean> findReadZanMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有未读消息（点赞）
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findReadZanMessagesByUid(uid);
+		return list;
 	}
 
 }

@@ -55,6 +55,7 @@ public class FollowDaoImpl implements FollowDao {
 	@Override
 	public boolean addFollow(FollowBean follow) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		//following_id :关注者， follower_id: 被关注者
 		String sql="insert into t_follow(id,following_id,follower_id,follow_date) values(?,?,?,?);";
 		int result = runner.update(sql, follow.getId(),follow.getFollowing_id(),follow.getFollower_id(),follow.getFollow_date());  
 		return result>0;
@@ -66,6 +67,15 @@ public class FollowDaoImpl implements FollowDao {
 		String sql="delete from t_follow where following_id=? and follower_id=?";
 		int result = runner.update(sql,following_id,follower_id);
 		return result>0;
+	}
+	
+	@Override
+	public Long countFollows(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//following_id :关注者， follower_id: 被关注者
+		String sql="select COUNT(follower_id) AS Fid from t_follow where follower_id=? and status='未读'";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),uid);
+		return count;
 	}
 
 }
