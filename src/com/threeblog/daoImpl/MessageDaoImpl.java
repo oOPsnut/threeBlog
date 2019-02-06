@@ -93,4 +93,20 @@ public class MessageDaoImpl implements MessageDao {
 		return runner.query(sql,new BeanListHandler<MessageBean>(MessageBean.class),uid,uid);
 	}
 
+	@Override
+	public List<MessageBean> findnotReadFavorMessagesByUid(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//接受消息者:receiver_id  发送消息者:answer_id
+ 		String sql="SELECT * FROM t_message WHERE receiver_id=? and answer_id!=? and  status='未读' and type='文章收藏'  ORDER BY add_time DESC";
+		return runner.query(sql,new BeanListHandler<MessageBean>(MessageBean.class),uid,uid);
+	}
+
+	@Override
+	public List<MessageBean> findReadFavorMessagesByUid(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//接受消息者:receiver_id  发送消息者:answer_id
+ 		String sql="SELECT * FROM t_message WHERE receiver_id=? and answer_id!=? and  status='已读' and type='文章收藏'  ORDER BY add_time DESC";
+		return runner.query(sql,new BeanListHandler<MessageBean>(MessageBean.class),uid,uid);
+	}
+
 }

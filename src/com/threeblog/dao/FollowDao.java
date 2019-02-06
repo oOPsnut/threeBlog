@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import com.threeblog.domain.FollowBean;
+import com.threeblog.domain.MessageBean;
 
 /**
  * 这是针对  关注表  的数据操作
@@ -76,4 +77,28 @@ public interface FollowDao {
 	 * @throws SQLException
 	 */
 	Long countFollows(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有未读消息（关注）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<FollowBean> findnotReadFollowMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有已读消息（关注）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<FollowBean> findReadFollowMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 将未读改成已读(关注)
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean fRead(String id)throws SQLException;
 }

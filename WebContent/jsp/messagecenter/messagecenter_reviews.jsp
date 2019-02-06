@@ -265,7 +265,7 @@ $(function() {
                 </tr>
             <%
             	ArticleService aService = new ArticleServiceImpl();
-            	List<MessageBean> notRReviewsmessages = uService.findnotReadReviewsMessagesByUid(uid);
+            	List<MessageBean> notRReviewsmessages = uService.findnotReadReviewsMessagesByUid(uid);//全部未读评论消息
             	if(notRReviewsmessages.isEmpty()){
            	%>
                 <tr>
@@ -275,6 +275,7 @@ $(function() {
              	}else{
              		//following_id :关注者， follower_id: 被关注者
 		        	  //接受消息者:receiver_id  发送消息者:answer_id
+		        	 // List<MessageBean> notRAReviewsmessages = uService.findnotReadAReviewsMessages(uid);//未读“文章”评论消息
 		        		for(int i=0;i<notRReviewsmessages.size();i++){
 		        			int number=i+1;
 		        			request.setAttribute("number", number);
@@ -287,12 +288,14 @@ $(function() {
 		        			ArticleBean aBean = aService.findArticle(aid);
 		        			request.setAttribute("aBean", aBean);           	 
            	 %>
+           	 	<c:if test="${mBean.type=='文章留言' }">
 	                <tr>
 	                <td>${number}</td>
 	                <td>
 	                	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>
-	                	评论了你的博文
+	                	在你的博文
 	                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a>
+	                	下留言了
 	                </td>
 	                <td>${mBean.add_time }</td>
 	                <td><a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank">
@@ -325,6 +328,48 @@ $(function() {
 	                    </script>
 		            </td>
 		            </tr>
+		            </c:if>
+		            <c:if test="${mBean.type=='留言回复' }">
+	                <tr>
+	                <td>${number}</td>
+	                <td>
+	                	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>
+	                	回复了你在
+	                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a>
+	                	下的留言
+	                </td>
+	                <td>${mBean.add_time }</td>
+	                <td><a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank">
+	                		<img id="eye" src="${pageContext.request.contextPath}/image/eye.png" onclick="cRead('${mBean.id}');">
+	                	</a>
+	                    <!--查看图标更换的jq-->
+						<script type="text/javascript">
+		                   function cRead(id){  
+		                          var mid=id;//消息的id
+		                          //console.log(mid);
+		                          $.ajax({
+		                        	  	type:"POST",//用post方式传输
+										dataType:"json",//数据格式:JSON
+										url:"/ThreeBlog_V1.0/MessageServlet?method=Read" ,//目标地址
+										data:{"id":mid},
+										error:function(){
+											alert("出错！请稍后再试...");
+										},
+										success:function(data){
+											if (data) {
+												window.location.reload();
+												//window.open("${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}");
+											} else {
+												alert("出错，此消息可能处于非正常状态！");		
+												window.location.reload();
+											}
+										}
+		                          }); 
+		                    }  
+	                    </script>
+		            </td>
+		            </tr>
+		            </c:if>
 	            <%}} %>
             </table>
             </div>
@@ -359,14 +404,33 @@ $(function() {
   		        			String aid = mBean.getArticle_id();//文章id
   		        			ArticleBean aBean = aService.findArticle(aid);
   		        			request.setAttribute("aBean", aBean); 	
-               %>              
+               %>       
+                <c:if test="${mBean.type=='留言回复' }">       
 	                <tr>
 		                <td>${number}</td>
-		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>评论了你的博文<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a></td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>
+		                		回复了你在
+		                		<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a>
+		                		的留言
+		                </td>
 		                <td>${mBean.add_time }</td>
 		                <td><a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><img  id="eye" src="${pageContext.request.contextPath}/image/eyes.png"></a>	                    
 			            </td>
-		            </tr>       
+		            </tr>   
+		         </c:if> 
+		         <c:if test="${mBean.type=='文章留言' }">       
+	                <tr>
+		                <td>${number}</td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>
+		                	在你的博文
+		                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a>
+		                	留言了
+		                </td>
+		                <td>${mBean.add_time }</td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><img  id="eye" src="${pageContext.request.contextPath}/image/eyes.png"></a>	                    
+			            </td>
+		            </tr>   
+		         </c:if>       
             	<%}} %>
             </table>
             </div>

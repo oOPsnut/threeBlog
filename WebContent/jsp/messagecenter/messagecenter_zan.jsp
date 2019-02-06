@@ -290,6 +290,7 @@ $(function() {
 		        			ArticleBean aBean = aService.findArticle(aid);
 		        			request.setAttribute("aBean", aBean);           	 
            	 %>
+           	 	<c:if test="${mBean.type=='文章点赞' }">
                 <tr>
                 <td>${number}</td>
                 <td>
@@ -329,6 +330,49 @@ $(function() {
 	                    </script>
             </td>
             </tr>
+            </c:if>
+            <c:if test="${mBean.type=='留言点赞' }">
+                <tr>
+                <td>${number}</td>
+                <td>
+                	<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>
+                		点赞了你在博文
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a>
+                		下的留言
+                </td>
+                <td>${mBean.add_time }</td>
+                <td>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank">
+                		<img  id="read" src="${pageContext.request.contextPath}/image/unread.png"  onclick="cRead('${mBean.id}');">
+                	</a>
+					 <!--查看图标更换的jq-->
+						<script type="text/javascript">
+		                   function cRead(id){  
+		                          var mid=id;//消息的id
+		                          //console.log(mid);
+		                          $.ajax({
+		                        	  	type:"POST",//用post方式传输
+										dataType:"json",//数据格式:JSON
+										url:"/ThreeBlog_V1.0/MessageServlet?method=Read" ,//目标地址
+										data:{"id":mid},
+										error:function(){
+											alert("出错！请稍后再试...");
+										},
+										success:function(data){
+											if (data) {
+												window.location.reload();
+												//window.open("${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}");
+											} else {
+												alert("出错，此消息可能处于非正常状态！");		
+												window.location.reload();
+											}
+										}
+		                          }); 
+		                    }  
+	                    </script>
+            </td>
+            </tr>
+            </c:if>
            <%}} %>
             </table>
            	</div>
@@ -364,14 +408,25 @@ $(function() {
   		        			String aid = mBean.getArticle_id();//文章id
   		        			ArticleBean aBean = aService.findArticle(aid);
   		        			request.setAttribute("aBean", aBean); 	
-               %>              
+               %>       
+               		<c:if test="${mBean.type=='文章点赞' }">       
 	                <tr>
 		                <td>${number}</td>
 		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>点赞了你的博文<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a></td>
 		                <td>${mBean.add_time }</td>
 		                <td><a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><img  id="read" src="${pageContext.request.contextPath}/image/read.png"></a>	                    
 			            </td>
-		            </tr>       
+		            </tr>   
+		            </c:if>  
+		            <c:if test="${mBean.type=='留言点赞' }">       
+	                <tr>
+		                <td>${number}</td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username } </a>点赞了你在博文<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank" id="m_review_article">《${aBean.title }》</a>下的留言</td>
+		                <td>${mBean.add_time }</td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><img  id="read" src="${pageContext.request.contextPath}/image/read.png"></a>	                    
+			            </td>
+		            </tr>   
+		            </c:if>  
             	<%}} %>
             </table>
             </div>

@@ -90,4 +90,20 @@ public interface MessageDao {
 	 * @throws SQLException
 	 */
 	List<MessageBean> findReadZanMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有未读消息（收藏）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<MessageBean> findnotReadFavorMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有已读消息（收藏）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<MessageBean> findReadFavorMessagesByUid(String uid)throws SQLException;
 }

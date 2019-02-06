@@ -10,6 +10,7 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 import com.threeblog.dao.FollowDao;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.FollowBean;
+import com.threeblog.domain.MessageBean;
 import com.threeblog.util.JDBCUtil;
 
 public class FollowDaoImpl implements FollowDao {
@@ -76,6 +77,30 @@ public class FollowDaoImpl implements FollowDao {
 		String sql="select COUNT(follower_id) AS Fid from t_follow where follower_id=? and status='未读'";
 		Long count =(Long) runner.query(sql,new ScalarHandler(),uid);
 		return count;
+	}
+
+	@Override
+	public List<FollowBean> findnotReadFollowMessagesByUid(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//following_id :关注者， follower_id: 被关注者
+ 		String sql="SELECT * FROM t_follow WHERE follower_id=? and following_id!=? and  status='未读' ORDER BY follow_date DESC";
+		return runner.query(sql,new BeanListHandler<FollowBean>(FollowBean.class),uid,uid);
+	}
+
+	@Override
+	public List<FollowBean> findReadFollowMessagesByUid(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		//following_id :关注者， follower_id: 被关注者
+ 		String sql="SELECT * FROM t_follow WHERE follower_id=? and following_id!=? and  status='已读' ORDER BY follow_date DESC";
+		return runner.query(sql,new BeanListHandler<FollowBean>(FollowBean.class),uid,uid);
+	}
+
+	@Override
+	public boolean fRead(String id) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_follow set status='已读' where id=?";
+		int result = runner.update(sql,id);
+		return result>0;
 	}
 
 }

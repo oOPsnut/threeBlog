@@ -269,8 +269,8 @@ $(function() {
                 </tr>
             <%
             	ArticleService aService = new ArticleServiceImpl();
-            	List<MessageBean> notRZanmessages = uService.findnotReadZanMessagesByUid(uid);
-            	if(notRZanmessages.isEmpty()){
+            	List<FollowBean> notRFollowmessages = uService.findnotReadFollowMessagesByUid(uid);
+            	if(notRFollowmessages.isEmpty()){
            	%>
            	 	<tr>
                     <td colspan="4" style="padding: 20px;"><strong>没有消息记录！</strong></td>                     
@@ -279,72 +279,94 @@ $(function() {
              	}else{
              		//following_id :关注者， follower_id: 被关注者
 		        	  //接受消息者:receiver_id  发送消息者:answer_id
-		        		for(int i=0;i<notRZanmessages.size();i++){
+		        		for(int i=0;i<notRFollowmessages.size();i++){
 		        			int number=i+1;
 		        			request.setAttribute("number", number);
-		        			MessageBean mBean = notRZanmessages.get(i);
-		        			request.setAttribute("mBean", mBean);
-		        			String sendMUserId = mBean.getAnswer_id();//发消息用户id
+		        			FollowBean fBean = notRFollowmessages.get(i);
+		        			request.setAttribute("fBean", fBean);
+		        			String sendMUserId = fBean.getFollowing_id();//发消息用户id
 		        			UserBean uBean = uService.findUserInfo(sendMUserId);
-		        			request.setAttribute("uBean", uBean);
-		        			String aid = mBean.getArticle_id();//文章id
-		        			ArticleBean aBean = aService.findArticle(aid);
-		        			request.setAttribute("aBean", aBean);           	 
+		        			request.setAttribute("uBean", uBean);	          	 
            	 %>
             
                 <tr>
-                <td>1</td>
-                <td><a href="#" id="m_review_author">xxx </a>关注了你</td>
-                <td>2018-05-20</td>
-                <td><a href="" target="_blank"><img  id="read" src="image/unread.png"></a>
+                <td>${number}</td>
+                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username }</a> 关注了你</td>
+                <td>${fBean.follow_date}</td>
+                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank">
+                		<img  id="read" src="${pageContext.request.contextPath}/image/unread.png"  onclick="cRead('${fBean.id}');">
+                	</a>
                     <!--查看图标更换的jq-->
-					<script>
-                    $('#read').click(function(){  
-                              
-                            if($('#read').attr('src')=='image/unread.png'){  
-                                $('#read').attr('src','image/read.png');  
-                            }
-                              
-                    });  
-                    </script>
+					<script type="text/javascript">
+		                   function cRead(id){  
+		                          var fid=id;//关注消息的id
+		                          //console.log(mid);
+		                          $.ajax({
+		                        	  	type:"POST",//用post方式传输
+										dataType:"json",//数据格式:JSON
+										url:"/ThreeBlog_V1.0/MessageServlet?method=FRead" ,//目标地址
+										data:{"id":fid},
+										error:function(){
+											alert("出错！请稍后再试...");
+										},
+										success:function(data){
+											if (data) {
+												window.location.reload();
+												//window.open("${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}");
+											} else {
+												alert("出错，此消息可能处于非正常状态！");		
+												window.location.reload();
+											}
+										}
+		                          }); 
+		                    }  
+	                    </script>
             </td>
             </tr>
-            <tr>
-                <td>2</td>
-                <td>你关注的<a href="#" id="m_review_author">tom </a>也关注了你</td>
-                <td>2018-05-20</td>
-                <td><a href="" target="_blank"><img  id="read" src="image/unread.png"></a>
-                    <!--查看图标更换的jq-->
-					<script>
-                    $('#read').click(function(){  
-                              
-                            if($('#read').attr('src')=='image/unread.png'){  
-                                $('#read').attr('src','image/read.png');  
-                            }
-                              
-                    });  
-                    </script>
-            </td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td><a href="#" id="m_review_author">mimi </a>关注了你</td>
-                <td>2018-05-20</td>
-                <td><a href="" target="_blank"><img  id="read" src="image/unread.png"></a>
-                    <!--查看图标更换的jq-->
-					<script>
-                    $('#read').click(function(){  
-                              
-                            if($('#read').attr('src')=='image/unread.png'){  
-                                $('#read').attr('src','image/read.png');  
-                            }
-                              
-                    });  
-                    </script>
-            </td>
-            </tr>
+            <%}} %>
             </table>
             </div>
+            
+            <!--已读消息  -->
+            <div id="readDiv">
+            <table id="messagecenter_table" border="1">
+                <tr>
+                <th width="5%">#</th>
+                <th width="55%">关注消息</th>
+                <th width="25%">时间</th>
+                <th width="15%">操作</th>
+                </tr>
+                <%
+	            	List<FollowBean> RFavormessages = uService.findReadFollowMessagesByUid(uid);
+	            	if(RFavormessages.isEmpty()){
+           		%>
+                <tr>
+                    <td colspan="4" style="padding: 20px;"><strong>没有消息记录！</strong></td>                     
+                </tr>
+                <%
+                	}else{
+                		//following_id :关注者， follower_id: 被关注者
+  		        	  //接受消息者:receiver_id  发送消息者:answer_id
+  		        		for(int i=0;i<RFavormessages.size();i++){
+  		        			int number=i+1;
+  		        			request.setAttribute("number", number);
+  		        			FollowBean fBean = RFavormessages.get(i);
+  		        			request.setAttribute("fBean", fBean);
+  		        			String sendMUserId = fBean.getFollowing_id();//发消息用户id
+  		        			UserBean uBean = uService.findUserInfo(sendMUserId);
+  		        			request.setAttribute("uBean", uBean); 	
+               %>       
+	                <tr>
+		                <td>${number}</td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank" id="m_review_author">${uBean.username }</a> 关注了你</td></td>
+		                <td>${fBean.follow_date }</td>
+		                <td><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank"><img  id="read" src="${pageContext.request.contextPath}/image/read.png"></a>	                    
+			            </td>
+		            </tr>    
+            	<%}} %>
+            </table>
+            </div>
+            
             </div> 
         </div>
      </div>

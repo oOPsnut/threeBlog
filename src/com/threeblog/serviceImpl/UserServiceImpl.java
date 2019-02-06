@@ -323,4 +323,44 @@ public class UserServiceImpl implements UserService{
 		return list;
 	}
 
+	@Override
+	public List<MessageBean> findnotReadFavorMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有未读消息（收藏）
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findnotReadFavorMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<MessageBean> findReadFavorMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有已读读消息（收藏）
+		MessageDao dao = new MessageDaoImpl();
+		List<MessageBean> list = dao.findReadFavorMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<FollowBean> findnotReadFollowMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有未读消息（关注）
+		FollowDao dao = new FollowDaoImpl();
+		List<FollowBean> list = dao.findnotReadFollowMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public List<FollowBean> findReadFollowMessagesByUid(String uid) throws SQLException {
+		// 通过用户id获取所有已读消息（关注）
+		FollowDao dao = new FollowDaoImpl();
+		List<FollowBean> list = dao.findReadFollowMessagesByUid(uid);
+		return list;
+	}
+
+	@Override
+	public boolean fRead(String id) throws SQLException {
+		// 将未读改成已读(关注)
+		FollowDao dao = new FollowDaoImpl();
+		boolean fRead = dao.fRead(id);
+		return fRead;
+	}
+
 }

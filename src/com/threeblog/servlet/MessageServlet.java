@@ -42,4 +42,30 @@ public class MessageServlet extends BaseServlet{
 			e.printStackTrace();
 		}
 	}
+	
+	//查看消息，未读变成已读
+	public void FRead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		//获取消息id
+		String id = request.getParameter("id");
+		//System.out.println(id);
+		//调用业务层
+		UserService userService=new UserServiceImpl();
+		try {
+			//改变阅读状态
+			boolean result = userService.fRead(id);
+			if (result) {
+				//改变成功
+				//将结果返回前端
+				response.getWriter().println(true);
+			}else {
+				//改变失败
+				//将结果返回前端
+				response.getWriter().println(false);
+			}
+		} catch (Exception e) {
+			//出错
+			e.printStackTrace();
+		}
+	}
 }

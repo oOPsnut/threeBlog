@@ -310,4 +310,44 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	List<MessageBean> findReadZanMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有未读消息（收藏）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<MessageBean> findnotReadFavorMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有已读消息（收藏）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<MessageBean> findReadFavorMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有未读消息（关注）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<FollowBean> findnotReadFollowMessagesByUid(String uid)throws SQLException;
+	
+	/**
+	 * 通过用户id获取所有已读消息（关注）
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	List<FollowBean> findReadFollowMessagesByUid(String uid)throws SQLException;
+
+	/**
+	 * 将未读改成已读(关注)
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean fRead(String id)throws SQLException;
 }
