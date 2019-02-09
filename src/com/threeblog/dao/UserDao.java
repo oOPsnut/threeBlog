@@ -87,4 +87,11 @@ public interface UserDao {
 	 * @throws SQLException
 	 */
 	boolean checkOldPasswd(String phone, String password)throws SQLException;
+	
+	/**
+	 * 统计所有注册用户数
+	 * @return
+	 * @throws SQLException
+	 */
+	Long CountTotalUsers()throws SQLException;
 }

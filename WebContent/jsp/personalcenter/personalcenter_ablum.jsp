@@ -5,9 +5,23 @@
 <%@page import="com.threeblog.service.UserService"%>
 <%@page import="com.threeblog.domain.AblumBean"%>
 <%@page import="com.threeblog.domain.UserBean"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
+			String uid = userBean.getId();
+			UserService uService = new UserServiceImpl();
+			int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
+			int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
+			int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
+			int countZans =  Integer.valueOf( uService.countZans(uid).toString());//点赞消息数
+			int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
+			request.setAttribute("countAll", countAll);
+			request.setAttribute("countReviews", countReviews);
+    		request.setAttribute("countFollows", countFollows);
+    		request.setAttribute("countCollects", countCollects);
+    		request.setAttribute("countZans", countZans);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -84,14 +98,47 @@ $(function() {
     	<a href="javascript:;">
         	<div style="float:left; position:relative;">
     			<img src="${pageContext.request.contextPath}/image/message.png"/>
-                	<span  id="tools_messagenumber">0</span>
+    			<c:if test="${countAll<100 }">
+                	<span  id="tools_messagenumber">${countAll }</span>
+                </c:if>
+                <c:if test="${countAll>99 }">
+                	<span  id="tools_messagenumber">...</span>
+                </c:if>
              </div>
          </a> 
          <ul class="index_tools_messages">
-         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a>
+         	<c:if test="${countReviews<99 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >${countReviews }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >...</span>
+         	</c:if>
+         	</li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a>
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">${countFollows }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a>	        	
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >${countCollects }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a>	        
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >${countZans }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >...</span>
+         	</c:if>
+	        </li>
          </ul>
     </li>
     <li>
@@ -187,9 +234,9 @@ $(function() {
                 <a href="${pageContext.request.contextPath}/RedirectServlet?method=PUploadAblumUI"><span>上传/修改图片</span><img id="ablum_uploadimg" src="${pageContext.request.contextPath}/image/ablum.png" /></a>
                 <div id="gallery2" class="gallery">  
                 	  <%
-		        		UserBean userBean=(UserBean)request.getSession().getAttribute("userBean");
-		        		String uid = userBean.getId();//获取用户id
-		        		UserService uService=new UserServiceImpl();
+		        		//UserBean userBean=(UserBean)request.getSession().getAttribute("userBean");
+		        		//String uid = userBean.getId();//获取用户id
+		        		//UserService uService=new UserServiceImpl();
 		        		List<AblumBean> photos = uService.findUserPhotosByUid(uid);
 		        		if(photos.isEmpty()){		        			
 		        			Calendar c=Calendar.getInstance();

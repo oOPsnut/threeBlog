@@ -1,6 +1,27 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.threeblog.domain.UserBean"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
+<%
+			UserService uService = new UserServiceImpl();
+			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
+			if(userBean!=null){
+				String uid = userBean.getId();
+				int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
+				int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
+				int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
+				int countZans =  Integer.valueOf( uService.countZans(uid).toString());//点赞消息数
+				int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
+				request.setAttribute("countAll", countAll);
+				request.setAttribute("countReviews", countReviews);
+	    		request.setAttribute("countFollows", countFollows);
+	    		request.setAttribute("countCollects", countCollects);
+	    		request.setAttribute("countZans", countZans);
+			}
+			int totalUser = Integer.valueOf(uService.CountTotalUsers().toString());//总用户数
+			request.setAttribute("totalUser", totalUser);
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -72,14 +93,47 @@ $(function() {
     	<a href="javascript:;">
         	<div style="float:left; position:relative;">
     			<img src="${pageContext.request.contextPath}/image/message.png"/>
-                	<span  id="tools_messagenumber">0</span>
+    			<c:if test="${countAll<100 }">
+                	<span  id="tools_messagenumber">${countAll }</span>
+                </c:if>
+                <c:if test="${countAll>99 }">
+                	<span  id="tools_messagenumber">...</span>
+                </c:if>
              </div>
          </a> 
          <ul class="index_tools_messages">
-         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a>
+         	<c:if test="${countReviews<99 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >${countReviews }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >...</span>
+         	</c:if>
+         	</li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a>
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">${countFollows }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a>	        	
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >${countCollects }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a>	        
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >${countZans }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >...</span>
+         	</c:if>
+	        </li>
          </ul>
     </li>
     <li>
@@ -147,12 +201,12 @@ $(function() {
 	<div id="index_body_head">
     	<div id="index_body_show">
     		<div id="owl-demo" class="owl-carousel">
-    		<a class="item"><img src="${pageContext.request.contextPath}/image/pic1.png" alt=""></a>
-    		<a class="item"><img src="${pageContext.request.contextPath}/image/pic2.jpg" alt=""></a>
-            <a class="item"><img src="${pageContext.request.contextPath}/image/pic3.jpg" alt=""></a>
-			<a class="item"><img src="${pageContext.request.contextPath}/image/pic4.jpg" alt=""></a>
-			<a class="item"><img src="${pageContext.request.contextPath}/image/pic5.jpg" alt=""></a>
-            <a class="item"><img src="${pageContext.request.contextPath}/image/pic6.jpg" alt=""></a>
+    		<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic1.png" alt=""></a>
+    		<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic2.jpg" alt=""></a>
+            <a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic3.jpg" alt=""></a>
+			<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic4.jpg" alt=""></a>
+			<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic5.jpg" alt=""></a>
+            <a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic6.jpg" alt=""></a>
 			</div>
     	</div>
     </div>
@@ -162,18 +216,24 @@ $(function() {
     	<!--写作入口-->
     	<div id="index_body_enter">
         	<div id="index_body_enter_write" >
+        		<c:if test="${not empty userBean }">
             	<a href="${pageContext.request.contextPath}/RedirectServlet?method=publishUI"><img src="${pageContext.request.contextPath}/image/write.png">
+                </c:if> 
+                <c:if test="${empty userBean }">
+            	<a href="${pageContext.request.contextPath}/RedirectServlet?method=LoginUI"><img src="${pageContext.request.contextPath}/image/write.png">
+                </c:if>
                 <div id="enter_writer_w">
                 	<span id="enter_writer_span1">写博文</span>&emsp;
                     <span id="enter_writer_span2">|&emsp;记录你生活的剪影</span>
                 </div>
                 </a>
+                              
             </div>
             <div id="index_body_enter_guideboard" >
             	<h3 >█ 指路牌</h3>
                 <a href="${pageContext.request.contextPath}/RedirectServlet?method=blogUI"><span >博客文章欣赏</span></a><br/><br/>
                 <a href="${pageContext.request.contextPath}/RedirectServlet?method=picturesUI"><span>博客图片画廊</span></a><br /><br/>
-                <a href="${pageContext.request.contextPath}/RedirectServlet?method=PreportCenterUI"><span>博客举报中心入口</span></a>
+                <a href="${pageContext.request.contextPath}/RedirectServlet?method=searchUI"><span>博客标签搜索</span></a>
             </div>
         </div>
         <!--介绍-->
@@ -181,7 +241,7 @@ $(function() {
         	<h2>记录生活，分享快乐。</h2>
             <span class="body_total_span_e">Life is short,</span><br/>
             <span class="body_total_span_e">have some pride.</span><br/><br/>
-            <span class="body_total_span_c">已经有xxx位朋友</span><br/>
+            <span class="body_total_span_c">已经有&nbsp;${totalUser}&nbsp;位朋友</span><br/>
              <span class="body_total_span_c">在这里</span><br/>
               <span class="body_total_span_c">留下他们生活的剪影</span>
     	</div>
@@ -208,7 +268,7 @@ $(function() {
         <!--热门标签标签-->
         <div id="index_body_labels">
         	<h3>█ 热门标签</h3>
-            <input  type="submit" value="关键词" class="body_labels_input">
+            <a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}"><input  type="submit" value="关键词" class="body_labels_input"></a>
             <input  type="submit" value="左岸"  class="body_labels_input">	
             <input  type="submit" value="最爱的，还是这人和烟火"  class="body_labels_input">	
              <input  type="submit" value="圣诞节撒点就扫大街哦啊就是都似的撒旦"  class="body_labels_input">	

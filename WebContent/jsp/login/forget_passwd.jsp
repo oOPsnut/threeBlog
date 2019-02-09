@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.threeblog.domain.UserBean"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -52,6 +53,11 @@ $(function() {
 </script>
 
 </head>
+
+<%
+	UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
+	if(userBean==null){
+%>
 
 <body>
 <!--顶端栏begin-->
@@ -164,4 +170,10 @@ $(function() {
 </footer>
 <!--底部end-->
 </body>
+	<%
+		}else{
+			response.sendRedirect(request.getContextPath()+"/jsp/homepage/Homepage.jsp");
+		}
+	%>
+
 </html>

@@ -363,4 +363,12 @@ public class UserServiceImpl implements UserService{
 		return fRead;
 	}
 
+	@Override
+	public Long CountTotalUsers() throws SQLException {
+		// 统计所有注册用户数
+		UserDao  dao = new UserDaoImpl();
+		Long count = dao.CountTotalUsers();
+		return count;
+	}
+
 }

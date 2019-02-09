@@ -21,6 +21,18 @@
 		    			response.sendRedirect(request.getContextPath()+"/RedirectServlet?method=PablumUI");
 		    		}else{	
 			    		String id =  userBean.getId();//登录用户id
+			    		
+			    		int countReviews =  Integer.valueOf( uService.countReviews(id).toString());//评论消息数
+						int countFollows =  Integer.valueOf( uService.countFollows(id).toString());//关注消息数
+						int countCollects =  Integer.valueOf( uService.countCollects(id).toString());//收藏消息数
+						int countZans =  Integer.valueOf( uService.countZans(id).toString());//点赞消息数
+						int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
+						request.setAttribute("countAll", countAll);
+						request.setAttribute("countReviews", countReviews);
+			    		request.setAttribute("countFollows", countFollows);
+			    		request.setAttribute("countCollects", countCollects);
+			    		request.setAttribute("countZans", countZans);
+			    		
 			        	boolean following = uService.findFollowStatus(id,uid);//用户有没有关注作者
 			        	boolean follower = uService.findFollowStatus(uid,id);//作者有没有关注我
 			        	if(following && follower){
@@ -120,14 +132,47 @@ $(function() {
     	<a href="javascript:;">
         	<div style="float:left; position:relative;">
     			<img src="${pageContext.request.contextPath}/image/message.png"/>
-                	<span  id="tools_messagenumber">0</span>
+    			<c:if test="${countAll<100 }">
+                	<span  id="tools_messagenumber">${countAll }</span>
+                </c:if>
+                <c:if test="${countAll>99 }">
+                	<span  id="tools_messagenumber">...</span>
+                </c:if>
              </div>
          </a> 
          <ul class="index_tools_messages">
-         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a><span   class="index_tools_messagesnumber"style="top:20px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a><span  class="index_tools_messagesnumber" style="top:80px; ">0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a><span  class="index_tools_messagesnumber" style="top:140px;" >0</span></li>
-	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a><span  class="index_tools_messagesnumber" style=" top:200px;" >0</span></li>
+         	<li><a href="${pageContext.request.contextPath}/RedirectServlet?method=reviewsUI">评论消息</a>
+         	<c:if test="${countReviews<99 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >${countReviews }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span   class="index_tools_messagesnumber"style="top:20px;" >...</span>
+         	</c:if>
+         	</li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=followUI">关注消息</a>
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">${countFollows }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:80px; ">...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=favorUI">收藏消息</a>	        	
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >${countCollects }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style="top:140px;" >...</span>
+         	</c:if>
+	        </li>
+	        <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=zanUI">点赞消息</a>	        
+	        <c:if test="${countReviews<99 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >${countZans }</span>
+         	</c:if>
+         	<c:if test="${countReviews>100 }">
+         		<span  class="index_tools_messagesnumber" style=" top:200px;" >...</span>
+         	</c:if>
+	        </li>
          </ul>
     </li>
     <li>

@@ -105,6 +105,14 @@ public class UserDaoImpl implements UserDao{
 		return reslut>0;
 	}
 
+	@Override
+	public Long CountTotalUsers() throws SQLException {
+		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select count(id) as totalUser from t_user";
+		Long count =(Long) runner.query(sql,new ScalarHandler());
+		return count;
+	}
+
 	
 	
 }
