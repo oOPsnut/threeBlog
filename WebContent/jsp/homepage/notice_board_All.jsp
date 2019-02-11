@@ -4,10 +4,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="toTop" content="true">
-<title>画廊</title>
+<title>博文</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/dist/stylesheets/chromagallery.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/blog.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
 
@@ -143,7 +141,7 @@ $(function() {
             </div>
             <a href="#"><span id="body_notice_detail">本告详情</span></a>
             <img src="image/notice.png">
-            <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
+            <a href="javascript:;"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">
@@ -160,56 +158,40 @@ $(function() {
         </div>
     </div>
     <!--右侧栏end-->
-    <!--画廊begin-->
-   	<div id="index_pictures_left">
-    	
-		<div class="content">
-			<div class="chroma-gallery mygallery">
-				<img src="images/thumbs/1.jpg" alt="Pic 1" data-largesrc="images/1.jpg">
-				<img src="images/thumbs/2.jpg" alt="Pic 2" data-largesrc="images/2.jpg">
-				<img src="images/thumbs/3.jpg" alt="Pic 3" data-largesrc="images/3.jpg">
-				<img src="images/thumbs/4.jpg" alt="Pic 4" data-largesrc="images/4.jpg">
-				<img src="images/thumbs/5.jpg" alt="Pic 5" data-largesrc="images/5.jpg">
-				<img src="images/thumbs/6.jpg" alt="Pic 6" data-largesrc="images/6.jpg">
-				<img src="images/thumbs/7.jpg" alt="Pic 7" data-largesrc="images/7.jpg">
-				<img src="images/thumbs/8.jpg" alt="Pic 8" data-largesrc="images/8.jpg">
-				<img src="images/thumbs/9.jpg" alt="Pic 9" data-largesrc="images/9.jpg">
-				<img src="images/thumbs/10.jpg" alt="Pic 10" data-largesrc="images/10.jpg">
-                <img src="images/thumbs/pic1.jpg" alt="Pic 10" data-largesrc="images/pic1.jpg">
-                <img src="images/thumbs/pic2.jpg" alt="Pic 10" data-largesrc="images/pic2.jpg">
-                <img src="images/thumbs/pic3.jpg" alt="Pic 10" data-largesrc="images/pic3.jpg">
-                <img src="images/thumbs/pic4.jpg" alt="Pic 10" data-largesrc="images/pic4.jpg">
-                <img src="images/thumbs/mao.jpg" alt="Pic 10" data-largesrc="images/mao.jpg">
-                 <img src="images/thumbs/mao3.jpg" alt="Pic 10" data-largesrc="images/mao3.jpg">
-                  <img src="images/thumbs/mao2.jpg" alt="Pic 10" data-largesrc="images/mao2.jpg">
-			</div>
-		</div>
-	
-
-	
-	
-	<script src="dist/scripts/chromagallery.pkgd.min.js"></script>
-	<script type="text/javascript">
-
-		$(document).ready(function(){
-			$(".mygallery").chromaGallery
-		    ({
-		        color:'#000',
-		        gridMargin:15,
-		        maxColumns:5,
-		        dof:true,
-		        screenOpacity:0.8
-		    });
-		});
-		
-	</script>
+    <!--左侧栏begin-->
+    <div id="index_body_left">  	
+    <!--内容begin-->
+   <div id="index_body_middle">
+    	<div id="index_body_middle_article">
+        	<!--具体N篇文章begin-->
+        	<div class="article_n">
+        		<div class="article_pic">
+            		<img  src="image/pic1.png" title="灯塔">
+                    <span>陌上行</span><br/>
+                    <span>2018-05-18</span>
+                </div>
+            	<div class="article_details">
+                <div id="details_h1">
+                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
+                    </div>
+                    <div id="details_p">	<a>
+                    <p>关于孤独，到此为止。
+天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
+					</a>
+                    </div><br/>
+					<div id="details_click">
+						<a href="#" id="details_click_a">查看全文</a>
+					</div>
+            	</div>
+            </div>
+           
+            <!--文章end-->
+            </div>
+        </div>
     </div>
-    <!--左侧栏end-->
+    <!--内容end-->
 </div>
 <!--内容栏end-->
-<!--置顶框begin-->
-	<script type="text/javascript" src="js/toTop.js"></script>
-<!--置顶框end-->
 <!--底部begin-->
 <footer>
 	<img src="image/footer_logo.png">

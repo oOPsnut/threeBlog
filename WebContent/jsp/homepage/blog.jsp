@@ -139,10 +139,9 @@ $(function() {
             <span><strong>本次封号期限:</strong>30天</span><br/><br/>
             <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
             </div>
-            <a href="#">
+            <a href="#"><span id="body_notice_detail">本告详情</span></a>
             <img src="image/notice.png">
-            <span id="body_notice_detail">详情点击</span>
-            </a>
+            <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">

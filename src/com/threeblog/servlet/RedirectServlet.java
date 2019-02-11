@@ -111,4 +111,9 @@ public class RedirectServlet extends BaseServlet{
 	public String RreportCenterUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		return "/jsp/reportcenter/report_reviews.jsp";
 	}
+	//跳转到所有公告页面
+	public String noticeBoardUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/jsp/homepage/notice_board_All.jsp";
+	}
+	
 }

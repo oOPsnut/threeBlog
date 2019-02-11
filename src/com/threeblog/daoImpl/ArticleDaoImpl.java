@@ -10,6 +10,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.threeblog.dao.ArticleDao;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.ArticleTypeBean;
@@ -236,6 +237,13 @@ public class ArticleDaoImpl implements ArticleDao {
 		//select * from t_article where publish_date like '2019%' and author_id='72C5BA19E0C1431BA25D74E9B0D47647'
 		String sql="select * from t_article where author_id=? order by publish_date ASC limit 1";
 		return runner.query(sql,new BeanHandler<ArticleBean>(ArticleBean.class),id);
+	}
+
+	@Override
+	public List findHotLabels() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT label AS labels,COUNT(*) AS number FROM t_article GROUP BY label  LIMIT 10";
+		return runner.query(sql,new ArrayListHandler());
 	}
 
 

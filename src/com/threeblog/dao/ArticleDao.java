@@ -229,4 +229,11 @@ public interface ArticleDao {
 	 * @throws SQLException
 	 */
 	ArticleBean getFirstArticlesByUid(String id)throws SQLException;
+	
+	/**
+	 * 查找热门标签
+	 * @return
+	 * @throws SQLException
+	 */
+	List findHotLabels()throws SQLException;
 }

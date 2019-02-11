@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.threeblog.domain.UserBean"%>
@@ -255,23 +258,23 @@ $(function() {
             <span><strong>本次封号期限:</strong>30天</span><br/><br/>
             <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
             </div>
-            <a href="#">
-            <img src="${pageContext.request.contextPath}/image/notice.png">
-            <span id="body_notice_detail">详情点击</span>
-            </a>
+            <a href="#"><span id="body_notice_detail">本告详情</span></a>
+            <img src="image/notice.png">
+            <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">
         	<div id="calendar" class="calendar"></div>
   			<script src="${pageContext.request.contextPath}/js/calendar.js"></script>
         </div>
-        <!--热门标签标签-->
+        <!--热门标签-->
         <div id="index_body_labels">
         	<h3>█ 热门标签</h3>
-            <a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}"><input  type="submit" value="关键词" class="body_labels_input"></a>
-            <input  type="submit" value="左岸"  class="body_labels_input">	
-            <input  type="submit" value="最爱的，还是这人和烟火"  class="body_labels_input">	
-             <input  type="submit" value="圣诞节撒点就扫大街哦啊就是都似的撒旦"  class="body_labels_input">	
+        	<%
+        		ArticleService aService = new ArticleServiceImpl();
+        		List hotLabels = aService.findHotLabels();
+        	%>
+            <a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}"><input  type="submit" value="关键词" class="body_labels_input"></a>           	
         </div>
     </div>
     <!--右侧栏end-->

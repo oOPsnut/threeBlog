@@ -1,37 +1,49 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page import="com.threeblog.domain.UserBean"%>
 <%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
 <%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.UserBean"%>
 <%
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
-			if(userBean!=null){
-				String uid = userBean.getId();
-				UserService uService = new UserServiceImpl();
-				int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
-				int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
-				int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
-				int countZans =  Integer.valueOf( uService.countZans(uid).toString());//点赞消息数
-				int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
-				request.setAttribute("countAll", countAll);
-				request.setAttribute("countReviews", countReviews);
-	    		request.setAttribute("countFollows", countFollows);
-	    		request.setAttribute("countCollects", countCollects);
-	    		request.setAttribute("countZans", countZans);
-			}
+			String uid = userBean.getId();
+			UserService uService = new UserServiceImpl();
+			int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
+			int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
+			int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
+			int countZans =  Integer.valueOf( uService.countZans(uid).toString());//点赞消息数
+			int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
+			request.setAttribute("countAll", countAll);
+			request.setAttribute("countReviews", countReviews);
+    		request.setAttribute("countFollows", countFollows);
+    		request.setAttribute("countCollects", countCollects);
+    		request.setAttribute("countZans", countZans);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>搜索</title>
+<meta name="toTop" content="true">
+<title>未知错误</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/blog.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/register.css" type="text/css"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
 
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-rebox.css"/>
+
+<script src="${pageContext.request.contextPath}/js/jquery-rebox.js"></script>
+
+<script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
+
+
+<!-- 提交表单校验 -->
+<script src="${pageContext.request.contextPath}/js/checkform.js"></script>
+<script src="${pageContext.request.contextPath}/js/check.js"></script>
+
 <!--头部show的js-->
 <script>
 $(function(){
@@ -68,7 +80,7 @@ $(function() {
   <div id="index_head_logo"> <img src="${pageContext.request.contextPath}/image/logo.png"> </div>
   <div id="index_head_menu">
     <ul>
-      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=homePageUI" >首页</a></li>
+     <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=homePageUI" >首页</a></li>
       <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=blogUI" >博文</a></li>
       <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=picturesUI" >画廊</a></li>
       <c:if test="${not empty userBean }">
@@ -82,7 +94,7 @@ $(function() {
   <div id="index_head_tools"> 
   <ul>
   	<li>
-    	<a href="javascript:;">
+    	<a href="${pageContext.request.contextPath}/RedirectServlet?method=searchUI">
         	<img  src="${pageContext.request.contextPath}/image/search.png" style="float:left;" />
        	</a> 
     </li>
@@ -193,79 +205,51 @@ $(function() {
 </div>
 </div>
 <!--顶端栏end-->
-<!--内容栏begin-->
-<div id="index_all">
-    <!--右侧栏begin-->
-    <div id="index_body_right">
-    	<!--写作入口-->
-    	<div id="index_body_enter">
-        	<div id="index_body_enter_write" >
-            	<a href="#"><img src="image/write.png">
-                <div id="enter_writer_w">
-                	<span id="enter_writer_span1">写博文</span>&emsp;
-                    <span id="enter_writer_span2">|&emsp;记录你生活的剪影</span>
-                </div>
-                </a>
-            </div>
-            <div id="index_body_enter_guideboard" >
-            	<h3 >█ 指路牌</h3>
-                <a href="#"><span >博客文章欣赏</span></a><br/><br/>
-                <a href="#"><span>博客图片画廊</span></a><br /><br/>
-                <a href="#"><span>博客举报中心入口</span></a>
+<!--内容begin-->
+<div id="error_all" align="center">
+	<div id="article_all">
+	<div id="article_all_content">
+    	<!--文章up-->
+        <div class="article_a_up">
+        	<h2>${aBean.title }</h2>
+            <div id="a_up_info">
+              <img src="${author.head }"/>
+              <span id="a_up_info_span">${aBean.author}</span>
+           	  <span>${aBean.publish_date}</span>
+              <span>分类 : </span><span><strong>${aTypeBean.article_type }</strong></span>
             </div>
         </div>
-        <!--介绍-->
-        <div id="index_body_total">
-        	<h2>记录生活，分享快乐。</h2>
-            <span class="body_total_span_e">Life is short,</span><br/>
-            <span class="body_total_span_e">have some pride.</span><br/><br/>
-            <span class="body_total_span_c">已经有xxx位朋友</span><br/>
-             <span class="body_total_span_c">在这里</span><br/>
-              <span class="body_total_span_c">留下他们生活的剪影</span>
-    	</div>
-        <!--公告-->
-        <div id="index_body_notice">
-        	<h3 >█ 公告</h3>
-            <div id="body_notice_w">
-            <span>【2018.07.21 公告】</span><br/><br/>
-            <span><strong>新封号用户:</strong>张三、李四、王五......</span><br/><br/>
-            <span><strong>简要原因:</strong>违反社会主义核心价值观，违反隐私条例，传播虚假信息，打广告</span><br><br/>
-            <span><strong>本次封号期限:</strong>30天</span><br/><br/>
-            <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
+	        <!--文章middle-->
+	        <div class="article_a_middle">${aBean.text}</div>
+	        <!--文章down-->
+        <div class="article_a_down" >
+        	<div id="a_down_lead">
+        	<c:if test="${empty last_aBean }">
+            	<a href="javascript:;" style="float:left;">◁上一篇  没有了</a>
+            </c:if>
+            <c:if test="${not empty last_aBean }">
+            	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${last_aBean.id}" style="float:left;">◁上一篇  ${last_aBean.title}</a>
+            </c:if>
+            <c:if test="${empty next_aBean }">
+            	<a href="javascript:;" style="float:right">▷下一篇  没有了</a><br>
+            </c:if>
+       		 <c:if test="${not empty next_aBean }">
+            	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${next_aBean.id}" style="float:right">▷下一篇  ${next_aBean.title}</a><br>
+            </c:if>	
             </div>
-            <a href="#"><span id="body_notice_detail">本告详情</span></a>
-            <img src="image/notice.png">
-            <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
+            
+        </div>      
         </div>
-        <!--日历-->
-        <div id="index_body_calendar">
-        	<div id="calendar" class="calendar"></div>
-  			<script src="js/calendar.js"></script>
-        </div>
-        <!--热门标签标签-->
-        <div id="index_body_labels">
-        	<h3>█ 热门标签</h3>
-            <input  type="submit" value="关键词" class="body_labels_input">
-            <input  type="submit" value="左岸"  class="body_labels_input">	
-            <input  type="submit" value="最爱的，还是这人和烟火"  class="body_labels_input">	
-             <input  type="submit" value="圣诞节撒点就扫大街哦啊就是都似的撒旦"  class="body_labels_input">	
-        </div>
-    </div>
-    <!--右侧栏end-->
-    <!--左侧栏begin-->
-    <div id="index_body_left_search">
-    	<img id="search_pic" src="image/search_pic.png">
-        <form>
-        	<input id="search_w" type="text" placeholder=" 请输入你感兴趣的事物！" >
-        
-        <input  id="search_c" type="submit" value="搜索">
-        </form>
-    </div>
+    </div>	
 </div>
-<!--内容栏end-->
+</div>
+<!--内容end-->
+<!--置顶框begin-->
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/toTop.js"></script>
+<!--置顶框end-->
 <!--底部begin-->
 <footer>
-	<img src="image/footer_logo.png">
+	<img src="${pageContext.request.contextPath}/image/footer_logo.png">
     <div id="footer_about">
     <p>&emsp;关于我们 | 意见反馈 | 服务条例 | 隐私政策</p>
     <p>Copyright © 2018 | Three Blog | All Right Reserved</p>

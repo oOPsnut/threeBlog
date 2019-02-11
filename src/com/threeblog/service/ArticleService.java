@@ -451,5 +451,10 @@ public interface ArticleService {
 	 */
 	boolean addReviewsReport(ReportBean report)throws SQLException;
 
-	
+	/**
+	 * 查找热门标签
+	 * @return
+	 * @throws SQLException
+	 */
+	List findHotLabels()throws SQLException;
 }

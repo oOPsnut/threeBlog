@@ -465,6 +465,14 @@ public  class ArticleServiceImpl implements ArticleService {
 		return result;
 	}
 
+	@Override
+	public List findHotLabels() throws SQLException {
+		// 查找热门标签
+		ArticleDao dao = new ArticleDaoImpl();
+		List list = dao.findHotLabels();
+		return list;
+	}
+
 	
 	
 }
