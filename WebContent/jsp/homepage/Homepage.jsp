@@ -1,3 +1,4 @@
+<%@page import="com.threeblog.domain.ArticleBean"%>
 <%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
 <%@page import="com.threeblog.service.ArticleService"%>
@@ -272,9 +273,20 @@ $(function() {
         	<h3>█ 热门标签</h3>
         	<%
         		ArticleService aService = new ArticleServiceImpl();
-        		List hotLabels = aService.findHotLabels();
+        		List<Object[]> hotLabels = aService.findHotLabels();  
+        		if(hotLabels.isEmpty()){
         	%>
-            <a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}"><input  type="submit" value="关键词" class="body_labels_input"></a>           	
+        	<h4 style="margin-left: 30px;color: gray;">暂无</h4>
+        	<%		
+        		}else{
+        			for(int i=0;i<hotLabels.size();i++){
+        				Object[] ob = hotLabels.get(i);
+        				Object hotLabel = ob[0];
+        				//System.out.println(hotLabel);
+        				request.setAttribute("hotLabel", hotLabel);
+        	%>
+            <a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${hotLabel}"><input  type="submit" value="${hotLabel}" class="body_labels_input"></a>     
+            <%} }%>      	
         </div>
     </div>
     <!--右侧栏end-->
@@ -283,132 +295,45 @@ $(function() {
     	<h3>█ 热门</h3>
     	<div id="index_body_middle_article">
         	<!--具体N篇文章begin-->
+        	<%
+        		List<ArticleBean> articles = aService.findHotArticles();
+        		if(articles.isEmpty()){
+        	%>
+        	<div class="article_n" align="center">
+        		<h4 style="padding-top: 80px;">暂无</h4>
+            </div>	
+        	<% 
+        		}else{
+        			for(int j=0;j<articles.size();j++){
+        				ArticleBean aBean = articles.get(j);
+        				request.setAttribute("aBean", aBean);
+        				String aid = aBean.getAuthor_id();//作者id
+        				UserBean uBean = uService.findUserInfo(aid);
+        				request.setAttribute("uBean", uBean);
+        	%>
+        	<c:if test="${aBean.status!='屏蔽' }">
         	<div class="article_n">
         		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/pic1.png" title="灯塔">
-                    <a href="#"><span>陌上行</span></a><br/>
-                    <span>2018-05-18</span>
+            		<img  src="${aBean.cover }">
+                    <a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank"><span id="Homepage_username">${uBean.username }</span></a><br/>
+                    <span>${aBean.publish_date}</span>
                 </div>
             	<div class="article_details">
                 <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank"><h1 id="Homepage_title">${aBean.title }</h1></a>
                     </div>
                     <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
+                    <p>${aBean.introduction}</p>
 					</a>
                     </div><br/>
-					<span>阅读：xxx&emsp;|</span>
-                    <span>评论：xxx&emsp;|</span>
-                    <span>喜欢：xxx&emsp;|</span>
-                    <span>收藏：xxx</span>
+					<span>阅读：${aBean.click_num }&emsp;|</span>
+                    <span>评论：${aBean.comment_num }&emsp;|</span>
+                    <span>喜欢：${aBean.liked_num }&emsp;|</span>
+                    <span>收藏：${aBean.collect_num}</span>
             	</div>
             </div>
-            <div class="article_n">
-        		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/pic1.png" title="灯塔">
-                    <a href="#"><span>陌上行</span></a><br/>
-                    <span>2018-05-18</span>
-                </div>
-            	<div class="article_details">
-                <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
-                    </div>
-                    <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
-					</a>
-                    </div><br/>
-					<span>阅读：xxx&emsp;|</span>
-                    <span>评论：xxx&emsp;|</span>
-                    <span>喜欢：xxx&emsp;|</span>
-                    <span>收藏：xxx</span>
-            	</div>
-            </div>
-            <div class="article_n">
-        		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/pic1.png" title="灯塔">
-                    <a href="#"><span>陌上行</span></a><br/>
-                    <span>2018-05-18</span>
-                </div>
-            	<div class="article_details">
-                <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
-                    </div>
-                    <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
-					</a>
-                    </div><br/>
-					<span>阅读：xxx&emsp;|</span>
-                    <span>评论：xxx&emsp;|</span>
-                    <span>喜欢：xxx&emsp;|</span>
-                    <span>收藏：xxx</span>
-            	</div>
-            </div>
-            <div class="article_n">
-        		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/pic1.png" title="灯塔">
-                    <a href="#"><span>陌上行</span></a><br/>
-                    <span>2018-05-18</span>
-                </div>
-            	<div class="article_details">
-                <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
-                    </div>
-                    <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
-					</a>
-                    </div><br/>
-					<span>阅读：xxx&emsp;|</span>
-                    <span>评论：xxx&emsp;|</span>
-                    <span>喜欢：xxx&emsp;|</span>
-                    <span>收藏：xxx</span>
-            	</div>
-            </div>
-            <div class="article_n">
-        		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/pic1.png" title="灯塔">
-                    <a href="#"><span>陌上行</span></a><br/>
-                    <span>2018-05-18</span>
-                </div>
-            	<div class="article_details">
-                <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
-                    </div>
-                    <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
-					</a>
-                    </div><br/>
-					<span>阅读：xxx&emsp;|</span>
-                    <span>评论：xxx&emsp;|</span>
-                    <span>喜欢：xxx&emsp;|</span>
-                    <span>收藏：xxx</span>
-            	</div>
-            </div>
-            <div class="article_n">
-        		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/pic1.png" title="灯塔">
-                    <a href="#"><span>陌上行</span></a><br/>
-                    <span>2018-05-18</span>
-                </div>
-            	<div class="article_details">
-                <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
-                    </div>
-                    <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
-					</a>
-                    </div><br/>
-					<span>阅读：xxx&emsp;|</span>
-                    <span>评论：xxx&emsp;|</span>
-                    <span>喜欢：xxx&emsp;|</span>
-                    <span>收藏：xxx</span>
-            	</div>
-            </div>
+            </c:if>
+            <%} }%>
             <!--文章end-->
         </div>
     </div>

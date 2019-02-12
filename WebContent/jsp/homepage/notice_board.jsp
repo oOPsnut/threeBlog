@@ -23,7 +23,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="toTop" content="true">
-<title>未知错误</title>
+<title>公告详情</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/register.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/personalcenter.css" type="text/css"/>

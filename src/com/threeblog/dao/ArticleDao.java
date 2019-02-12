@@ -235,5 +235,12 @@ public interface ArticleDao {
 	 * @return
 	 * @throws SQLException
 	 */
-	List findHotLabels()throws SQLException;
+	List<Object[]> findHotLabels()throws SQLException;
+
+	/**
+	 * 查找热门博文
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findHotArticles()throws SQLException;
 }

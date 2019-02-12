@@ -466,11 +466,19 @@ public  class ArticleServiceImpl implements ArticleService {
 	}
 
 	@Override
-	public List findHotLabels() throws SQLException {
+	public List<Object[]> findHotLabels() throws SQLException {
 		// 查找热门标签
 		ArticleDao dao = new ArticleDaoImpl();
-		List list = dao.findHotLabels();
+		List<Object[]> list = dao.findHotLabels();
 		return list;
+	}
+
+	@Override
+	public List<ArticleBean> findHotArticles() throws SQLException {
+		// 查找热门博文
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.findHotArticles();
+		return articles;
 	}
 
 	

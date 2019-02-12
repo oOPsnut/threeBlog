@@ -240,10 +240,19 @@ public class ArticleDaoImpl implements ArticleDao {
 	}
 
 	@Override
-	public List findHotLabels() throws SQLException {
+	public List<Object[]> findHotLabels() throws SQLException {
 		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="SELECT label AS labels,COUNT(*) AS number FROM t_article GROUP BY label  LIMIT 10";
+		//SELECT label AS labels,COUNT(*) AS number FROM t_article GROUP BY label  LIMIT 10
+		//上面是返回有数数的，下面是没有数数的。
+		String sql="SELECT label AS labels FROM t_article GROUP BY label  LIMIT 10";
 		return runner.query(sql,new ArrayListHandler());
+	}
+
+	@Override
+	public List<ArticleBean> findHotArticles() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article order BY click_num DESC  LIMIT 15";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
 	}
 
 

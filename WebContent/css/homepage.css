@@ -679,3 +679,10 @@ footer img{
 	cursor:pointer;}
 .article_a_discuss{
 	width:900px;}
+#Homepage_username:hover{
+	font-weight:blod;
+	color:#d29510;
+}
+#Homepage_title:hover{
+	color:#d29510;
+}

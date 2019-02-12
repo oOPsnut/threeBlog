@@ -3,6 +3,10 @@
 <%@page import="com.threeblog.domain.UserBean"%>
 <%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
 <%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.ArticleBean"%>
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
 <%
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
 			if(userBean!=null){
@@ -200,7 +204,12 @@ $(function() {
     	<!--写作入口-->
     	<div id="index_body_enter">
         	<div id="index_body_enter_write" >
-            	<a href="#"><img src="image/write.png">
+            	<c:if test="${not empty userBean }">
+            	<a href="${pageContext.request.contextPath}/RedirectServlet?method=publishUI"><img src="${pageContext.request.contextPath}/image/write.png">
+                </c:if> 
+                <c:if test="${empty userBean }">
+            	<a href="${pageContext.request.contextPath}/RedirectServlet?method=LoginUI"><img src="${pageContext.request.contextPath}/image/write.png">
+                </c:if>
                 <div id="enter_writer_w">
                 	<span id="enter_writer_span1">写博文</span>&emsp;
                     <span id="enter_writer_span2">|&emsp;记录你生活的剪影</span>
@@ -209,9 +218,9 @@ $(function() {
             </div>
             <div id="index_body_enter_guideboard" >
             	<h3 >█ 指路牌</h3>
-                <a href="#"><span >博客文章欣赏</span></a><br/><br/>
-                <a href="#"><span>博客图片画廊</span></a><br /><br/>
-                <a href="#"><span>博客举报中心入口</span></a>
+                <a href="${pageContext.request.contextPath}/RedirectServlet?method=blogUI"><span >博客文章欣赏</span></a><br/><br/>
+                <a href="${pageContext.request.contextPath}/RedirectServlet?method=picturesUI"><span>博客图片画廊</span></a><br /><br/>
+                <a href="${pageContext.request.contextPath}/RedirectServlet?method=searchUI"><span>博客标签搜索</span></a>
             </div>
         </div>
         <!--介绍-->
@@ -219,7 +228,7 @@ $(function() {
         	<h2>记录生活，分享快乐。</h2>
             <span class="body_total_span_e">Life is short,</span><br/>
             <span class="body_total_span_e">have some pride.</span><br/><br/>
-            <span class="body_total_span_c">已经有xxx位朋友</span><br/>
+            <span class="body_total_span_c">已经有&nbsp;${totalUser}&nbsp;位朋友</span><br/>
              <span class="body_total_span_c">在这里</span><br/>
               <span class="body_total_span_c">留下他们生活的剪影</span>
     	</div>
@@ -245,10 +254,22 @@ $(function() {
         <!--热门标签标签-->
         <div id="index_body_labels">
         	<h3>█ 热门标签</h3>
-            <input  type="submit" value="关键词" class="body_labels_input">
-            <input  type="submit" value="左岸"  class="body_labels_input">	
-            <input  type="submit" value="最爱的，还是这人和烟火"  class="body_labels_input">	
-             <input  type="submit" value="圣诞节撒点就扫大街哦啊就是都似的撒旦"  class="body_labels_input">	
+        	<%
+        		ArticleService aService = new ArticleServiceImpl();
+        		List<Object[]> hotLabels = aService.findHotLabels();  
+        		if(hotLabels.isEmpty()){
+        	%>
+        	<h4 style="margin-left: 30px;color: gray;">暂无</h4>
+        	<%		
+        		}else{
+        			for(int i=0;i<hotLabels.size();i++){
+        				Object[] ob = hotLabels.get(i);
+        				Object hotLabel = ob[0];
+        				//System.out.println(hotLabel);
+        				request.setAttribute("hotLabel", hotLabel);
+        	%>
+            <a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${hotLabel}"><input  type="submit" value="${hotLabel}" class="body_labels_input"></a>     
+            <%} }%>      	
         </div>
     </div>
     <!--右侧栏end-->
@@ -256,16 +277,15 @@ $(function() {
     <div id="index_body_left_search">
     	<img id="search_pic" src="image/search_pic.png">
         <form>
-        	<input id="search_w" type="text" placeholder=" 请输入你感兴趣的事物！" >
-        
-        <input  id="search_c" type="submit" value="搜索">
+        	<input id="search_w" type="text" placeholder=" 请输入你感兴趣的事物！" >       
+        	<input  id="search_c" type="submit" value="搜索">
         </form>
     </div>
 </div>
 <!--内容栏end-->
 <!--底部begin-->
 <footer>
-	<img src="image/footer_logo.png">
+	<img src="${pageContext.request.contextPath}/image/footer_logo.png">
     <div id="footer_about">
     <p>&emsp;关于我们 | 意见反馈 | 服务条例 | 隐私政策</p>
     <p>Copyright © 2018 | Three Blog | All Right Reserved</p>
