@@ -8,10 +8,10 @@
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
 <%@page import="com.threeblog.service.ArticleService"%>
 <%
+			UserService uService = new UserServiceImpl();
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
 			if(userBean!=null){
 				String uid = userBean.getId();
-				UserService uService = new UserServiceImpl();
 				int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
 				int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
 				int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
@@ -23,6 +23,8 @@
 	    		request.setAttribute("countCollects", countCollects);
 	    		request.setAttribute("countZans", countZans);
 			}
+			int totalUser = Integer.valueOf(uService.CountTotalUsers().toString());//总用户数
+			request.setAttribute("totalUser", totalUser);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -36,6 +38,7 @@
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
+<script src="${pageContext.request.contextPath}/js/search.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -275,12 +278,17 @@ $(function() {
     <!--右侧栏end-->
     <!--左侧栏begin-->
     <div id="index_body_left_search">
-    	<img id="search_pic" src="image/search_pic.png">
-        <form>
-        	<input id="search_w" type="text" placeholder=" 请输入你感兴趣的事物！" >       
-        	<input  id="search_c" type="submit" value="搜索">
+    	<img id="search_pic" src="${pageContext.request.contextPath}/image/search_pic.png">
+        <form action="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp" method="post" onsubmit="return check();">
+        	<div style="height: 42px;">
+	        	<input id="search_w" type="text" placeholder=" 请输入你感兴趣的事物！（标题/标签）" >       
+	        	<input  id="search_c" type="submit" value="搜索">
+        	</div>
+        	<div id="search_h">
+        		
+        	</div>
         </form>
-    </div>
+    </div>   
 </div>
 <!--内容栏end-->
 <!--底部begin-->

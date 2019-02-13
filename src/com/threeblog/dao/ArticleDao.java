@@ -243,4 +243,12 @@ public interface ArticleDao {
 	 * @throws SQLException
 	 */
 	List<ArticleBean> findHotArticles()throws SQLException;
+	
+	/**
+	 *查找提示搜索关键词（标题/标签）
+	 * @param word
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findSearchKey(String word)throws SQLException;
 }

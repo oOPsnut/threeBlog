@@ -8,10 +8,10 @@
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
 <%@page import="com.threeblog.service.ArticleService"%>
 <%
+			UserService uService = new UserServiceImpl();
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
 			if(userBean!=null){
 				String uid = userBean.getId();
-				UserService uService = new UserServiceImpl();
 				int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
 				int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
 				int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
@@ -23,6 +23,8 @@
 	    		request.setAttribute("countCollects", countCollects);
 	    		request.setAttribute("countZans", countZans);
 			}
+			int totalUser = Integer.valueOf(uService.CountTotalUsers().toString());//总用户数
+			request.setAttribute("totalUser", totalUser);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

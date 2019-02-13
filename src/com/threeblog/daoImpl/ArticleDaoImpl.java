@@ -255,6 +255,13 @@ public class ArticleDaoImpl implements ArticleDao {
 		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
 	}
 
+	@Override
+	public List<ArticleBean> findSearchKey(String word) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article WHERE label LIKE ? OR title LIKE ? LIMIT 5 ";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),word+"%",word+"%");
+	}
+
 
 
 	

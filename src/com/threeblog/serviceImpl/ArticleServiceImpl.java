@@ -481,6 +481,14 @@ public  class ArticleServiceImpl implements ArticleService {
 		return articles;
 	}
 
+	@Override
+	public List<ArticleBean> findSearchKey(String word) throws SQLException {
+		//  查找提示搜索关键词（标题/标签）
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.findSearchKey(word);
+		return articles;
+	}
+
 	
 	
 }

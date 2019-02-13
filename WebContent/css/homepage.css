@@ -476,6 +476,7 @@ footer img{
 	float:left;
 	margin-top:5px;}
 #search_c{
+	 cursor:pointer;
 	 float:left;
 	 width:100px;
 	 height:50px;
@@ -512,6 +513,21 @@ footer img{
 	 margin-left:25px; 
 	 background-color:#6cf; 
 	 color:#FFF; }
+#search_h{
+	margin-left:15px;
+	border:2px solid #cea16a;
+	min-height:50px;
+	height:auto;
+	overflow:inherit;
+	width:470px;
+	display:none;
+}
+.tr_change:hover{
+	background-color:#f0e0b7;
+}
+.tr_change td a{
+	color:#c89659;
+}
 #index_body_left_search h4{
 	margin-left:20px;}
 .result_n{
