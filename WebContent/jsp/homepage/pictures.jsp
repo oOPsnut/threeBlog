@@ -282,23 +282,33 @@ $(function() {
     	
 		<div class="content">
 			<div class="chroma-gallery mygallery">
-				<img src="images/thumbs/1.jpg" alt="Pic 1" data-largesrc="images/1.jpg">
-				<img src="images/thumbs/2.jpg" alt="Pic 2" data-largesrc="images/2.jpg">
-				<img src="images/thumbs/3.jpg" alt="Pic 3" data-largesrc="images/3.jpg">
-				<img src="images/thumbs/4.jpg" alt="Pic 4" data-largesrc="images/4.jpg">
-				<img src="images/thumbs/5.jpg" alt="Pic 5" data-largesrc="images/5.jpg">
-				<img src="images/thumbs/6.jpg" alt="Pic 6" data-largesrc="images/6.jpg">
-				<img src="images/thumbs/7.jpg" alt="Pic 7" data-largesrc="images/7.jpg">
-				<img src="images/thumbs/8.jpg" alt="Pic 8" data-largesrc="images/8.jpg">
-				<img src="images/thumbs/9.jpg" alt="Pic 9" data-largesrc="images/9.jpg">
-				<img src="images/thumbs/10.jpg" alt="Pic 10" data-largesrc="images/10.jpg">
-                <img src="images/thumbs/pic1.jpg" alt="Pic 10" data-largesrc="images/pic1.jpg">
-                <img src="images/thumbs/pic2.jpg" alt="Pic 10" data-largesrc="images/pic2.jpg">
-                <img src="images/thumbs/pic3.jpg" alt="Pic 10" data-largesrc="images/pic3.jpg">
-                <img src="images/thumbs/pic4.jpg" alt="Pic 10" data-largesrc="images/pic4.jpg">
-                <img src="images/thumbs/mao.jpg" alt="Pic 10" data-largesrc="images/mao.jpg">
-                 <img src="images/thumbs/mao3.jpg" alt="Pic 10" data-largesrc="images/mao3.jpg">
-                  <img src="images/thumbs/mao2.jpg" alt="Pic 10" data-largesrc="images/mao2.jpg">
+				<%
+                	List<ArticleBean> list = aService.findArticleCover();
+                	if(!list.isEmpty()){
+                		request.setAttribute("list", list);
+                	}
+                %>
+                <c:forEach items="${list }" var="l">
+                	<img src="${l.cover }" alt="${l.label }" data-largesrc="${l.cover }">
+                </c:forEach>
+				<img src="${pageContext.request.contextPath}/images/thumbs/1.jpg" alt="New York" data-largesrc="${pageContext.request.contextPath}/images/1.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/2.jpg" alt="湖畔" data-largesrc="${pageContext.request.contextPath}/images/2.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/3.jpg" alt="潮" data-largesrc="${pageContext.request.contextPath}/images/3.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/4.jpg" alt="猫头鹰" data-largesrc="${pageContext.request.contextPath}/images/4.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/5.jpg" alt="灯塔" data-largesrc="${pageContext.request.contextPath}/images/5.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/6.jpg" alt="城墙" data-largesrc="${pageContext.request.contextPath}/images/6.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/7.jpg" alt="二哈" data-largesrc="${pageContext.request.contextPath}/images/7.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/8.jpg" alt="城市" data-largesrc="${pageContext.request.contextPath}/images/8.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/9.jpg" alt="猎豹" data-largesrc="${pageContext.request.contextPath}/images/9.jpg">
+				<img src="${pageContext.request.contextPath}/images/thumbs/10.jpg" alt="落日" data-largesrc="${pageContext.request.contextPath}/images/10.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/pic1.jpg" alt="小吃" data-largesrc="${pageContext.request.contextPath}/images/pic1.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/pic2.jpg" alt="日本街景" data-largesrc="${pageContext.request.contextPath}/images/pic2.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/pic3.jpg" alt="街景" data-largesrc="${pageContext.request.contextPath}/images/pic3.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/pic4.jpg" alt="余晖" data-largesrc="${pageContext.request.contextPath}/images/pic4.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/mao.jpg" alt="猫" data-largesrc="${pageContext.request.contextPath}/images/mao.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/mao3.jpg" alt="爱宠" data-largesrc="${pageContext.request.contextPath}/images/mao3.jpg">
+                <img src="${pageContext.request.contextPath}/images/thumbs/mao2.jpg" alt="cute" data-largesrc="${pageContext.request.contextPath}/images/mao2.jpg">
+                
 			</div>
 		</div>
 	

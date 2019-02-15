@@ -48,7 +48,7 @@ public class ArticleDaoImpl implements ArticleDao {
 	@Override
 	public ArticleTypeBean findArticleType(String id2) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="select * from t_articletype where id = ?";
+		String sql="select * from t_articletype where article_id = ?";
 		return runner.query(sql, new BeanHandler<ArticleTypeBean>(ArticleTypeBean.class),id2);
 	}
 
@@ -258,8 +258,72 @@ public class ArticleDaoImpl implements ArticleDao {
 	@Override
 	public List<ArticleBean> findSearchKey(String word) throws SQLException {
 		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
-		String sql="SELECT * FROM t_article WHERE label LIKE ? OR title LIKE ? LIMIT 5 ";
+		String sql="SELECT * FROM t_article WHERE label LIKE ? OR title LIKE ? order by publish_date DESC LIMIT 5 ";
 		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),word+"%",word+"%");
+	}
+
+	@Override
+	public List<ArticleBean> fingAllAboutWord(String word) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article WHERE label LIKE ? OR title LIKE ? order by publish_date DESC";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),word+"%",word+"%");
+	}
+
+	@Override
+	public List<ArticleBean> findArticleCover() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article where status!='屏蔽' order by publish_date DESC";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
+	}
+
+	@Override
+	public List<ArticleBean> findHotestArticle() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article where status!='屏蔽' order by click_num DESC limit 5";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
+	}
+
+	@Override
+	public List<ArticleBean> findNewestArticle() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article where status!='屏蔽' order by publish_date DESC limit 5";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
+	}
+
+	@Override
+	public List<ArticleBean> loadMore(int offset, int size,String alt) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql=null;
+		//System.out.println(alt);
+		if (alt.equals("hot")) {
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' ORDER BY click_num DESC LIMIT ? , ?";			
+		} else if(alt.equals("new")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("mix")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='杂乱无章') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("fun")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='休闲娱乐') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("game")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='游戏漫画') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("travel")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='旅游摄影') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("fashion")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='时尚美食') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("school")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='校园青春') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("media")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='媒体科技') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}else if(alt.equals("sports")){
+			sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type='体育健康') ORDER BY publish_date DESC LIMIT ? , ?";	
+		}
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),offset,size);
+	}
+
+	@Override
+	public List<ArticleBean> findArticleByType(String type) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article where status!='屏蔽' and id IN(SELECT article_id FROM t_articletype WHERE article_type=?) order by publish_date DESC limit 5";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),type);
 	}
 
 

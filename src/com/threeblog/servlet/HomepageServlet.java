@@ -40,4 +40,29 @@ public class HomepageServlet extends BaseServlet {
 			return "/jsp/homepage/seachList.jsp";
 		}
 	}
+	
+	//实时返回查询结果（加载更多）
+	public String loadmore(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		int offset = Integer.parseInt(request.getParameter("offset"));
+		int size = Integer.parseInt(request.getParameter("size"));
+		String alt = request.getParameter("alt");
+		//System.out.println(offset+"="+size+"="+alt);
+		
+		//查询数据库
+		ArticleService aService = new ArticleServiceImpl();
+		List<ArticleBean> list = aService.loadMore(offset,size,alt);
+		//System.out.println(list);
+		//返回数据
+		if (list.isEmpty()) {
+			response.getWriter().println(1);
+			return null;
+		} else {
+			request.setAttribute("list", list);
+			return "/jsp/homepage/loadmore.jsp";
+		}
+	}
+	
+	
 }

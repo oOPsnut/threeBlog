@@ -38,6 +38,7 @@
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
+<script src="${pageContext.request.contextPath}/js/search.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -245,13 +246,13 @@ $(function() {
             <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
             </div>
             <a href="#"><span id="body_notice_detail">本告详情</span></a>
-            <img src="image/notice.png">
+            <img src="${pageContext.request.contextPath}/image/notice.png">
             <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">
         	<div id="calendar" class="calendar"></div>
-  			<script src="js/calendar.js"></script>
+  			<script src="${pageContext.request.contextPath}/js/calendar.js"></script>
         </div>
         <!--热门标签标签-->
         <div id="index_body_labels">
@@ -278,37 +279,108 @@ $(function() {
     <!--左侧栏begin-->
     <div id="index_body_left_search">
     	<div id="search_result">
-    	<img id="search_r_pic" src="image/search_result.png" style="float:left;">
-    	 <form>
-        	<input id="search_r_w" type="text" placeholder=" 请输入你感兴趣的事物！" >
-        
-        <input  id="search_r_c" type="submit" value="搜索">
+    	<img id="search_r_pic" src="${pageContext.request.contextPath}/image/search_result.png" style="float:left;">
+    	 <form action="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp" method="post" onsubmit="return check();">
+        	<div style="height: 42px;">
+	        	<input id="search_r_w" type="text" name="search_w" placeholder=" 请输入你感兴趣的事物！（标题/标签）" >       
+	        	<input  id="search_r_c" type="submit" value="搜索">
+        	</div>
+        	<div id="search_r_h">
+        		
+        	</div>
         </form>
         </div>
-        <h4>与“xxx”有关的博文</h4>
+        <%
+        	String word = request.getParameter("search_w");
+        	String content = request.getParameter("content");
+        	if(word!=null){
+        		request.setAttribute("word", word);
+        		List<ArticleBean> wlist = aService.fingAllAboutWord(word);
+        		if(!wlist.isEmpty()){
+        			request.setAttribute("wlist", wlist);
+        		}else{
+        %>
+        	<h4>与“${word}”有关的博文</h4>
+        	<div class="result_n" align="center">
+        		<h4 style="padding-top: 80px;">暂无</h4>
+            </div>
+        <%
+        		}
+        	}else if(content!=null){
+        		request.setAttribute("content", content);
+        		List<ArticleBean> clist=aService.fingAllAboutWord(content);
+        		if(!clist.isEmpty()){
+        			request.setAttribute("clist", clist);
+        		}else{
+        %>
+        	<h4>与“${content}”有关的博文</h4>
+        	<div class="result_n" align="center">
+        		<h4 style="padding-top: 80px;">暂无</h4>
+            </div>
+        <% 
+        		}
+        	}
+        %>
+        <c:if test="${not empty word && not empty wlist}">
+        	<h4>与“${word}”有关的博文</h4>
+        </c:if>
+        <c:if test="${not empty content&& not empty clist}">
+        	<h4>与“${content}”有关的博文</h4>
+        </c:if>
     	<!--具体N篇文章begin-->
+    	<c:if test="${not empty wlist}">
+    	<c:forEach items="${wlist}" var="w">
+    	<c:if test="${w.status!='屏蔽' }">
         <div class="result_n">
                <div class="result_pic">
-                        <img  src="image/pic1.png" title="灯塔">
-                        <a href="#"><span>陌上行</span></a><br/>
-                        <span>2018-05-18</span>
+                        <img  src="${w.cover}">
+                        <a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${w.author_id}" target="_blank"><span>${w.author}</span></a><br/>
+                        <span>${w.publish_date }</span>
               </div>
                <div class="result_details">
                         <div id="result_details_h1">
-                        <a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
+                        <a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${w.id}"><h1>${w.title}</h1></a>
                         </div>
                         <div id="result_details_p">	<a>
-                        <p>关于孤独，到此为止。
-    天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
+                        <p>${w.introduction}</p>
                         </a>
                         </div><br/>
-                        <span>阅读：xxx&emsp;|</span>
-                        <span>评论：xxx&emsp;|</span>
-                        <span>喜欢：xxx&emsp;|</span>
-                        <span>收藏：xxx</span>
+                        <span>阅读：${w.click_num }&emsp;|</span>
+	                    <span>评论：${w.comment_num }&emsp;|</span>
+	                    <span>喜欢：${w.liked_num }&emsp;|</span>
+	                    <span>收藏：${w.collect_num}</span>
                </div>
         </div>
-     
+        </c:if>
+        </c:forEach>
+    	</c:if>
+    	
+    	<c:if test="${not empty clist}">
+    	<c:forEach items="${clist}" var="c">
+    	<c:if test="${c.status!='屏蔽' }">
+        <div class="result_n">
+               <div class="result_pic">
+                        <img  src="${c.cover}">
+                        <a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${c.author_id}" target="_blank"><span id="Homepage_username">${c.author}</span></a><br/>
+                        <span>${c.publish_date }</span>
+              </div>
+               <div class="result_details">
+                        <div id="result_details_h1">
+                        <a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${c.id}"><h1 id="Homepage_title">${c.title}</h1></a>
+                        </div>
+                        <div id="result_details_p">	<a>
+                        <p>${c.introduction}</p>
+                        </a>
+                        </div><br/>
+                        <span>阅读：${c.click_num }&emsp;|</span>
+	                    <span>评论：${c.comment_num }&emsp;|</span>
+	                    <span>喜欢：${c.liked_num }&emsp;|</span>
+	                    <span>收藏：${c.collect_num}</span>
+               </div>
+        </div>
+        </c:if>
+        </c:forEach>
+    	</c:if>
         <!--文章end-->
            
     </div>

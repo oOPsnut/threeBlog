@@ -238,7 +238,7 @@ public interface ArticleDao {
 	List<Object[]> findHotLabels()throws SQLException;
 
 	/**
-	 * 查找热门博文
+	 * 查找热门博文(限制10-15条)
 	 * @return
 	 * @throws SQLException
 	 */
@@ -251,4 +251,51 @@ public interface ArticleDao {
 	 * @throws SQLException
 	 */
 	List<ArticleBean> findSearchKey(String word)throws SQLException;
+	
+	/**
+	 * 根据关键词（标题/标签）查找文章(无限制)（可给限制20左右，但需要分页）
+	 * @param word
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> fingAllAboutWord(String word)throws SQLException;
+	
+	/**
+	 * 查找文章封面
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findArticleCover()throws SQLException;
+	
+	/**
+	 * 查找热门博文(全部)
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findHotestArticle()throws SQLException;
+	
+	/**
+	 * 查找最新博文(全部)
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findNewestArticle()throws SQLException;
+
+	/**
+	 * 加载更多热门博文
+	 * @param offset
+	 * @param size
+	 * @param alt
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> loadMore(int offset, int size,String alt)throws SQLException;
+	
+	/**
+	 * 根据类型查找博文（全部）
+	 * @param type
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findArticleByType(String type)throws SQLException;
 }

@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page import="com.threeblog.domain.UserBean"%>
 <%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
 <%@page import="com.threeblog.service.UserService"%>
+<%@page import="com.threeblog.domain.UserBean"%>
 <%@page import="com.threeblog.domain.ArticleBean"%>
 <%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
@@ -30,7 +30,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>搜索</title>
+<title>博文</title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/homepage.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/blog.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/calendar.css">
@@ -38,7 +38,7 @@
 <link href="${pageContext.request.contextPath}/css/owl.carousel.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
-<script src="${pageContext.request.contextPath}/js/search.js"></script>
+<script src="${pageContext.request.contextPath}/js/loadmore.js"></script>
 <!--头部show的js-->
 <script>
 $(function(){
@@ -75,7 +75,7 @@ $(function() {
   <div id="index_head_logo"> <img src="${pageContext.request.contextPath}/image/logo.png"> </div>
   <div id="index_head_menu">
     <ul>
-      <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=homePageUI" >首页</a></li>
+     <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=homePageUI" >首页</a></li>
       <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=blogUI" >博文</a></li>
       <li><a href="${pageContext.request.contextPath}/RedirectServlet?method=picturesUI" >画廊</a></li>
       <c:if test="${not empty userBean }">
@@ -89,7 +89,7 @@ $(function() {
   <div id="index_head_tools"> 
   <ul>
   	<li>
-    	<a href="javascript:;">
+    	<a href="${pageContext.request.contextPath}/RedirectServlet?method=searchUI">
         	<img  src="${pageContext.request.contextPath}/image/search.png" style="float:left;" />
        	</a> 
     </li>
@@ -246,13 +246,13 @@ $(function() {
             <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
             </div>
             <a href="#"><span id="body_notice_detail">本告详情</span></a>
-            <img src="image/notice.png">
+            <img src="${pageContext.request.contextPath}/image/notice.png">
             <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">
         	<div id="calendar" class="calendar"></div>
-  			<script src="js/calendar.js"></script>
+  			<script src="${pageContext.request.contextPath}/js/calendar.js"></script>
         </div>
         <!--热门标签标签-->
         <div id="index_body_labels">
@@ -277,18 +277,68 @@ $(function() {
     </div>
     <!--右侧栏end-->
     <!--左侧栏begin-->
-    <div id="index_body_left_search">
-    	<img id="search_pic" src="${pageContext.request.contextPath}/image/search_pic.png">
-        <form action="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp" method="post" onsubmit="return check();">
-        	<div style="height: 42px;">
-	        	<input id="search_w" type="text" name="search_w" placeholder=" 请输入你感兴趣的事物！（标题/标签）" >       
-	        	<input  id="search_c" type="submit" value="搜索">
-        	</div>
-        	<div id="search_h">
-        		
-        	</div>
-        </form>
-    </div>   
+    <div id="index_body_left">
+    	<div id="blog_title">
+			<ul>
+            	<li><a href="${pageContext.request.contextPath}/jsp/homepage/blog.jsp">&emsp;热门头条&emsp;</a></li>
+        		<li><a href="${pageContext.request.contextPath}/jsp/homepage/newest.jsp">&emsp;新鲜事物&emsp;</a></li>
+            	<li><a href="${pageContext.request.contextPath}/jsp/homepage/mixture.jsp">&emsp;杂乱无章&emsp;</a></li>
+            	<li><a href="${pageContext.request.contextPath}/jsp/homepage/fun.jsp">&emsp;休闲娱乐&emsp;</a></li>
+            	<li><a href="${pageContext.request.contextPath}/jsp/homepage/game.jsp">&emsp;游戏漫画&emsp;</a></li>
+            	<li><a href="javascript:;">&emsp;旅游摄影&emsp;</a></li>
+            	<li><a href="${pageContext.request.contextPath}/jsp/homepage/fashion.jsp">&emsp;时尚美食&emsp;</a></li>
+                <li><a href="${pageContext.request.contextPath}/jsp/homepage/school.jsp">&emsp;校园青春&emsp;</a></li>
+                <li><a href="${pageContext.request.contextPath}/jsp/homepage/media.jsp">&emsp;媒体科技&emsp;</a></li>
+                <li><a href="${pageContext.request.contextPath}/jsp/homepage/sports.jsp">&emsp;体育健康&emsp;</a></li>
+        	</ul>
+        </div>
+    <!--内容begin-->
+   <div id="index_body_middle">
+    	<div id="index_body_middle_article">
+        	<!--具体N篇文章begin-->
+        	<%
+        		String type="旅游摄影";
+        		List<ArticleBean> list = aService.findArticleByType(type);
+        		if(list.isEmpty()){
+        	%>
+        		<div class="article_n" align="center">
+        		   <h4 style="padding-top: 80px;">暂无</h4>    	
+            	</div>
+        	<% 		
+        		}else{
+        			request.setAttribute("list", list);
+        		}
+        	%>
+        	<c:forEach items="${list}" var="l">
+        	<div class="article_n">
+        		<div class="article_pic">
+            		<img  src="${l.cover }">
+                    <a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${l.author_id}" target="_blank"><span id="Homepage_username">${l.author }</span></a><br/>
+                    <span>${l.publish_date }</span>
+                </div>
+            	<div class="article_details">
+                <div id="details_h1">
+                	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${l.id}" target="_blank"><h1 id="Homepage_title">${l.title}</h1></a>
+                    </div>
+                    <div id="details_p">	<a>
+                    <p>${l.introduction }</p>
+					</a>
+                    </div><br/>
+					<span>阅读：${l.click_num }&emsp;|</span>
+                    <span>评论：${l.comment_num }&emsp;|</span>
+                    <span>喜欢：${l.liked_num }&emsp;|</span>
+                    <span>收藏：${l.collect_num}</span>
+            	</div>
+            </div>
+           </c:forEach>
+           <div id="loadmoreDiv"></div>
+           <div id="loadmoreButton"><input type="button" value="点击加载更多" id="loadmore" alt="travel"></div>
+           
+            <!--文章end-->
+            </div>
+        </div>
+    </div>
+    <!--内容end-->
 </div>
 <!--内容栏end-->
 <!--底部begin-->

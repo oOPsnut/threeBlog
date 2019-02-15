@@ -31,6 +31,7 @@
 				
 				//通过文章id获取文章类型
 				ArticleTypeBean aTypeBean = aService.findArticleType(id);
+				//System.out.println(aTypeBean);
 				//找上一篇和下一篇的id
 				ArticleBean last_aBean = aService.findLastAId(author_id,pub_time);
 				ArticleBean next_aBean = aService.findNextAId(author_id,pub_time);

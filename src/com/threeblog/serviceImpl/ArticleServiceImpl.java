@@ -58,6 +58,7 @@ public  class ArticleServiceImpl implements ArticleService {
 		// 通过类型id，找到文章类型
 		ArticleDao dao = new ArticleDaoImpl();
 		ArticleTypeBean atBean = dao.findArticleType(id2);
+		//System.out.println(atBean);
 		return atBean;
 	}
 
@@ -475,7 +476,7 @@ public  class ArticleServiceImpl implements ArticleService {
 
 	@Override
 	public List<ArticleBean> findHotArticles() throws SQLException {
-		// 查找热门博文
+		// 查找热门博文(限制10-15条)
 		ArticleDao dao = new ArticleDaoImpl();
 		List<ArticleBean> articles = dao.findHotArticles();
 		return articles;
@@ -486,6 +487,55 @@ public  class ArticleServiceImpl implements ArticleService {
 		//  查找提示搜索关键词（标题/标签）
 		ArticleDao dao = new ArticleDaoImpl();
 		List<ArticleBean> articles = dao.findSearchKey(word);
+		return articles;
+	}
+
+	@Override
+	public List<ArticleBean> fingAllAboutWord(String word) throws SQLException {
+		// 根据关键词（标题/标签）查找文章(无限制)（可给限制20左右，但需要分页）
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.fingAllAboutWord(word);
+		return articles;
+	}
+
+	@Override
+	public List<ArticleBean> findArticleCover() throws SQLException {
+		// 查找文章封面
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.findArticleCover();
+		return articles;
+	}
+
+	@Override
+	public List<ArticleBean> findHotestArticle() throws SQLException {
+		// 查找热门博文(全部)
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.findHotestArticle();
+		return articles;
+	}
+
+	@Override
+	public List<ArticleBean> findNewestArticle() throws SQLException {
+		// 查找最新博文(全部)
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.findNewestArticle();
+		return articles;
+	}
+
+	@Override
+	public List<ArticleBean> loadMore(int offset, int size,String alt)throws SQLException {
+		// 加载更多热门博文
+		//System.out.println(alt);
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.loadMore(offset, size,alt);
+		return articles;
+	}
+
+	@Override
+	public List<ArticleBean> findArticleByType(String type) throws SQLException {
+		// 根据类型查找博文（全部）
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> articles = dao.findArticleByType(type);
 		return articles;
 	}
 

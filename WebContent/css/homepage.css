@@ -488,9 +488,10 @@ footer img{
 	 background-color:#6cf; 
 	 color:#FFF; }
 #search_result{
+	background-color:cornsilk;
 	width:100%;
-	height:80px;
-	margin-top:30px;}
+	min-height:80px;
+	padding-top:30px;}
 #search_r_pic{
 	margin-left:10px;
 	float:left;}
@@ -520,6 +521,15 @@ footer img{
 	height:auto;
 	overflow:inherit;
 	width:470px;
+	display:none;
+}
+#search_r_h{
+	margin-left:85px;
+	border:2px solid #cea16a;
+	min-height:50px;
+	height:auto;
+	overflow:inherit;
+	width:400px;
 	display:none;
 }
 .tr_change:hover{
