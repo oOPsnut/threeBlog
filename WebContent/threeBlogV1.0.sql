@@ -32,10 +32,10 @@ DROP TABLE IF EXISTS `t_admin`;
 CREATE TABLE `t_admin` (
   `id` VARCHAR(32) NOT NULL,
   `username` VARCHAR(20) DEFAULT NULL,
-  `password` VARCHAR(40) NOT NULL,
+  `password` VARCHAR(40) DEFAULT NULL,
   `phone` VARCHAR(20) NOT NULL,
   `license_code` VARCHAR(20) NOT NULL,
-  `register_time` DATE NOT NULL,
+  `register_time` DATE DEFAULT NULL,
   `last_login_time` DATE DEFAULT NULL, 
   PRIMARY KEY (`id`),
   UNIQUE KEY `phone` (`phone`),

@@ -84,7 +84,7 @@ function validateSimpleValidate(){
 						type:"post",
 						dataType:"json",
 						data:{
-							phone:function(){
+							code:function(){
 								return $("#f_cnum_input").val();
 							},
 						dataFilter: function (data) {  //判断控制器返回的内容

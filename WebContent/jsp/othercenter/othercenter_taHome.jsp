@@ -521,10 +521,12 @@
            </c:if>
    				 <%
              	 	ArticleBean aBeanF = aService.getFirstArticlesByUid(uid);
-             		String idF = aBeanF.getId();
-             		ArticleTypeBean atBeanF =  aService.getArticleTypeByAid(idF);
-     				request.setAttribute("atBeanF", atBeanF);
-             		request.setAttribute("aBeanF", aBeanF);
+   				 	if(aBeanF!=null){
+	             		String idF = aBeanF.getId();
+	             		ArticleTypeBean atBeanF =  aService.getArticleTypeByAid(idF);
+	     				request.setAttribute("atBeanF", atBeanF);
+	             		request.setAttribute("aBeanF", aBeanF);
+   				 	}
              	%>
            <!--第一条博文-->         
             	<c:if test="${year=='0'}">

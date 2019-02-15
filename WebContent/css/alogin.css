@@ -1,0 +1,134 @@
+/* CSS Document */
+#login_all{
+	width:1100px;
+	height:auto;
+	min-height:700px;
+	overflow:hidden;
+	background:url(../image/background_11.jpg) no-repeat;
+	background-size:100% 100%;
+	 }
+
+#login_left{
+	width:450px;
+	height:auto;
+	overflow:hidden;
+	float:left;
+	margin-top:110px;
+	margin-left:60px;
+	}
+#login_left table{
+	margin-top:200px;
+	border-left:2px solid #f5f2c1;
+	}
+#login_left p{
+	margin-left:20px;
+	color: #F5F2c1;
+	font-size:32px;
+	letter-spacing: 0;
+	margin-bottom:15px;
+		}
+#login_left span{
+	margin-left:20px;
+	display:block;
+	color: #F5F2c1;
+	font-size:18px;
+	letter-spacing: 0;
+	margin-bottom:32px;
+		}
+
+#login_right{
+    position: absolute;   
+	top: 50%;   
+	left: 50%;   
+	-webkit-transform: translate(-50%, -50%);   
+	-moz-transform: translate(-50%, -50%);   
+	-ms-transform: translate(-50%, -50%);   
+	-o-transform: translate(-50%, -50%);   
+	transform: translate(-50%, -50%);  
+	width:450px;
+	height:530px;
+	background-color:#F5F2c1;
+	padding:10px;
+	}
+#right_content{
+	width:100%;
+	height:100%;
+	border:1px solid #6cf;
+	}
+#right_content img{
+	margin:30px 75px 0px 75px;;
+	width:300px;
+	}
+.f_input{
+	font:"Microsoft YaHei UI", "Microsoft YaHei UI Light";
+	font-size:20px;
+	margin-top:20px;
+	height:40px;
+	width:300px;
+	margin-bottom:20px;
+	}
+#forget_passwd{
+	font-size:16px;
+	color:#666;
+	margin-left:230px;}
+#forget_passwd:hover{
+	color:#000;
+	font-weight:bold;}
+#login{
+	border:1px solid #ff0000;
+	padding:2px 3px;
+	background-color:#ff0000;
+	font-size:18px;
+	color:#FFF;
+	cursor:pointer;
+	}
+#register{
+	font-size:18px;
+	color:#000;
+	display:block;
+	padding:10px;
+	height:20px;
+	text-align:center;
+	width:280px;
+	background-color:#FFF;
+	}
+#f_remember{
+	margin:10px 0 0 0;
+	width:100%;
+	height:25px;}
+#remember{
+	display:none;
+	text-align:center;
+	font-size:20px;
+}
+
+input[type=checkbox] + label:before {
+  content: "\2713";
+  color: transparent;
+  display: inline-block;
+  border: 1px solid #000;
+  font-size: 20px;    
+  line-height: 22px;
+  margin: -5px 5px 0 0;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  vertical-align: middle;
+  transition: color ease .3s;
+}
+
+input[type=checkbox]:checked + label:before {
+  color: #000;
+}
+a{
+	text-decoration:none;}
+
+body{
+	margin:0 auto;
+	width:1100px;
+	background-color:#FC6;
+	background-size:100% 100%;
+	-moz-background-size:100% 100%;
+	color: #555 ;
+	margin-top:0px;
+}

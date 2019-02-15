@@ -27,6 +27,7 @@
 		request.setAttribute("year", year);
 		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
 		String uid = userBean.getId();//用户id
+		//System.out.println(at+"="+flag+"="+year);
 		//在博文表查找自己的所有博文及其信息，listBean（按照时间降序）
 		ArticleService aService = new ArticleServiceImpl();
 		List<ArticleBean> aBeans =	aService.getArticlesByUid(uid);
@@ -867,10 +868,12 @@
            </c:if>
    				 <%
              	 	ArticleBean aBeanF = aService.getFirstArticlesByUid(uid);
-             		String idF = aBeanF.getId();
-             		ArticleTypeBean atBeanF =  aService.getArticleTypeByAid(idF);
-     				request.setAttribute("atBeanF", atBeanF);
-             		request.setAttribute("aBeanF", aBeanF);
+   				 	if(aBeanF!=null){
+	             		String idF = aBeanF.getId();
+	             		ArticleTypeBean atBeanF =  aService.getArticleTypeByAid(idF);
+	     				request.setAttribute("atBeanF", atBeanF);
+	             		request.setAttribute("aBeanF", aBeanF);
+             		}
              	%>
            <!--第一条博文-->         
             	<c:if test="${year=='0'}">

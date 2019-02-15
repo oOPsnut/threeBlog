@@ -138,7 +138,7 @@ $(function() {
                 </div>
                 <input class="f_input" type="submit" name="submit" id="login" value="登&emsp;录" onclick="encryptionPassword()"/>
                 
-                <a id="register" href="${pageContext.request.contextPath}/UserServlet?method=registUI">注&emsp;册</a>
+                <a id="register" href="${pageContext.request.contextPath}/RedirectServlet?method=registUI">注&emsp;册</a>
                 </form>
             </div>
         </div>

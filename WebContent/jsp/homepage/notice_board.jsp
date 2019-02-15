@@ -217,7 +217,6 @@ $(function() {
         <div class="article_a_up">
         	<h2>${aBean.title }</h2>
             <div id="a_up_info">
-              <img src="${author.head }"/>
               <span id="a_up_info_span">${aBean.author}</span>
            	  <span>${aBean.publish_date}</span>
               <span>分类 : </span><span><strong>${aTypeBean.article_type }</strong></span>

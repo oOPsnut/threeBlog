@@ -423,21 +423,24 @@ public class UserServlet extends BaseServlet {
 					Date date=new Date();
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 					//用户手机号+时间+格式   136xxxx1122_20171201194110.jepg
-					String filename = phone+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
-					//获取实际存储路径
-					String t1 = request.getServletContext().getRealPath("") + "\\image\\userhead"; 	
-					String realFile=t1  +File.separator+ filename;
-					File saveFile = new File(realFile);
-					if (!saveFile.exists()) {
-						saveFile.createNewFile();
+					if(!item.getContentType().equals("application/octet-stream")) {
+						String filename = phone+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
+						//获取实际存储路径
+						String t1 = request.getServletContext().getRealPath("") + "\\image\\userhead"; 	
+						String realFile=t1  +File.separator+ filename;
+						File saveFile = new File(realFile);
+						//System.out.println(item.getContentType());
+						if (!saveFile.exists()) {
+							saveFile.createNewFile();
+						}
+						try {
+							item.write(saveFile);// 把上传的内容写到一个文件中
+		                    head="/ThreeBlog_V1.0/image/userhead/"+filename;
+		                } catch (Exception e) {
+		                    //System.out.println("文件为空，未修改头像");
+		                	e.printStackTrace();
+		                }
 					}
-					try {
-						item.write(saveFile);// 把上传的内容写到一个文件中
-	                    head="/ThreeBlog_V1.0/image/userhead/"+filename;
-	                } catch (Exception e) {
-	                    //System.out.println("文件为空，未修改头像");
-	                	e.printStackTrace();
-	                }
 				}				
 			}
 			//在session中获取用户id

@@ -116,4 +116,18 @@ public class RedirectServlet extends BaseServlet{
 		return "/jsp/homepage/notice_board_All.jsp";
 	}
 	
+	//跳转到注册页面
+	public String AregistUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/admin/login/admin_register.jsp";
+	}
+	
+	//跳转到登陆页面
+	public String AloginUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/admin/login/admin_login.jsp";
+	}
+	
+	//跳转到忘记密码页面
+	public String AforgetPasswdUI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		return "/admin/login/admin_forgetPassword.jsp";
+	}
 }
