@@ -62,4 +62,13 @@ public interface AdminService {
 	 */
 	void changeLoginTime(String id, Date last_login_time)throws SQLException;
 
+	/**
+	 * 修改密码（忘记密码）
+	 * @param phone
+	 * @param password
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean changePasswd(String phone, String password)throws SQLException;
+
 }

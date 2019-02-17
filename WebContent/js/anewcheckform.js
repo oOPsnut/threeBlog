@@ -8,21 +8,15 @@ function checkAll(obj){
 	if(validateSimpleValidate().form()){
 		//判断是否符合规则
 		//符合则进入后台ajax处理
-		var s = confirm("注册后，用户名不能修改！");
-		if(s==true){	
 		//表单提交时对输入的密码进行加密， 避免抓包分析破解密码
 		//加密字段				
 		var md5KeyR= "jL2NdrALvN";
-	    var hash1 = $('#password1').val()+md5KeyR; 
+	    var hash1 = $('#newpasswd1').val()+md5KeyR; 
 		var hash2=MD5(hash1); 
-	    $('#password1').val(hash2);
-	    $('#password2').val(hash2);	
-	    alert("注册成功，将自动返回登录页面");	
+	    $('#newpasswd1').val(hash2);
+	    $('#newpasswd2').val(hash2);    
+	    alert("修改密码成功，将自动返回登录页面");
 	    return true;
-	    
-		}else{
-			return false;
-		}
 	}else{
 		//不符合规则返回
 		alert("错误，请更正！");
@@ -31,40 +25,33 @@ function checkAll(obj){
 }
 
 //自定义校验
-//1.用户名校验
-$.validator.addMethod("userName",function(value,element,params){
-	var uPattern =  /^[\u4e00-\u9fff\w]{3,10}$/;
-	return this.optional(element)||(uPattern.test(value));
-});
-
-//2.手机号校验
+//1.手机号校验
 $.validator.addMethod("Phone",function(value,element,params){
 	var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
 	return this.optional(element)||(myreg.test(value));
 });
 
-//3.密码校验
+//2.密码校验
 $.validator.addMethod("Password",function(value,element,params){
 	var reg=/^[a-zA-Z0-9]{6,35}$/;  
 	return this.optional(element)||(reg.test(value));
 });
-//4.授权码校验
+//3.授权码校验
 $.validator.addMethod("LicenseCode",function(value,element,params){
 	var reg=/^[a-zA-Z0-9]{10}$/;  
 	return this.optional(element)||(reg.test(value));
 });
 
-
 //校验
 function validateSimpleValidate(){
-	
-	var simpleValidateResult = $("#AdminRegister").validate({
+	var simpleValidateResult = $("#changePasswd").validate({
+			
 			rules:{
 				phone:{
 					required:true,//必填不能为空		
 					Phone:true,
 					remote:{
-						url:"/ThreeBlog_V1.0/AdminServlet?method=CheckPhone",
+						url:"/ThreeBlog_V1.0/AdminServlet?method=newCheckPhone",
 						type:"post",
 						dataType:"json",
 						data:{
@@ -73,7 +60,7 @@ function validateSimpleValidate(){
 							},
 						dataFilter: function (data) {  //判断控制器返回的内容
 					        //var notice = eval("("+ data +")");
-					        if( data ){
+					        if(data){
 					            return true;
 					        }else{
 					             return false;
@@ -82,38 +69,15 @@ function validateSimpleValidate(){
 						}
 					}
 				},
-				username:{
-					required:true,
-					rangelength:[3,10],
-					userName:true,
-					remote:{
-						url:"/ThreeBlog_V1.0/AdminServlet?method=CheckUsername",
-						type:"post",
-						dataType:"json",
-						data:{
-							username:function(){
-								return $("#username").val();
-							},
-						dataFilter: function (data) {  //判断控制器返回的内容
-					        //var notice = eval("("+ data +")");
-					        if( data ){
-					            return true;
-					        }else{
-					             return false;
-					        	}
-					     	}
-						}
-					}
-				},
-				password1:{
+				newpasswd1:{
 					required:true,
 					rangelength:[6,35],
 					Password:true
 				},
-				password2:{
+				newpasswd2:{
 					required:true,
 					rangelength:[6,35],
-					equalTo:'#password1'
+					equalTo:'#newpasswd1'
 				},
 				license_code:{
 					required:true,
@@ -139,7 +103,7 @@ function validateSimpleValidate(){
 					             return false;
 					        	}
 					     	}
-						}					
+						}				
 					}
 				},
 				code:{
@@ -152,7 +116,7 @@ function validateSimpleValidate(){
 						type:"post",
 						dataType:"json",
 						data:{
-							phone:function(){
+							code:function(){
 								return $("#f_cnum_input").val();
 							},
 						dataFilter: function (data) {  //判断控制器返回的内容
@@ -171,20 +135,14 @@ function validateSimpleValidate(){
 				phone:{
 					required:"请输入",	
 					Phone:"格式错误",
-					remote:"未授权"
+					remote:"未注册"
 				},
-				username:{
-					required:"请输入",
-					rangelength:"限3-10位",
-					userName:"格式错误",
-					remote:"已存在"
-				},
-				password1:{
+				newpasswd1:{
 					required:"请输入",
 					rangelength:"限6-35位",
 					Password:"格式错误"
 				},
-				password2:{
+				newpasswd2:{
 					required:"请输入",
 					rangelength:"限6-35位",
 					equalTo:"不一致"
@@ -216,7 +174,3 @@ function validateSimpleValidate(){
 	});
 		return simpleValidateResult;
 }
-
-
-
-

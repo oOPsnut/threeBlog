@@ -253,3 +253,20 @@ CREATE TABLE `t_ablum` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `t_ablum_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
 ) ENGINE=INNODB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+
+/*--------------------------------- 
+	t_notice表
+-----------------------------------*/
+DROP TABLE IF EXISTS `t_notice`;
+CREATE TABLE `t_notice` (
+  `id` VARCHAR(32) NOT NULL,
+  `admin_id` VARCHAR(32) NOT NULL,
+  `admin_username` VARCHAR(20) DEFAULT NULL,
+  `photo` VARCHAR(512) DEFAULT '/ThreeBlog_V1.0/image/noticecover/notice_three.jpg',
+  `type` VARCHAR(12) NOT NULL,
+  `content` TEXT NOT NULL,
+  `publish_date` DATE NOT NULL ,
+  PRIMARY KEY (`id`),
+  KEY `admin_id` (`admin_id`),
+  CONSTRAINT `t_notice_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `t_admin` (`id`)
+) ENGINE=INNODB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,8 +7,14 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/aforget_passwd.css" type="text/css"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-rebox.css"/>
 <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+<script src="${pageContext.request.contextPath}/js/owl.carousel.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/md5.js"></script>
-<script type="text/javascript" src="${pageContext.request.contextPath}/js/encryptionPassword.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/jquery-rebox.css"/>
+
+<!-- 提交表单检验 -->
+<script src="${pageContext.request.contextPath}/js/jquery.validate.js"></script>
+<script src="${pageContext.request.contextPath}/js/anewcheck.js"></script>
+<script src="${pageContext.request.contextPath}/js/anewcheckform.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-rebox.js"></script>
 </head>
 <body>
@@ -17,7 +22,7 @@
     	<div id="right_content">
         	<img id="right_content_img" src="${pageContext.request.contextPath}/image/footer_logo.png">
         	<h2 style="-webkit-margin-before: 10px;color: #cc6633;">后台管理中心</h2>
-        	<form action="${pageContext.request.contextPath}/UserServlet?method=changePasswd" method="post" id="changePasswd">
+        	<form action="${pageContext.request.contextPath}/AdminServlet?method=changePasswd" method="post" id="changePasswd">
             <div id="right_content_f" align="center">
             	<div class="f_username">
             		<input class="f_username_input" type="text" name="phone" placeholder=" 请 输 入 手 机 号" id="phone"/>

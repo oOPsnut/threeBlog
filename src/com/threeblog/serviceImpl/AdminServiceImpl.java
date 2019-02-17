@@ -59,4 +59,12 @@ public class AdminServiceImpl implements AdminService {
 		dao.changeLoginTime(id, last_login_time);
 	}
 
+	@Override
+	public boolean changePasswd(String phone, String password) throws SQLException {
+		// 修改密码（忘记密码）
+		AdminDao dao = new AdminDaoImpl();
+		boolean flag = dao.changePasswd(phone, password);
+		return flag;
+	}
+
 }

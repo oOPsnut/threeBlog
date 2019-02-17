@@ -9,7 +9,6 @@ import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.threeblog.dao.AdminDao;
 import com.threeblog.domain.AdminBean;
-import com.threeblog.domain.UserBean;
 import com.threeblog.util.JDBCUtil;
 
 public class AdminDaoImpl implements AdminDao {
@@ -61,5 +60,15 @@ public class AdminDaoImpl implements AdminDao {
 		runner.update(sql,last_login_time,id);
 		
 	}
+
+	@Override
+	public boolean changePasswd(String phone, String password) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		//UPDATE t_user SET PASSWORD='123456' WHERE phone='13642593642';
+		String sql="update t_admin set password=? where phone=?;";
+		int result = runner.update(sql,password,phone);
+		return result>0;
+	}
+
 
 }

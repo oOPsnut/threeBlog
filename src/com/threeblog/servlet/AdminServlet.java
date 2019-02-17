@@ -92,6 +92,27 @@ public class AdminServlet extends BaseServlet {
 		}
 	}
 	
+	//检测手机号是否已被注册(forgetpasswd)
+	public void newCheckPhone(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		try {
+			//检测是否存在
+			String phone = request.getParameter("phone");
+			
+			AdminService adminService=new AdminServiceImpl();
+			boolean pisExist = adminService.checkPhone(phone);;			
+			
+			//通知页面
+			if (pisExist) {
+				response.getWriter().println(true);//手机号已注册
+			}else {
+				response.getWriter().println(false);//手机号未注册
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}	
+	
 	//检测用户名是否使用
 	public void CheckUsername(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -248,8 +269,7 @@ public class AdminServlet extends BaseServlet {
 					request.getSession().setAttribute("CKFinder_UserRole","admin");
 					
 					request.getSession().setAttribute("adminBean", adminBean);
-					//request.getRequestDispatcher("/Homepage.jsp").forward(request, response);
-					response.sendRedirect(request.getContextPath()+"/Homepage.jsp");
+					response.sendRedirect(request.getContextPath()+"/admin/index/index.jsp");
 					return null;
 					
 				}else {
@@ -257,14 +277,51 @@ public class AdminServlet extends BaseServlet {
 					request.setAttribute("errorMsg", "账号或密码错误，请重新登录！");
 					//response.sendRedirect(request.getContextPath()+"/jsp/login/login.jsp");
 					return "/admin/login/admin_login.jsp";
-				}
-					
-					
-					
-				
+				}					
 			} catch (Exception e) {
 				return "/jsp/login/login.jsp";
 			}
 	}
+	
+	//修改密码（忘记密码）
+	public String changePasswd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+			
+			//接受表单参数
+			String phone = request.getParameter("phone");
+			String fpassword = request.getParameter("newpasswd1");
+							
+			UserBean user=new UserBean();
+			//MD5加密
+			String password = Md5StringUtils.getMD5Str(fpassword+md5Key,null);	
+			
+			//调用业务层修改密码
+			AdminService adminService=new AdminServiceImpl();
+			try {
+				//修改成功，跳转到登录页
+				boolean result = adminService.changePasswd(phone,password);
+				if (result) {
+					return "/admin/login/admin_login.jsp";
+				}else {
+					//修改失败，跳转到提示页面
+					return "/admin/error/error.jsp";
+				}
+			} catch (Exception e) {
+				//修改失败，跳转到提示页面
+				return "/admin/error/error.jsp";
+			}
+		}
 
+	//退出登录
+	public String LoginOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		// 删除cookie和session
+        HttpSession session = request.getSession();
+        session.removeAttribute("adminBean");
+        session.removeAttribute("CKFinder_UserRole");//移除ckfinder属性
+        session.invalidate();
+               
+        // 重定向到首页
+        response.sendRedirect(request.getContextPath()+"/admin/login/admin_login.jsp");
+		return null;
+	}
 }

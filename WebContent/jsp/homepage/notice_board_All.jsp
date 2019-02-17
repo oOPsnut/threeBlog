@@ -245,13 +245,13 @@ $(function() {
             <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
             </div>
             <a href="#"><span id="body_notice_detail">本告详情</span></a>
-            <img src="image/notice.png">
+            <img src="${pageContext.request.contextPath}/image/notice.png">
             <a href="javascript:;"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">
         	<div id="calendar" class="calendar"></div>
-  			<script src="js/calendar.js"></script>
+  			<script src="${pageContext.request.contextPath}/js/calendar.js"></script>
         </div>
         <!--热门标签标签-->
         <div id="index_body_labels">
@@ -283,7 +283,7 @@ $(function() {
         	<!--具体N篇文章begin-->
         	<div class="article_n">
         		<div class="article_pic">
-            		<img  src="image/pic1.png" title="灯塔">
+            		<img  src="${pageContext.request.contextPath}/image/noticecover/notice_three.jpg">
                     <span>陌上行</span><br/>
                     <span>2018-05-18</span>
                 </div>

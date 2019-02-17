@@ -2,9 +2,11 @@ package com.threeblog.daoImpl;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.threeblog.common.Config;
@@ -111,6 +113,22 @@ public class UserDaoImpl implements UserDao{
 		String sql="select count(id) as totalUser from t_user";
 		Long count =(Long) runner.query(sql,new ScalarHandler());
 		return count;
+	}
+
+	@Override
+	public Long countTotalUserByYear(int currentYear) throws SQLException {
+		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(id) AS totalUser FROM t_user WHERE register_time LIKE ?";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),currentYear+"%");
+		return count;
+	}
+
+	@Override
+	public List<UserBean> findLastLoginUser() throws SQLException {
+		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT * FROM t_user order by last_login_time DESC limit 20";
+		return runner.query(sql,new BeanListHandler<UserBean>(UserBean.class));
+		 
 	}
 
 	

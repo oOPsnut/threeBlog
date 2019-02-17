@@ -539,6 +539,30 @@ public  class ArticleServiceImpl implements ArticleService {
 		return articles;
 	}
 
+	@Override
+	public Long countTotalArticles() throws SQLException {
+		// 总博文数
+		ArticleDao dao = new ArticleDaoImpl();
+		Long totalArticles = dao.countTotalArticles();
+		return totalArticles;
+	}
+
+	@Override
+	public Object  countTotalClickNum() throws SQLException {
+		// 总博文浏览量
+		ArticleDao dao = new ArticleDaoImpl();
+		Object totalClickNum = dao.countTotalClickNum();
+		return totalClickNum;
+	}
+
+	@Override
+	public Long countTotalArticlesByYear(int currentYear) throws SQLException {
+		// 全年新增博文数
+		ArticleDao dao = new ArticleDaoImpl();
+		Long count = dao.countTotalArticlesByYear(currentYear);
+		return count;
+	}
+
 	
 	
 }

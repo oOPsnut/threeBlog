@@ -371,4 +371,20 @@ public class UserServiceImpl implements UserService{
 		return count;
 	}
 
+	@Override
+	public Long countTotalUserByYear(int currentYear) throws SQLException {
+		// 全年新增用户数
+		UserDao dao = new UserDaoImpl();
+		Long count = dao.countTotalUserByYear(currentYear);
+		return count;
+	}
+
+	@Override
+	public List<UserBean> findLastLoginUser() throws SQLException {
+		// 查找最近登陆的20人
+		UserDao dao = new UserDaoImpl();
+		List<UserBean> list = dao.findLastLoginUser();
+		return list;
+	}
+
 }

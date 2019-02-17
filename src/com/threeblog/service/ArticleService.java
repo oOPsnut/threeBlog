@@ -520,4 +520,25 @@ public interface ArticleService {
 	 */
 	List<ArticleBean> findArticleByType(String type)throws SQLException;
 	
+	/**
+	 * 总博文数
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countTotalArticles()throws SQLException;
+	
+	/**
+	 * 总博文浏览量
+	 * @return
+	 * @throws SQLException
+	 */
+	Object countTotalClickNum()throws SQLException;
+	
+	/**
+	 * 全年新增博文数
+	 * @param currentYear
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countTotalArticlesByYear(int currentYear)throws SQLException;
 }

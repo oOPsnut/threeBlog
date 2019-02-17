@@ -326,6 +326,30 @@ public class ArticleDaoImpl implements ArticleDao {
 		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),type);
 	}
 
+	@Override
+	public Long countTotalArticles() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(id) AS id FROM t_article ";
+		Long count =(Long) runner.query(sql,new ScalarHandler());
+		return count;
+	}
+
+	@Override
+	public Object countTotalClickNum() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT SUM(click_num)  FROM t_article ";
+		Object count = runner.query(sql,new ScalarHandler());
+		return count;
+	}
+
+	@Override
+	public Long countTotalArticlesByYear(int currentYear) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(id) AS id FROM t_article WHERE publish_date LIKE ?";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),currentYear+"%");
+		return count;
+	}
+
 
 
 	

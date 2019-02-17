@@ -2,6 +2,7 @@ package com.threeblog.dao;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.List;
 
 import com.threeblog.domain.UserBean;
 
@@ -94,4 +95,19 @@ public interface UserDao {
 	 * @throws SQLException
 	 */
 	Long CountTotalUsers()throws SQLException;
+	
+	/**
+	 * 全年新增用户数
+	 * @param currentYear
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countTotalUserByYear(int currentYear)throws SQLException;
+	
+	/**
+	 * 查找最近登陆的20人
+	 * @return
+	 * @throws SQLException
+	 */
+	List<UserBean> findLastLoginUser()throws SQLException;
 }
