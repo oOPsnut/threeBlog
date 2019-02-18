@@ -1,13 +1,17 @@
 package com.threeblog.serviceImpl;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.List;
 import java.sql.SQLException;
 
 import com.threeblog.dao.AdminDao;
+import com.threeblog.dao.NoticeDao;
 import com.threeblog.dao.UserDao;
 import com.threeblog.daoImpl.AdminDaoImpl;
+import com.threeblog.daoImpl.NoticeDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
 import com.threeblog.domain.AdminBean;
+import com.threeblog.domain.NoticeBean;
 import com.threeblog.service.AdminService;
 
 public class AdminServiceImpl implements AdminService {
@@ -65,6 +69,54 @@ public class AdminServiceImpl implements AdminService {
 		AdminDao dao = new AdminDaoImpl();
 		boolean flag = dao.changePasswd(phone, password);
 		return flag;
+	}
+
+	@Override
+	public boolean addNotice(NoticeBean notice) throws SQLException {
+		// 新增公告
+		NoticeDao dao  = new NoticeDaoImpl();
+		boolean result = dao.addNotice(notice);
+		return result;
+	}
+
+	@Override
+	public NoticeBean fingNoticeById(String id) throws SQLException {
+		// 通过id查找对应公告
+		NoticeDao dao = new NoticeDaoImpl();
+		NoticeBean noticeBean = dao.fingNoticeById(id);
+		return noticeBean;
+	}
+
+	@Override
+	public NoticeBean findLatelyNotice() throws SQLException {
+		// 查找到最新一篇
+		NoticeDao dao= new NoticeDaoImpl();
+		NoticeBean notice = dao.findLatelyNotice();
+		return notice;
+	}
+
+	@Override
+	public NoticeBean findLastNoticeByPubDate(Date pDate) throws SQLException {
+		// 查找上一篇公告
+		NoticeDao dao = new NoticeDaoImpl();
+		NoticeBean noticeBean = dao.findLastNoticeByPubDate(pDate);
+		return noticeBean;
+	}
+
+	@Override
+	public NoticeBean findNextNoticeByPubDate(Date pDate) throws SQLException {
+		// 查找下一篇公告
+		NoticeDao dao = new NoticeDaoImpl();
+		NoticeBean noticeBean = dao.findNextNoticeByPubDate(pDate);
+		return noticeBean;
+	}
+
+	@Override
+	public List<NoticeBean> findAllNotice() throws SQLException {
+		// 查找所有公告
+		NoticeDao dao = new NoticeDaoImpl();
+		List<NoticeBean> list = dao.findAllNotice();
+		return list;
 	}
 
 }

@@ -1,3 +1,16 @@
+<%@page import="com.threeblog.domain.NoticeBean"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
+<%@page import="com.threeblog.domain.UserBean"%>
+<%@page import="java.util.List"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="com.mysql.fabric.xmlrpc.base.Data"%>
+<%@page import="java.util.Date"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -12,7 +25,6 @@
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
- 	//System.out.println(adminBean);
 	if(adminBean!=null){
 		
 %>
@@ -69,52 +81,37 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe000;</i><a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">公告发布</span></div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-content">
-                <form action="${pageContext.request.contextPath}/AdminServlet?method=NoticePublish" method="post" id="myform" name="myform" enctype="multipart/form-data">
-                    <table class="insert-tab" width="100%">
-                        <tbody><tr>
-                            <th width="120"><i class="require-red">*</i>分类：</th>
-                            <td>
-                                <select name="colId" id="catid" class="required">
-                                    <option value="维护公告">维护公告</option>
-                                    <option value="博文公告">博文公告</option>
-                                    <option value="封号公告">封号公告</option>
-                                </select>
-                            </td>
-                        </tr>
-                            <tr>
-                                <th><i class="require-red">*</i>标题：</th>
-                                <td>
-                                    <input class="common-text required" id="title" name="title" size="50" value="" type="text" required>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>作者：</th>
-                                <td>${adminBean.username}<input class="common-text" name="author" size="50" value="${adminBean.username}" type="text" style="visibility: hidden;"></td>
-                            </tr>
-                            <tr>
-                                <th><i class="require-red">*</i>缩略图：</th>
-                                <td><input name="smallimg" id="" type="file" required><!--<input type="submit" onclick="submitForm('/jscss/admin/design/upload')" value="上传图片"/>--></td>
-                            </tr>
-                            <tr>
-                                <th><i class="require-red">*</i>内容：</th>
-                                <td><textarea name="content" class="common-textarea" id="content" cols="30" style="width: 98%;" rows="10" required></textarea></td>
-                            </tr>
-                            <tr>
-                                <th></th>
-                                <td>
-                                    <input class="btn btn-primary btn6 mr10" value="提交" type="submit">
-                                    <input class="btn btn6" onClick="history.go(-1)" value="返回" type="button">
-                                </td>
-                            </tr>
-                        </tbody></table>
-                </form>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span>
+            	<a class="crumb-name" href="${pageContext.request.contextPath}/admin/index/notice_list.jsp">公告管理</a>
+            	<span class="crumb-step">&gt;</span><span>公告详情</span>
             </div>
         </div>
-
+        <div class="result-wrap">
+            <div class="result-title">
+              <h1>公告详情</h1>
+            </div>
+            <%
+            	String id = request.getParameter("id");//从地址栏获取公告id
+            	AdminService adminService = new AdminServiceImpl();
+            	NoticeBean nBean = adminService.fingNoticeById(id);//找到对应公告信息
+            	request.setAttribute("nBean", nBean);
+            %>
+            <div id="contentDiv" align="center">
+				<div id="title">
+					<h1>${nBean.title }</h1>
+					<span class="title_span">作者：</span><span>${nBean.admin_username }</span>&emsp;<span class="title_span">分类：</span><span>${nBean.type }</span>&emsp;<span class="title_span">日期：</span><span>${nBean.publish_date }</span>
+				</div>
+				<div align="left" id="content">
+					<h4 >亲爱的ThreeBlog朋友们：</h4><br>
+					<p>&emsp;&emsp;${nBean.content }</p><br>
+					<h4 align="right" >ThreeBlog博客</h4>
+					<h4 align="right" >${nBean.publish_date }</h4>
+				</div>
+			</div>
+        </div> 
     </div>
     <!--/main-->
 </div>

@@ -1,8 +1,12 @@
+<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
 <%@page import="com.threeblog.service.UserService"%>
 <%@page import="com.threeblog.domain.UserBean"%>
+<%@page import="com.threeblog.domain.NoticeBean"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
 <%
 			UserService uService = new UserServiceImpl();
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
@@ -212,32 +216,52 @@ $(function() {
 <!--内容begin-->
 <div id="error_all" align="center">
 	<div id="article_all">
+	<%
+		String id = request.getParameter("id");
+		AdminService adminService = new AdminServiceImpl();
+		NoticeBean noticeBean = adminService.fingNoticeById(id);
+		request.setAttribute("noticeBean", noticeBean);
+		Date pDate = noticeBean.getPublish_date();
+		NoticeBean LastNoticeBean = adminService.findLastNoticeByPubDate(pDate);//查找上一篇
+		if(LastNoticeBean!=null){
+			request.setAttribute("LastNoticeBean", LastNoticeBean);
+		}
+		NoticeBean NextNoticeBean = adminService.findNextNoticeByPubDate(pDate);//查找下一篇
+		if(LastNoticeBean!=null){
+			request.setAttribute("NextNoticeBean", NextNoticeBean);
+		}
+	%>
 	<div id="article_all_content">
     	<!--文章up-->
-        <div class="article_a_up">
-        	<h2>${aBean.title }</h2>
-            <div id="a_up_info">
-              <span id="a_up_info_span">${aBean.author}</span>
-           	  <span>${aBean.publish_date}</span>
-              <span>分类 : </span><span><strong>${aTypeBean.article_type }</strong></span>
+        <div>
+        	<h2>${noticeBean.title }</h2>
+            <div id="a_up_info" align="center">
+              <span id="a_up_info_span">${noticeBean.admin_username}</span>
+           	  <span>日期 : </span><span><strong>${noticeBean.publish_date}</strong></span>
+              <span>分类 : </span><span><strong>${noticeBean.type }</strong></span>
             </div>
         </div>
 	        <!--文章middle-->
-	        <div class="article_a_middle">${aBean.text}</div>
+	        <div class="article_a_middle">
+				<h4 align="left">亲爱的ThreeBlog朋友们：</h4><br>
+				<p align="left">&emsp;&emsp;${noticeBean.content }</p><br>
+				<h4 align="right" >ThreeBlog博客</h4>
+				<h4 align="right" >${noticeBean.publish_date }</h4>
+			</div>
 	        <!--文章down-->
         <div class="article_a_down" >
         	<div id="a_down_lead">
-        	<c:if test="${empty last_aBean }">
+        	<c:if test="${empty LastNoticeBean }">
             	<a href="javascript:;" style="float:left;">◁上一篇  没有了</a>
             </c:if>
-            <c:if test="${not empty last_aBean }">
-            	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${last_aBean.id}" style="float:left;">◁上一篇  ${last_aBean.title}</a>
+            <c:if test="${not empty LastNoticeBean }">
+            	<a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${LastNoticeBean.id}" style="float:left;">◁上一篇  ${LastNoticeBean.title}</a>
             </c:if>
-            <c:if test="${empty next_aBean }">
+            <c:if test="${empty NextNoticeBean }">
             	<a href="javascript:;" style="float:right">▷下一篇  没有了</a><br>
             </c:if>
-       		 <c:if test="${not empty next_aBean }">
-            	<a href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${next_aBean.id}" style="float:right">▷下一篇  ${next_aBean.title}</a><br>
+       		 <c:if test="${not empty NextNoticeBean }">
+            	<a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${NextNoticeBean.id}" style="float:right">▷下一篇  ${NextNoticeBean.title}</a><br>
             </c:if>	
             </div>
             

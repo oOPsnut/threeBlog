@@ -1,6 +1,6 @@
 package com.threeblog.daoImpl;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
 
 import org.apache.commons.dbutils.QueryRunner;

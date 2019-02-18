@@ -7,6 +7,9 @@
 <%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
 <%@page import="com.threeblog.service.ArticleService"%>
+<%@page import="com.threeblog.domain.NoticeBean"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
 <%
 			UserService uService = new UserServiceImpl();
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
@@ -234,19 +237,21 @@ $(function() {
              <span class="body_total_span_c">在这里</span><br/>
               <span class="body_total_span_c">留下他们生活的剪影</span>
     	</div>
+        <%
+    		AdminService adminService = new AdminServiceImpl();
+    		NoticeBean noticeBean = adminService.findLatelyNotice();//找到最近一篇公告
+    		request.setAttribute("noticeBean", noticeBean);
+    	%>
         <!--公告-->
         <div id="index_body_notice">
         	<h3 >█ 公告</h3>
             <div id="body_notice_w">
-            <span>【2018.07.21 公告】</span><br/><br/>
-            <span><strong>新封号用户:</strong>张三、李四、王五......</span><br/><br/>
-            <span><strong>简要原因:</strong>违反社会主义核心价值观，违反隐私条例，传播虚假信息，打广告</span><br><br/>
-            <span><strong>本次封号期限:</strong>30天</span><br/><br/>
-            <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
+            <span>【${noticeBean.publish_date} 公告】</span><br/><br/>
+            <span>${noticeBean.content}</span><br/><br/>
             </div>
-            <a href="#"><span id="body_notice_detail">本告详情</span></a>
+            <a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${noticeBean.id}"><span id="body_notice_detail">本告详情</span></a>
             <img src="${pageContext.request.contextPath}/image/notice.png">
-            <a href="javascript:;"><span id="body_notice_old">以往公告</span></a>
+            <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->
         <div id="index_body_calendar">
@@ -281,27 +286,39 @@ $(function() {
    <div id="index_body_middle">
     	<div id="index_body_middle_article">
         	<!--具体N篇文章begin-->
+        	<%
+        		List<NoticeBean> list = adminService.findAllNotice();//查找所有公告
+        		if(list.isEmpty()){
+        	%>
+        		<div class="article_n" align="center">
+        		   <h4 style="padding-top: 80px;">暂无</h4>    	
+            	</div>
+        	<%		
+        		}else{
+        			for(int i=0;i<list.size();i++){
+        				NoticeBean notice = list.get(i);
+       					request.setAttribute("notice", notice);
+        	%>
         	<div class="article_n">
         		<div class="article_pic">
-            		<img  src="${pageContext.request.contextPath}/image/noticecover/notice_three.jpg">
-                    <span>陌上行</span><br/>
-                    <span>2018-05-18</span>
+            		<img  src="${notice.photo }">
+                    <span>${notice.admin_username }</span><br/>
+                    <span>${notice.publish_date }</span>
                 </div>
             	<div class="article_details">
                 <div id="details_h1">
-                	<a href="#" ><h1>最爱的，还是这人和烟火</h1></a>
+                	<a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${notice.id}" ><h1 id="Homepage_title">${notice.title }</h1></a>
                     </div>
                     <div id="details_p">	<a>
-                    <p>关于孤独，到此为止。
-天空很蓝，却很悲伤。 阳光很暖，却很刺眼。 花儿很美，却很碍眼。 世界很好，却不温柔。</p>
+						<p>&emsp;&emsp;${noticeBean.content }</p><br>
 					</a>
                     </div><br/>
 					<div id="details_click">
-						<a href="#" id="details_click_a">查看全文</a>
+						<a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${notice.id}" id="details_click_a">查看全文</a>
 					</div>
             	</div>
             </div>
-           
+           <%}} %>
             <!--文章end-->
             </div>
         </div>

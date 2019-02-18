@@ -2,6 +2,7 @@ package com.threeblog.servlet;
 
 import com.threeblog.base.BaseServlet;
 import com.threeblog.domain.AdminBean;
+import com.threeblog.domain.NoticeBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.AdminService;
 import com.threeblog.service.UserService;
@@ -13,9 +14,13 @@ import com.threeblog.util.UUIDUtils;
 
 import net.sf.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +28,11 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 /**
  * Servlet implementation class AdminServlet
@@ -49,7 +59,7 @@ public class AdminServlet extends BaseServlet {
 		AdminBean user=new AdminBean();
 		//注册时间
 		Date now=new Date();
-		java.sql.Date register_time=new java.sql.Date(now.getTime());
+		Date register_time=new Date(now.getTime());
 		
 		//调用业务层注册功能
 		AdminService adminService=new AdminServiceImpl();
@@ -260,7 +270,7 @@ public class AdminServlet extends BaseServlet {
 				
 					//创建当前时间
 					Date date=new Date();
-					java.sql.Date last_login_time=new java.sql.Date(date.getTime());
+					Date last_login_time=new Date(date.getTime());
 					adminBean.setLast_login_time(last_login_time);
 					//更新登录时间
 					adminService.changeLoginTime(id,last_login_time);
@@ -323,5 +333,101 @@ public class AdminServlet extends BaseServlet {
         // 重定向到首页
         response.sendRedirect(request.getContextPath()+"/admin/login/admin_login.jsp");
 		return null;
+	}
+		
+	//公告发布
+	public String NoticePublish(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		
+		//从session中获取用户名
+		AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");		
+		String admin_username = adminBean.getUsername();
+		String admin_id = adminBean.getId();
+		//System.out.println(admin_id+"="+admin_username);
+		
+		//用UUID生成公告id
+		String id = UUIDUtils.getId();
+		//注册时间
+		Date now=new Date();
+		java.sql.Date publish_date=new java.sql.Date(now.getTime());
+				
+		//创建工厂
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		//通过工厂创建解析器ServletFileUpload
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		//设置上传文件大小
+		upload.setSizeMax(20*1024*1024);			
+		
+		//解析请求
+		List<FileItem> list=null;
+		try {
+			list =upload.parseRequest(request);
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		}
+		//创建迭代器
+		Iterator iterator=list.iterator();
+		//表单数据
+		String type=null;
+		String title = null;
+		String photo = null;
+		String content = null;
+		
+		while(iterator.hasNext()){
+			FileItem item=(FileItem)iterator.next();
+			if(item.isFormField()){
+				String value=item.getString("UTF-8");
+				if(item.getFieldName().equals("colId")){
+					type=value;
+				}else if(item.getFieldName().equals("title")){
+					title=value;
+				}else if (item.getFieldName().equals("content")) {
+					content=value;
+				}
+			}else{
+				//当前处理item里面封装的上传文件（公告封面）
+				//用用户管理员名称+当前时间作为文件名
+				Date date=new Date();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+				//手机号+时间+格式   136xxxx2211_20171201194110.jepg
+				String filename = admin_username+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
+				//获取实际存储路径
+				String t1 = request.getServletContext().getRealPath("") + "\\image\\noticecover"; 	
+				String realFile=t1  +File.separator+ filename;
+				File saveFile = new File(realFile);
+				if (!saveFile.exists()) {
+					saveFile.createNewFile();
+				}
+				try {
+					item.write(saveFile);// 把上传的内容写到一个文件中
+					photo="/ThreeBlog_V1.0/image/noticecover/"+filename;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+			}
+		}
+		
+		//将数据封装到notice中
+		NoticeBean notice = new NoticeBean();
+		notice.setId(id);
+		notice.setAdmin_id(admin_id);
+		notice.setAdmin_username(admin_username);
+		notice.setType(type);
+		notice.setTitle(title);
+		notice.setPublish_date(publish_date);
+		notice.setContent(content);
+		notice.setPhoto(photo);
+        
+		AdminService adminService = new AdminServiceImpl();
+		boolean result =  adminService.addNotice(notice);
+		if (result) {	
+			//发布成功
+			// 重定向到首页
+			response.sendRedirect(request.getContextPath()+"/admin/index/notice_board.jsp?id="+id);
+			return null;
+		} else {
+			//发布失败
+			response.sendRedirect(request.getContextPath()+"/admin/error/error.jsp");
+			return null;
+		}
 	}
 }

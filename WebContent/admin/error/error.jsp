@@ -10,7 +10,7 @@
 <body>
 <!--内容begin-->
 <div id="error_all" align="center">
-	<a href="${pageContext.request.contextPath}/RedirectServlet?method=AloginUI"><img src="${pageContext.request.contextPath}/image/page-not-found.gif"/></a>
+	<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><img src="${pageContext.request.contextPath}/image/page-not-found.gif"/></a>
 </div>
 <!--内容end-->
 </body>

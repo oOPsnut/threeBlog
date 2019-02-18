@@ -7,6 +7,9 @@
 <%@page import="java.util.List"%>
 <%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
 <%@page import="com.threeblog.service.ArticleService"%>
+<%@page import="com.threeblog.domain.NoticeBean"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
 <%
 			UserService uService = new UserServiceImpl();
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
@@ -236,18 +239,20 @@ $(function() {
              <span class="body_total_span_c">在这里</span><br/>
               <span class="body_total_span_c">留下他们生活的剪影</span>
     	</div>
+        <%
+    		AdminService adminService = new AdminServiceImpl();
+    		NoticeBean noticeBean = adminService.findLatelyNotice();//找到最近一篇公告
+    		request.setAttribute("noticeBean", noticeBean);
+    	%>
         <!--公告-->
         <div id="index_body_notice">
         	<h3 >█ 公告</h3>
             <div id="body_notice_w">
-            <span>【2018.07.21 公告】</span><br/><br/>
-            <span><strong>新封号用户:</strong>张三、李四、王五......</span><br/><br/>
-            <span><strong>简要原因:</strong>违反社会主义核心价值观，违反隐私条例，传播虚假信息，打广告</span><br><br/>
-            <span><strong>本次封号期限:</strong>30天</span><br/><br/>
-            <span><strong>以往封号用户:</strong>张三、李四......</span><br/><br/>
+            <span>【${noticeBean.publish_date} 公告】</span><br/><br/>
+            <span>${noticeBean.content}</span><br/><br/>
             </div>
-            <a href="#"><span id="body_notice_detail">本告详情</span></a>
-            <img src="image/notice.png">
+            <a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${noticeBean.id}"><span id="body_notice_detail">本告详情</span></a>
+            <img src="${pageContext.request.contextPath}/image/notice.png">
             <a href="${pageContext.request.contextPath}/RedirectServlet?method=noticeBoardUI"><span id="body_notice_old">以往公告</span></a>
         </div>
         <!--日历-->

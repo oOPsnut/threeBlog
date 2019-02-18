@@ -69,3 +69,18 @@
 	margin-top: 10px;
 	 z-index:8;
 }
+#contentDiv{
+	width: 100%;
+}
+#contentDiv #title{
+	margin: 10px 0;
+}
+#contentDiv #title h1{
+	font-size: 24px;
+}
+.title_span{
+	color: darkgray;
+}
+#contentDiv #content h4{
+	margin-right: 20px;
+}

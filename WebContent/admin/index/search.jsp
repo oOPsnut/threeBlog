@@ -159,5 +159,4 @@
 		response.sendRedirect(request.getContextPath()+"/admin/login/admin_login.jsp");
 	}
 %>
-}
 </html>
