@@ -372,4 +372,34 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	List<UserBean> findLastLoginUser()throws SQLException;
+	
+	/**
+	 * 查找所有用户
+	 * @return
+	 * @throws SQLException
+	 */
+	List<UserBean> fingAllUser()throws SQLException;
+
+	/**
+	 * 更改用户头像（涉嫌违规图片）
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ChangeUserHead(String id)throws SQLException;
+	
+	/**
+	 * 按日期查找所有相册图片
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AblumBean> findAllUserAblum()throws SQLException;
+
+	/**
+	 * 更改用户相册（涉嫌违规图片）
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ChangePhoto(String id) throws SQLException;
 }

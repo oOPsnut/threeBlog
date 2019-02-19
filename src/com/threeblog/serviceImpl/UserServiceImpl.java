@@ -387,4 +387,35 @@ public class UserServiceImpl implements UserService{
 		return list;
 	}
 
+	@Override
+	public List<UserBean> fingAllUser() throws SQLException {
+		UserDao dao = new UserDaoImpl();
+		List<UserBean> list = dao.fingAllUser();
+		return list;
+	}
+
+	@Override
+	public boolean ChangeUserHead(String id) throws SQLException {
+		// 更改用户头像（涉嫌违规图片）
+		UserDao dao = new UserDaoImpl();
+		boolean head = dao.ChangeUserHead(id);
+		return head;
+	}
+
+	@Override
+	public List<AblumBean> findAllUserAblum() throws SQLException {
+		// 按日期查找所有相册图片
+		AblumDao dao = new AblumDaoImpl();
+		List<AblumBean> list = dao.findAllUserAblum();
+		return list;
+	}
+
+	@Override
+	public boolean ChangePhoto(String id) throws SQLException {
+		//更改用户相册（涉嫌违规图片）
+		AblumDao dao = new AblumDaoImpl();
+		boolean photo = dao.ChangePhoto(id);
+		return photo;
+	}
+
 }

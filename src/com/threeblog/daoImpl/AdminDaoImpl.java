@@ -70,5 +70,12 @@ public class AdminDaoImpl implements AdminDao {
 		return result>0;
 	}
 
+	@Override
+	public AdminBean findAdminByAUsername(String admin_username) throws SQLException {
+		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select * from t_admin where username=?";
+		return runner.query(sql, new BeanHandler<AdminBean>(AdminBean.class), admin_username);
+	}
+
 
 }

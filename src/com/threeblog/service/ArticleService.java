@@ -541,4 +541,19 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	Long countTotalArticlesByYear(int currentYear)throws SQLException;
+	
+	/**
+	 * 查找所有文章信息，包括封面（需要其中的封面）
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findAllACover()throws SQLException;
+
+	/**
+	 * 更改文章封面（涉嫌违规图片）
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ChangeACover(String id)throws SQLException;
 }

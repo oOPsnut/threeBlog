@@ -131,6 +131,29 @@ public class UserDaoImpl implements UserDao{
 		 
 	}
 
+	@Override
+	public boolean limitUser(String username, java.util.Date ban_time) throws SQLException {
+		QueryRunner runner= new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_user set ban_time=? where username=?";
+		int result = runner.update(sql, ban_time,username);
+		return result>0;
+	}
+
+	@Override
+	public List<UserBean> fingAllUser() throws SQLException {
+		QueryRunner runner =new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT * FROM t_user order by register_time DESC";
+		return runner.query(sql,new BeanListHandler<UserBean>(UserBean.class));
+	}
+
+	@Override
+	public boolean ChangeUserHead(String id) throws SQLException {
+		QueryRunner runner= new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_user set head='/ThreeBlog_V1.0/image/userhead/illegal_head.jpg' where id=?";
+		int result = runner.update(sql, id);
+		return result>0;
+	}
+
 	
 	
 }

@@ -58,5 +58,13 @@ public class NoticeDaoImpl implements NoticeDao {
 		return runner.query(sql, new BeanListHandler<NoticeBean>(NoticeBean.class));
 	}
 
+	@Override
+	public boolean deleteNotice(String id) throws SQLException {
+		QueryRunner runner=new QueryRunner(JDBCUtil.getDataSource());
+		String sql="delete from t_notice where id=?";
+		int result = runner.update(sql,id);
+		return result>0;
+	}
+
 	
 }

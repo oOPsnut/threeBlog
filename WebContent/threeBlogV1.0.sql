@@ -266,7 +266,7 @@ CREATE TABLE `t_notice` (
   `title` VARCHAR(20) NOT NULL,
   `type` VARCHAR(12) NOT NULL,
   `content` TEXT NOT NULL,
-  `publish_date` DATE NOT NULL ,
+  `publish_date` DATETIME NOT NULL ,
   PRIMARY KEY (`id`),
   KEY `admin_id` (`admin_id`),
   CONSTRAINT `t_notice_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `t_admin` (`id`)

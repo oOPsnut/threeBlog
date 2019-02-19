@@ -118,4 +118,29 @@ public interface AdminService {
 	 * @throws SQLException
 	 */
 	List<NoticeBean> findAllNotice()throws SQLException;
+
+	/**
+	 * 删除公告
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deleteNotice(String id)throws SQLException;
+
+	/**
+	 * 通过管理员名字找到管理员信息
+	 * @param admin_username
+	 * @return
+	 * @throws SQLException
+	 */
+	AdminBean findAdminByAUsername(String admin_username) throws SQLException;
+
+	/**
+	 * 限制用户（封号）
+	 * @param username
+	 * @param ban_time
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean limitUser(String username, Date ban_time)throws SQLException;
 }

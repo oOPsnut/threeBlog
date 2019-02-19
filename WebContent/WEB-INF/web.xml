@@ -21,6 +21,9 @@
     <servlet-name>ConnectorServlet</servlet-name>
     <url-pattern>/ckfinder/core/connector/java/connector.java </url-pattern>
   </servlet-mapping>
+  <session-config>  
+          <session-timeout>30</session-timeout>  
+  </session-config>
   <filter>
     <filter-name>FileUploadFilter</filter-name>
     <filter-class>com.ckfinder.connector.FileUploadFilter</filter-class>

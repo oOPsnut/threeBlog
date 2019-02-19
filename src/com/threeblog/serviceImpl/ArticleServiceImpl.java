@@ -26,7 +26,7 @@ import com.threeblog.domain.ReportBean;
 import com.threeblog.domain.ZanBean;
 import com.threeblog.service.ArticleService;
 
-public  class ArticleServiceImpl implements ArticleService {
+public class ArticleServiceImpl implements ArticleService {
 
 	
 	@Override
@@ -561,6 +561,22 @@ public  class ArticleServiceImpl implements ArticleService {
 		ArticleDao dao = new ArticleDaoImpl();
 		Long count = dao.countTotalArticlesByYear(currentYear);
 		return count;
+	}
+
+	@Override
+	public List<ArticleBean> findAllACover() throws SQLException {
+		// 查找所有文章信息，包括封面（需要其中的封面）
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> list = dao.findAllACover();
+		return list;
+	}
+
+	@Override
+	public boolean ChangeACover(String id) throws SQLException {
+		// 更改文章封面（涉嫌违规图片）
+		ArticleDao dao = new ArticleDaoImpl();
+		boolean aCover = dao.ChangeACover(id);
+		return aCover;
 	}
 
 	

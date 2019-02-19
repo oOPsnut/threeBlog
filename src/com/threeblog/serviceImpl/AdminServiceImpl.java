@@ -119,4 +119,28 @@ public class AdminServiceImpl implements AdminService {
 		return list;
 	}
 
+	@Override
+	public boolean deleteNotice(String id) throws SQLException {
+		// 删除公告
+		NoticeDao dao = new NoticeDaoImpl();
+		boolean notice = dao.deleteNotice(id);
+		return notice;
+	}
+
+	@Override
+	public AdminBean findAdminByAUsername(String admin_username) throws SQLException {
+		// 通过管理员名字找到管理员信息
+		AdminDao dao = new AdminDaoImpl();
+		AdminBean adminBean = dao.findAdminByAUsername(admin_username);
+		return adminBean;
+	}
+
+	@Override
+	public boolean limitUser(String username, Date ban_time) throws SQLException {
+		//限制用户（封号）
+		UserDao dao = new UserDaoImpl();
+		boolean result = dao.limitUser(username, ban_time);
+		return result;
+	}
+
 }

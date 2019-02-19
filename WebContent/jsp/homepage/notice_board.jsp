@@ -227,7 +227,7 @@ $(function() {
 			request.setAttribute("LastNoticeBean", LastNoticeBean);
 		}
 		NoticeBean NextNoticeBean = adminService.findNextNoticeByPubDate(pDate);//查找下一篇
-		if(LastNoticeBean!=null){
+		if(NextNoticeBean!=null){
 			request.setAttribute("NextNoticeBean", NextNoticeBean);
 		}
 	%>

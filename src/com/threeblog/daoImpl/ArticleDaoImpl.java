@@ -350,6 +350,21 @@ public class ArticleDaoImpl implements ArticleDao {
 		return count;
 	}
 
+	@Override
+	public List<ArticleBean> findAllACover() throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select * from t_article order by publish_date DESC";
+		return runner.query(sql, new BeanListHandler<ArticleBean>(ArticleBean.class));
+	}
+
+	@Override
+	public boolean ChangeACover(String id) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql = "update t_article set cover='/ThreeBlog_V1.0/image/articlecover/illegal_pic3.jpg' where id=?;";
+		int result = runner.update(sql, id);
+		return result>0;
+	}
+
 
 
 	

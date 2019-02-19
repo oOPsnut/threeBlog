@@ -310,7 +310,7 @@ $(function() {
                 	<a href="${pageContext.request.contextPath}/jsp/homepage/notice_board.jsp?id=${notice.id}" ><h1 id="Homepage_title">${notice.title }</h1></a>
                     </div>
                     <div id="details_p">	<a>
-						<p>&emsp;&emsp;${noticeBean.content }</p><br>
+						<p>&emsp;&emsp;${notice.content }</p><br>
 					</a>
                     </div><br/>
 					<div id="details_click">

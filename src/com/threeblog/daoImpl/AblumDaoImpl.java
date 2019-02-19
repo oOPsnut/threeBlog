@@ -42,4 +42,19 @@ public class AblumDaoImpl implements AblumDao {
 		return  runner.query(sql, new BeanListHandler<AblumBean>(AblumBean.class),uid,year+"%");	
 	}
 
+	@Override
+	public List<AblumBean> findAllUserAblum() throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select * from t_ablum where status='正常' order by upload_date DESC";
+		return  runner.query(sql, new BeanListHandler<AblumBean>(AblumBean.class));	
+	}
+
+	@Override
+	public boolean ChangePhoto(String id) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_ablum set photo='/ThreeBlog_V1.0/image/userablum/illegal_pic5.jpg' where id=?";
+		int result = runner.update(sql,id);
+		return result>0;
+	}
+
 }

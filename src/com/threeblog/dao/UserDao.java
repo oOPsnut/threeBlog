@@ -110,4 +110,28 @@ public interface UserDao {
 	 * @throws SQLException
 	 */
 	List<UserBean> findLastLoginUser()throws SQLException;
+	
+	/**
+	 * 限制用户（封号）
+	 * @param username
+	 * @param ban_time
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean limitUser(String username, java.util.Date ban_time)throws SQLException;
+	
+	/**
+	 * 查找所有用户
+	 * @return
+	 * @throws SQLException
+	 */
+	List<UserBean> fingAllUser()throws SQLException;
+	
+	/**
+	 * 更改用户头像（涉嫌违规图片）
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ChangeUserHead(String id)throws SQLException;
 }

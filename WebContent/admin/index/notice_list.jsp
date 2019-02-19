@@ -2,6 +2,10 @@
 <%@page import="com.threeblog.domain.AdminBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="com.threeblog.domain.NoticeBean"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
+<%@page import="java.util.List"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -9,6 +13,7 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -68,86 +73,82 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用Three Blog后台管理中心。</span></div>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>公告管理</span>
+            </div>
         </div>
         <div class="result-wrap">
             <div class="result-title">
-                <h1>快捷操作</h1>
+                <h1>公告管理</h1>
             </div>
             <div class="result-content">
-                <div class="short-wrap">
-					<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><i class="icon-font">&#xe048;</i>数据统计</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_publish.jsp"><i class="icon-font">&#xe001;</i>新增公告</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_list.jsp"><i class="icon-font">&#xe005;</i>公告管理</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/admin_manage.jsp"><i class="icon-font">&#xe01e;</i>管理员管理</a>
+                <div id="index_body_middle_article">
+        	<!--具体N篇文章begin-->
+        	<%
+        		AdminService adminService = new AdminServiceImpl();
+        		List<NoticeBean> list = adminService.findAllNotice();//查找所有公告
+        		if(list.isEmpty()){
+        	%>
+        		<div class="article_n" align="center">
+        		   <h4 style="padding-top: 80px;">暂无</h4>    	
+            	</div>
+        	<%		
+        		}else{
+        			for(int i=0;i<list.size();i++){
+        				NoticeBean notice = list.get(i);
+       					request.setAttribute("notice", notice);
+        	%>
+        	<div class="article_n">
+        		<div class="article_pic">
+            		<img  src="${notice.photo }">
+                    <span><strong>${notice.admin_username }</strong></span><br/>
+                    <span>${notice.publish_date }</span>
                 </div>
+            	<div class="article_details">
+                <div id="details_h1">
+                	<a href="${pageContext.request.contextPath}/admin/index/notice_board.jsp?id=${notice.id}" ><h1 id="Homepage_title">${notice.title }</h1></a>
+                	<input id="delete_content" type="button" value="删 除" onclick="deleteNotice('${notice.id}')">
+                	<script type="text/javascript">
+		               	function deleteNotice(id) {
+		               		var nid=id;//公告id
+							var s = confirm("你确定要删除此公告吗？");
+							if (s) {
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/AdminServlet?method=DeleteNotice" ,//目标地址
+									data:{"id":nid},
+									error:function(){
+										alert("出错！请稍后再试...");
+									},
+									success:function(data){
+										if (data) {
+											alert("删除成功！");
+											window.location.reload();
+										} else {
+											alert("删除失败，请稍后再试！");		
+											window.location.reload();
+										}
+									}
+								});
+							}
+						}
+                	</script>
+                    </div>
+                    <div id="details_p">	<a>
+						<p>&emsp;&emsp;${notice.content}</p><br>
+					</a>
+                    </div><br/>
+					<div id="details_click">
+						<a href="${pageContext.request.contextPath}/admin/index/notice_board.jsp?id=${notice.id}" id="details_click_a">查看全文</a>
+					</div>
+            	</div>
             </div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>数据统计</h1>
+           <%}} %>
+            <!--文章end-->
             </div>
-            <div class="result-content">
-                <ul class="sys-info-list">
-                    <li>
-                        <label class="res-lab">博客系统</label><span class="res-info">Three Blog</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总用户量</label><span class="res-info">100</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总博文数</label><span class="res-info">2000</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总浏览量</label><span class="res-info">245561654</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">全年新增博文数</label><span class="res-info">78914</span>
-                    </li>
-                    
-                    <li>
-                        <label class="res-lab">全年新增用户数</label><span class="res-info">2486</span>
-                    </li>
-					<li>
-                        <label class="res-lab">北京时间</label><span class="res-info">2014年3月18日 21:08:24</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>活跃用户</h1>
-            </div>
-            <div class="result-content">             
-				<table class="result-tab" width="100%">
-                        <tr>
-                            <th class="tc" width="5%">#</th>
-                            <th>用户名</th>
-                            <th>性别</th>
-                            <th>电话</th>
-                            <th>所在地区</th>
-                            <th>注册时间</th>
-                            <th>最近登录时间</th>
-							<th>禁用状态</th>
-                            <th>登录次数</th>
-                            <th>操作</th>
-                        </tr>
-                        <tr>
-                            <td class="tc">1</td>
-                            <td><a target="_blank" href="#" title="发哥经典">查无此人</a></td>
-                            <td>男</td>
-                            <td>15800000012</td>
-                            <td>广东省广州市</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>否</td>
-                            <td>50</td>
-                            <td>
-                                <a class="link-update" href="#">查看</a>
-                            </td>
-                        </tr>
-                        
-                    </table>
             </div>
         </div>
     </div>

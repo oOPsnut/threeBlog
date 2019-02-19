@@ -1,3 +1,9 @@
+<%@page import="java.util.Date"%>
+<%@page import="java.util.Calendar"%>
+<%@page import="com.threeblog.domain.UserBean"%>
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -9,6 +15,7 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -68,55 +75,35 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用Three Blog后台管理中心。</span></div>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>用户管理</span>
+            </div>
         </div>
         <div class="result-wrap">
             <div class="result-title">
-                <h1>快捷操作</h1>
+                <h1>违规封印</h1>
             </div>
             <div class="result-content">
-                <div class="short-wrap">
-					<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><i class="icon-font">&#xe048;</i>数据统计</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_publish.jsp"><i class="icon-font">&#xe001;</i>新增公告</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_list.jsp"><i class="icon-font">&#xe005;</i>公告管理</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/admin_manage.jsp"><i class="icon-font">&#xe01e;</i>管理员管理</a>
-                </div>
+		           <form action="${pageContext.request.contextPath}/AdminServlet?method=LimitUser" method="post">
+		                <ul class="sys-info-list">
+		                   <li align="center">
+		                       <label class="res-lab ">用户名:</label><span class="res-info"><input name="username" type="text" class="wid" id="lusername" required/></span>
+		                   </li>
+		                   <li align="center">
+		                       <label class="res-lab ">将被限制登录直到:</label><span class="res-info"><input type="date" name="ban_time" class="wid" required/></span>
+		                   </li>
+		                   <li align="center">
+		                       <input type="submit" value="封印" id="limitUser"/>
+		                   </li>
+		                 </ul>
+		           </form>
             </div>
-        </div>
+        </div>      
         <div class="result-wrap">
             <div class="result-title">
-                <h1>数据统计</h1>
-            </div>
-            <div class="result-content">
-                <ul class="sys-info-list">
-                    <li>
-                        <label class="res-lab">博客系统</label><span class="res-info">Three Blog</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总用户量</label><span class="res-info">100</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总博文数</label><span class="res-info">2000</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总浏览量</label><span class="res-info">245561654</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">全年新增博文数</label><span class="res-info">78914</span>
-                    </li>
-                    
-                    <li>
-                        <label class="res-lab">全年新增用户数</label><span class="res-info">2486</span>
-                    </li>
-					<li>
-                        <label class="res-lab">北京时间</label><span class="res-info">2014年3月18日 21:08:24</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>活跃用户</h1>
+                <h1>正常用户管理</h1>
             </div>
             <div class="result-content">             
 				<table class="result-tab" width="100%">
@@ -128,25 +115,107 @@
                             <th>所在地区</th>
                             <th>注册时间</th>
                             <th>最近登录时间</th>
-							<th>禁用状态</th>
-                            <th>登录次数</th>
+                            <th>被禁用时间</th>
                             <th>操作</th>
                         </tr>
+                        <%
+                        	UserService uService = new UserServiceImpl();
+                        	List<UserBean> list = uService.fingAllUser();//查找所有用户
+                        	if(list.isEmpty()){
+                        %>
                         <tr>
-                            <td class="tc">1</td>
-                            <td><a target="_blank" href="#" title="发哥经典">查无此人</a></td>
-                            <td>男</td>
-                            <td>15800000012</td>
-                            <td>广东省广州市</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>否</td>
-                            <td>50</td>
+                        	<td colspan="9" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
+                        </tr>
+                        <% 	
+                        	}else{
+                        		for(int i = 0;i<list.size();i++){
+                        			int number=i+1;
+        		        			request.setAttribute("number", number);    
+        		        			UserBean uBean = list.get(i);
+        		        			request.setAttribute("uBean", uBean); 
+        		        			Date date = new Date();
+        		        			request.setAttribute("currentTime", date);
+                        %>
+                        <c:if test="${uBean.ban_time < currentTime }">
+                        <tr>
+                            <td class="tc">${number}</td>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}">${uBean.username }</a></td>
+                            <td>${uBean.sex }</td>
+                            <td>${uBean.phone}</td>
+                            <td>${uBean.province }-${uBean.city}</td>
+                            <td>${uBean.register_time}</td>
+                            <td>${uBean.last_login_time }</td>
+                            <td>${uBean.ban_time }</td>
                             <td>
-                                <a class="link-update" href="#">查看</a>
+                                <a class="link-update" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank">查看</a>&emsp;
+                                <a class="link-update" onclick="addUsername('${uBean.username}')">限制</a>
+                                <script type="text/javascript">
+		                            function addUsername(username) {
+										$("#lusername").val(username);
+									} 
+                                </script>
                             </td>
                         </tr>
-                        
+                        </c:if>
+                        <%}} %>
+                    </table>
+            </div>
+        </div>
+        <div class="result-wrap">
+            <div class="result-title">
+                <h1>受限制用户管理</h1>
+            </div>
+            <div class="result-content">             
+				<table class="result-tab" width="100%">
+                        <tr>
+                            <th class="tc" width="5%">#</th>
+                            <th>用户名</th>
+                            <th>性别</th>
+                            <th>电话</th>
+                            <th>所在地区</th>
+                            <th>注册时间</th>
+                            <th>最近登录时间</th>
+                            <th>被禁用时间</th>
+                            <th>操作</th>
+                        </tr>
+                        <%
+                        	if(list.isEmpty()){
+                        %>
+                        <tr>
+                        	<td colspan="9" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
+                        </tr>
+                        <% 	
+                        	}else{
+                        		for(int i = 0;i<list.size();i++){
+                        			int number=i+1;
+        		        			request.setAttribute("number", number);    
+        		        			UserBean uBean = list.get(i);
+        		        			request.setAttribute("uBean", uBean); 
+        		        			Date date = new Date();
+        		        			request.setAttribute("currentTime", date);
+                        %>
+                        <c:if test="${uBean.ban_time >= currentTime }">
+                        <tr>
+                            <td class="tc">${number}</td>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}">${uBean.username }</a></td>
+                            <td>${uBean.sex }</td>
+                            <td>${uBean.phone}</td>
+                            <td>${uBean.province }-${uBean.city}</td>
+                            <td>${uBean.register_time}</td>
+                            <td>${uBean.last_login_time }</td>
+                            <td>${uBean.ban_time }</td>
+                            <td>
+                                <a class="link-update" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank">查看</a>&emsp;
+                                <a class="link-update" onclick="addUsername('${uBean.username}')">限制</a>
+                                <script type="text/javascript">
+		                            function addUsername(username) {
+										$("#lusername").val(username);
+									} 
+                                </script>
+                            </td>
+                        </tr>
+                        </c:if>
+                        <%}} %>
                     </table>
             </div>
         </div>

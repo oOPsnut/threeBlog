@@ -44,4 +44,19 @@ public interface AblumDao {
 	 * @throws SQLException
 	 */
 	List<AblumBean> findPhotosByUidYear(String uid,int year)throws SQLException;
+	
+	/**
+	 * 按日期查找所有相册图片
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AblumBean> findAllUserAblum()throws SQLException;
+	
+	/**
+	 * 更改用户相册（涉嫌违规图片）
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ChangePhoto(String id) throws SQLException;
 }

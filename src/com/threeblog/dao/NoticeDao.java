@@ -58,4 +58,12 @@ public interface NoticeDao {
 	 * @throws SQLException
 	 */
 	List<NoticeBean> findAllNotice()throws SQLException;
+	
+	/**
+	 * 删除公告
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean deleteNotice(String id)throws SQLException;
 }

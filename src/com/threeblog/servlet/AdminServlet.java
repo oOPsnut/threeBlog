@@ -5,8 +5,10 @@ import com.threeblog.domain.AdminBean;
 import com.threeblog.domain.NoticeBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.AdminService;
+import com.threeblog.service.ArticleService;
 import com.threeblog.service.UserService;
 import com.threeblog.serviceImpl.AdminServiceImpl;
+import com.threeblog.serviceImpl.ArticleServiceImpl;
 import com.threeblog.serviceImpl.UserServiceImpl;
 import com.threeblog.util.DateDiffUtil;
 import com.threeblog.util.Md5StringUtils;
@@ -17,6 +19,7 @@ import net.sf.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
@@ -338,17 +341,25 @@ public class AdminServlet extends BaseServlet {
 	//公告发布
 	public String NoticePublish(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		
+		//数据初始化
+		String admin_username=null;
+		String admin_id = null;
 		//从session中获取用户名
-		AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");		
-		String admin_username = adminBean.getUsername();
-		String admin_id = adminBean.getId();
-		//System.out.println(admin_id+"="+admin_username);
+		AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");	
+		if(adminBean!=null) {
+			admin_username = adminBean.getUsername();
+			admin_id = adminBean.getId();
+			//System.out.println(admin_id+"="+admin_username);
+		}
+		
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
 		
 		//用UUID生成公告id
 		String id = UUIDUtils.getId();
 		//注册时间
 		Date now=new Date();
-		java.sql.Date publish_date=new java.sql.Date(now.getTime());
+		Date publish_date=new Date(now.getTime());
 				
 		//创建工厂
 		DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -382,6 +393,13 @@ public class AdminServlet extends BaseServlet {
 					title=value;
 				}else if (item.getFieldName().equals("content")) {
 					content=value;
+				}else if (adminBean==null) {
+					if (item.getFieldName().equals("author")) {
+						admin_username=value;	
+						AdminBean admin = adminService.findAdminByAUsername(admin_username);
+						admin_id = admin.getId();
+					}
+					
 				}
 			}else{
 				//当前处理item里面封装的上传文件（公告封面）
@@ -417,7 +435,7 @@ public class AdminServlet extends BaseServlet {
 		notice.setContent(content);
 		notice.setPhoto(photo);
         
-		AdminService adminService = new AdminServiceImpl();
+		
 		boolean result =  adminService.addNotice(notice);
 		if (result) {	
 			//发布成功
@@ -428,6 +446,97 @@ public class AdminServlet extends BaseServlet {
 			//发布失败
 			response.sendRedirect(request.getContextPath()+"/admin/error/error.jsp");
 			return null;
+		}
+	}
+	
+	//删除公告
+	public void DeleteNotice(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");//公告id
+		
+		//调用服务删除公告
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.deleteNotice(id);
+		if (r) {		
+			response.getWriter().println(true);		
+		} else {
+			response.getWriter().println(false);
+		}
+	}
+		
+	//限制用户（封号）
+	public void LimitUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String username = request.getParameter("username");
+		String get_time = request.getParameter("ban_time");
+		
+		//更改格式
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Date ban_time=null;
+		try {
+			ban_time = sdf.parse(get_time);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.limitUser(username,ban_time);
+		if (r) {		
+			response.sendRedirect(request.getContextPath()+"/admin/index/user_manage.jsp");	
+		} else {
+			response.sendRedirect(request.getContextPath()+"/admin/error/error.jsp");
+		}
+	}
+	
+	
+	//更改文章封面（涉嫌违规图片）
+	public void ChangeACover(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");//文章id
+		
+		//调用服务
+		ArticleService aService = new ArticleServiceImpl();
+		boolean r = aService.ChangeACover(id);
+		if (r) {		
+			response.getWriter().println(true);		
+		} else {
+			response.getWriter().println(false);
+		}
+	}
+	
+	//更改用户头像（涉嫌违规图片）
+	public void ChangeUserHead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");//用户id
+		
+		//调用服务
+		UserService uService = new UserServiceImpl();
+		boolean r = uService.ChangeUserHead(id);
+		if (r) {		
+			response.getWriter().println(true);		
+		} else {
+			response.getWriter().println(false);
+		}
+	}
+	
+	//更改用户相册（涉嫌违规图片）
+	public void ChangePhoto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");//相册id
+		
+		//调用服务
+		UserService uService = new UserServiceImpl();
+		boolean r = uService.ChangePhoto(id);
+		if (r) {		
+			response.getWriter().println(true);		
+		} else {
+			response.getWriter().println(false);
 		}
 	}
 }

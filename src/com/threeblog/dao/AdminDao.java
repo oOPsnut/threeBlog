@@ -71,4 +71,11 @@ public interface AdminDao {
 	 */
 	boolean changePasswd(String phone, String password)throws SQLException;
 
+	/**
+	 * 通过管理员名字找到管理员信息
+	 * @param admin_username
+	 * @return
+	 * @throws SQLException
+	 */
+	AdminBean findAdminByAUsername(String admin_username) throws SQLException;
 }
