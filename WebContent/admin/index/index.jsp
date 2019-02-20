@@ -164,8 +164,8 @@
                         	if(list.isEmpty()){
                         		
                         %>
-                        <tr>
-                        	<td colspan="8" style="padding: 20px;"><strong>没有消息记录！</strong></td>    
+                        <tr align="center">
+                        	<td colspan="8" style="padding: 20px;"><strong>没有用户记录！</strong></td>    
                         </tr>
                         <%	
                         	}else{

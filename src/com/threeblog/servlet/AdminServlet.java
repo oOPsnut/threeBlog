@@ -2,6 +2,7 @@ package com.threeblog.servlet;
 
 import com.threeblog.base.BaseServlet;
 import com.threeblog.domain.AdminBean;
+import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.NoticeBean;
 import com.threeblog.domain.UserBean;
 import com.threeblog.service.AdminService;
@@ -537,6 +538,133 @@ public class AdminServlet extends BaseServlet {
 			response.getWriter().println(true);		
 		} else {
 			response.getWriter().println(false);
+		}
+	}
+	
+	
+	//查找用户
+	public String SearchUser(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String username = request.getParameter("username");//相册id
+		
+		//调用服务
+		UserService uService = new UserServiceImpl();
+		List<UserBean> list = uService.SearchUser(username);
+		if (!list.isEmpty()) {	
+			request.setAttribute("SURList", list);
+			return "/admin/index/searchUList.jsp";		
+		} else {
+			response.getWriter().println(1);
+			return null;
+		}
+	}
+	
+	//查找博文
+	public String SearchArticle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String content = request.getParameter("content");
+		//System.out.println(word);
+		//查询数据库
+		ArticleService aService = new ArticleServiceImpl();
+		List<ArticleBean> list = aService.findSearchKey(content);
+		//System.out.println(list);
+		//返回数据
+		if (list.isEmpty()) {
+			response.getWriter().println(1);
+			return null;
+		} else {
+			request.setAttribute("list", list);
+			return "/admin/index/searchAList.jsp";
+		}
+	}
+	
+	
+	//屏蔽博文
+	public void HideArticle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");
+
+		//调用服务
+		ArticleService aService = new ArticleServiceImpl();
+		boolean r = aService.HideArticle(id);
+
+		//返回数据
+		if (r) {
+			response.getWriter().println(true);//成功
+		} else {
+			response.getWriter().println(false);
+		}
+	}
+	
+	
+	//展示所有博文
+	public String FindAllArticle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//查询数据库
+		ArticleService aService = new ArticleServiceImpl();
+		List<ArticleBean> list = aService.findAllACover();
+		
+		//返回数据
+		request.setAttribute("list", list);
+		return "/admin/index/acList.jsp";
+		
+	}
+	
+	//展示对应类型的博文
+	public String FindArticleByType(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取对应类型
+		String article_type = request.getParameter("article_type");
+		
+		//查询数据库
+		ArticleService aService = new ArticleServiceImpl();
+		List<ArticleBean> list = aService.findAllArticleByType(article_type);
+		
+		//返回数据
+		request.setAttribute("list", list);
+		return "/admin/index/acList.jsp";	
+	}
+	
+	//检查密码是否正确（添加管理员）
+	public void checkPasswd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");
+		String fpassword = request.getParameter("passwd");
+		//MD5加密
+		String password = Md5StringUtils.getMD5Str(fpassword+md5Key,null);
+		
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.checkPasswd(id,password);
+
+		//返回数据
+		if (r) {
+			response.getWriter().println(true);//密码输入正确
+		} else {
+			response.getWriter().println(false);
+		}
+	}
+	
+	
+	//检查手机号是否使用过（添加管理员）
+	public void checkAdminPhone(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String phone = request.getParameter("phone");
+		
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.checkAdminPhone(phone);
+
+		//返回数据
+		if (r) {
+			response.getWriter().println(false);//已注册
+		} else {
+			response.getWriter().println(true);//可用
 		}
 	}
 }

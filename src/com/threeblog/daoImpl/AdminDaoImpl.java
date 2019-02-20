@@ -77,5 +77,21 @@ public class AdminDaoImpl implements AdminDao {
 		return runner.query(sql, new BeanHandler<AdminBean>(AdminBean.class), admin_username);
 	}
 
+	@Override
+	public boolean checkPasswd(String id, String password) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select count(*) from t_admin where id=? and password=?";
+		Long result = (Long) runner.query(sql,new ScalarHandler(),id,password);
+		return result>0;
+	}
+
+	@Override
+	public boolean checkAdminPhone(String phone) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select count(*) from t_admin where phone=? ";
+		Long result = (Long) runner.query(sql,new ScalarHandler(),phone);
+		return result>0;
+	}
+
 
 }

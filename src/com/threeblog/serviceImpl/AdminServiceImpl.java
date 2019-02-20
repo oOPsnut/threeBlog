@@ -143,4 +143,20 @@ public class AdminServiceImpl implements AdminService {
 		return result;
 	}
 
+	@Override
+	public boolean checkPasswd(String id, String password) throws SQLException {
+		// 检查密码是否正确（添加管理员）
+		AdminDao dao = new AdminDaoImpl();
+		boolean checkPasswd = dao.checkPasswd(id, password);
+		return checkPasswd;
+	}
+
+	@Override
+	public boolean checkAdminPhone(String phone) throws SQLException {
+		// 检查手机号是否使用过（添加管理员）
+		AdminDao dao = new AdminDaoImpl();
+		boolean adminPhone = dao.checkAdminPhone(phone);
+		return adminPhone;
+	}
+
 }

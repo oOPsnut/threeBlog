@@ -1,3 +1,4 @@
+<%@page import="com.sun.jndi.url.iiopname.iiopnameURLContextFactory"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.Calendar"%>
 <%@page import="com.threeblog.domain.UserBean"%>
@@ -81,6 +82,45 @@
             	<span class="crumb-step">&gt;</span><span>用户管理</span>
             </div>
         </div>
+        
+        <div class="result-wrap">
+            <div class="result-title">
+                <h1>用户搜索</h1>
+            </div>
+            <div class="result-content">
+		                <ul class="sys-info-list">
+		                   <li align="center">
+		                       <label class="res-lab ">用户名:</label><span class="res-info"><input  type="text" class="wid" id="susername" required/></span>
+		                       <input type="submit" value="搜索" id="searchUser" onclick="searchUser()"/>
+		                       <script type="text/javascript">
+		                       		function searchUser() {
+										var username = $("#susername").val();//获取输入的用户名
+										if (username=="") {
+											$("#search-result").hide();
+										} else {
+
+										$.post("/ThreeBlog_V1.0/AdminServlet?method=SearchUser",{username:username},function(data,status){
+											//alert(data);
+											if(data==1){
+												$("#search-result").hide();
+												alert("查询无结果！");
+											}else{
+												//alert(data);
+												$("#search-result").show();
+												$('#search-result').html(data);
+											}
+											});
+										}
+									}
+		                       </script>
+		                   </li>
+		                 </ul>
+            </div>  
+        </div>
+        <div  id="search-result">
+        
+        </div>
+        
         <div class="result-wrap">
             <div class="result-title">
                 <h1>违规封印</h1>
@@ -107,8 +147,7 @@
             </div>
             <div class="result-content">             
 				<table class="result-tab" width="100%">
-                        <tr>
-                            <th class="tc" width="5%">#</th>
+                        <tr> 
                             <th>用户名</th>
                             <th>性别</th>
                             <th>电话</th>
@@ -123,14 +162,12 @@
                         	List<UserBean> list = uService.fingAllUser();//查找所有用户
                         	if(list.isEmpty()){
                         %>
-                        <tr>
-                        	<td colspan="9" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
+                        <tr align="center">
+                        	<td colspan="8" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
                         </tr>
                         <% 	
                         	}else{
-                        		for(int i = 0;i<list.size();i++){
-                        			int number=i+1;
-        		        			request.setAttribute("number", number);    
+                        		for(int i = 0;i<list.size();i++){  
         		        			UserBean uBean = list.get(i);
         		        			request.setAttribute("uBean", uBean); 
         		        			Date date = new Date();
@@ -138,7 +175,6 @@
                         %>
                         <c:if test="${uBean.ban_time < currentTime }">
                         <tr>
-                            <td class="tc">${number}</td>
                             <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}">${uBean.username }</a></td>
                             <td>${uBean.sex }</td>
                             <td>${uBean.phone}</td>
@@ -168,7 +204,6 @@
             <div class="result-content">             
 				<table class="result-tab" width="100%">
                         <tr>
-                            <th class="tc" width="5%">#</th>
                             <th>用户名</th>
                             <th>性别</th>
                             <th>电话</th>
@@ -181,14 +216,12 @@
                         <%
                         	if(list.isEmpty()){
                         %>
-                        <tr>
-                        	<td colspan="9" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
+                        <tr align="center">
+                        	<td colspan="8" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
                         </tr>
                         <% 	
                         	}else{
-                        		for(int i = 0;i<list.size();i++){
-                        			int number=i+1;
-        		        			request.setAttribute("number", number);    
+                        		for(int i = 0;i<list.size();i++){   
         		        			UserBean uBean = list.get(i);
         		        			request.setAttribute("uBean", uBean); 
         		        			Date date = new Date();
@@ -196,7 +229,6 @@
                         %>
                         <c:if test="${uBean.ban_time >= currentTime }">
                         <tr>
-                            <td class="tc">${number}</td>
                             <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}">${uBean.username }</a></td>
                             <td>${uBean.sex }</td>
                             <td>${uBean.phone}</td>

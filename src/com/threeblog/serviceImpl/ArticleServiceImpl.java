@@ -579,6 +579,22 @@ public class ArticleServiceImpl implements ArticleService {
 		return aCover;
 	}
 
+	@Override
+	public boolean HideArticle(String id) throws SQLException {
+		//  屏蔽文章
+		ArticleDao dao =new  ArticleDaoImpl();
+		boolean hideArticle = dao.HideArticle(id);
+		return hideArticle;
+	}
+
+	@Override
+	public List<ArticleBean> findAllArticleByType(String article_type) throws SQLException {
+		//  通过文章类型找到所有对应文章
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> list = dao.findAllArticleByType(article_type);
+		return list;
+	}
+
 	
 	
 }

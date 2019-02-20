@@ -9,6 +9,9 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/md5.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/aencryptionPassword.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -68,50 +71,91 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用Three Blog后台管理中心。</span></div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>快捷操作</h1>
-            </div>
-            <div class="result-content">
-                <div class="short-wrap">
-					<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><i class="icon-font">&#xe048;</i>数据统计</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_publish.jsp"><i class="icon-font">&#xe001;</i>新增公告</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_list.jsp"><i class="icon-font">&#xe005;</i>公告管理</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/admin_manage.jsp"><i class="icon-font">&#xe01e;</i>管理员管理</a>
-                </div>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>管理员管理</span>
             </div>
         </div>
+       
         <div class="result-wrap">
             <div class="result-title">
-                <h1>数据统计</h1>
+                <h1>新增管理员</h1>
             </div>
             <div class="result-content">
+            	<form action="${pageContext.request.contextPath}/AdminServlet?method=addAdmin">
                 <ul class="sys-info-list">
-                    <li>
-                        <label class="res-lab">博客系统</label><span class="res-info">Three Blog</span>
+                    <li align="left">
+                        <label class="res-lab">当前管理员</label><span class="res-info">${adminBean.username }<input  type="text" value="${adminBean.id }" id="admin"  name="admin" style="visibility: hidden;"/></span>
+                    </li>
+                    <li align="left">
+                        <label class="res-lab">密码</label><span class="res-info"><input  type="password" class="wid" id="password" name="password" onkeyup="checkPasswd()" required/></span><span id="span02"></span>
+                        <script type="text/javascript">
+                        	function checkPasswd() {
+                        		var id=$("#admin").val();
+								var passwd=$("#password").val();
+								var md5KeyR= "jL2NdrALvN";
+								//表单提交时对输入的密码进行加密， 避免抓包分析破解密码
+							    var hash1 = passwd+md5KeyR; 
+								var hash2=MD5(hash1); 
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/AdminServlet?method=checkPasswd" ,//目标地址
+									data:{"id":id,"passwd":hash2},
+									error:function(){
+										alert("出错！请稍后再试");
+									},
+									success:function(data){
+										if(data){
+											$("#span02").html("<font color='green'>正确</font>");
+										}else{
+											$("#span02").html("<font color='red'>错误</font>");
+										}
+									}
+								});
+							}
+                        </script>
+                    </li>
+                    <li align="left">
+                        <label class="res-lab">新管理员手机号</label><input  type="text" class="wid" id="phone" name="phone" onkeyup="checkPhone()" required/></span><span id="span01"></span>
+                        <script type="text/javascript">
+                        	function checkPhone() {
+								var phone=$("#phone").val();
+								var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+								if(myreg.test(phone)){
+									$.ajax({
+										type:"POST",//用post方式传输
+										dataType:"json",//数据格式:JSON
+										url:"/ThreeBlog_V1.0/AdminServlet?method=checkAdminPhone" ,//目标地址
+										data:{"phone":phone},
+										error:function(){
+											alert("出错！请稍后再试");
+										},
+										success:function(data){
+											if(data){
+												$("#span01").html("<font color='green'>可用</font>");
+											}else{
+												$("#span01").html("<font color='red'>已注册</font>");
+											}
+										}
+									});
+								}else{
+										$("#span01").html("<font color='red'>手机号格式错误</font>");
+								} 
+								
+							}
+                        </script>
+                    </li>
+                    <li align="left">
+                        <label class="res-lab">*</label><span class="res-info">请仔细检查，并确认手机号填写正确！</span>
                     </li>
                     <li>
-                        <label class="res-lab">总用户量</label><span class="res-info">100</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总博文数</label><span class="res-info">2000</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总浏览量</label><span class="res-info">245561654</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">全年新增博文数</label><span class="res-info">78914</span>
+                        <input type="submit" value="添加" class="submit-button" id="addA" onclick="encryptionPassword()"/>
                     </li>
                     
-                    <li>
-                        <label class="res-lab">全年新增用户数</label><span class="res-info">2486</span>
-                    </li>
-					<li>
-                        <label class="res-lab">北京时间</label><span class="res-info">2014年3月18日 21:08:24</span>
-                    </li>
                 </ul>
+                </form>
             </div>
         </div>
         <div class="result-wrap">

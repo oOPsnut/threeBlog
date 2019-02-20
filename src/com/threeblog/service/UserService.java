@@ -402,4 +402,12 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	boolean ChangePhoto(String id) throws SQLException;
+
+	/***
+	 * 通过用户名模糊查找用户
+	 * @param username
+	 * @return
+	 * @throws SQLException
+	 */
+	List<UserBean> SearchUser(String username) throws SQLException;
 }

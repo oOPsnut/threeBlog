@@ -418,4 +418,12 @@ public class UserServiceImpl implements UserService{
 		return photo;
 	}
 
+	@Override
+	public List<UserBean> SearchUser(String username) throws SQLException {
+		// 通过用户名模糊查找用户
+		UserDao dao = new UserDaoImpl();
+		List<UserBean> list = dao.SearchUser(username);
+		return list;
+	}
+
 }

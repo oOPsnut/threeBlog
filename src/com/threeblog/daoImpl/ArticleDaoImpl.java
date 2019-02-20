@@ -365,6 +365,21 @@ public class ArticleDaoImpl implements ArticleDao {
 		return result>0;
 	}
 
+	@Override
+	public boolean HideArticle(String id) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql = "update t_article set status='屏蔽' where id=?;";
+		int result = runner.update(sql, id);
+		return result>0;
+	}
+
+	@Override
+	public List<ArticleBean> findAllArticleByType(String article_type) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article where  id IN(SELECT article_id FROM t_articletype WHERE article_type=?) order by publish_date DESC ";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),article_type);
+	}
+
 
 
 	

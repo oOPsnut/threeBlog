@@ -154,6 +154,13 @@ public class UserDaoImpl implements UserDao{
 		return result>0;
 	}
 
+	@Override
+	public List<UserBean> SearchUser(String username) throws SQLException {
+		QueryRunner runner= new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT * FROM t_user where username like ?";
+		return  runner.query(sql, new BeanListHandler<UserBean>(UserBean.class),username+"%");	
+	}
+
 	
 	
 }

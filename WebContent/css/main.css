@@ -175,6 +175,24 @@
 	background-color: indianred;
     color: white;
 }
+#searchUser{
+	width:80px;
+	background-color: indianred;
+    color: white;
+}
+#searchArticle{
+	width:80px;
+	background-color: indianred;
+    color: white;
+}
+.submit-button{
+	width:80px;
+	background-color: indianred;
+    color: white;
+}
+#addA{
+	margin-left:200px;
+}
 .wid{
 	width:200px;
 }

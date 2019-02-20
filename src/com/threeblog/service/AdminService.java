@@ -143,4 +143,21 @@ public interface AdminService {
 	 * @throws SQLException
 	 */
 	boolean limitUser(String username, Date ban_time)throws SQLException;
+
+	/**
+	 * 检查密码是否正确（添加管理员）
+	 * @param id
+	 * @param password
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean checkPasswd(String id, String password)throws SQLException;
+
+	/**
+	 * 检查手机号是否使用过（添加管理员）
+	 * @param phone
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean checkAdminPhone(String phone) throws SQLException;
 }

@@ -556,4 +556,20 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	boolean ChangeACover(String id)throws SQLException;
+
+	/**
+	 * 屏蔽文章
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean HideArticle(String id) throws SQLException;
+
+	/**
+	 * 通过文章类型找到所有对应文章
+	 * @param article_type
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findAllArticleByType(String article_type) throws SQLException;
 }

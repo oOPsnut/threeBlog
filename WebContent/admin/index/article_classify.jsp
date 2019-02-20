@@ -1,5 +1,10 @@
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
+<%@page import="com.threeblog.domain.ArticleTypeBean"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
+<%@page import="com.threeblog.domain.ArticleBean"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -9,6 +14,8 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/ac-changeP.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -70,93 +77,160 @@
 <div class="main-wrap">
 
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font"></i><a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">作品管理</span></div>
-        </div>
-        <div class="search-wrap">
-            <div class="search-content">
-                <form action="#" method="post">
-                    <table class="search-tab">
-                        <tr>
-                            <th width="120">选择分类:</th>
-                            <td>
-                                <select name="search-sort" id="">
-                                    <option value="">全部</option>
-                                    <option value="19">精品界面</option><option value="20">推荐界面</option>
-                                </select>
-                            </td>
-                            <th width="70">关键字:</th>
-                            <td><input class="common-text" placeholder="关键字" name="keywords" value="" id="" type="text"></td>
-                            <td><input class="btn btn-primary btn2" name="sub" value="查询" type="submit"></td>
-                        </tr>
-                    </table>
-                </form>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>分类管理</span>
             </div>
         </div>
         <div class="result-wrap">
-            <form name="myform" id="myform" method="post">
-                <div class="result-title">
-                    <div class="result-list">
-                        <a href="insert.html"><i class="icon-font"></i>新增作品</a>
-                        <a id="batchDel" href="javascript:void(0)"><i class="icon-font"></i>批量删除</a>
-                        <a id="updateOrd" href="javascript:void(0)"><i class="icon-font"></i>更新排序</a>
-                    </div>
-                </div>
-                <div class="result-content">
-                    <table class="result-tab" width="100%">
-                        <tr>
-                            <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
-                            <th>排序</th>
-                            <th>ID</th>
-                            <th>标题</th>
-                            <th>审核状态</th>
-                            <th>点击</th>
-                            <th>发布人</th>
-                            <th>更新时间</th>
-                            <th>评论</th>
-                            <th>操作</th>
-                        </tr>
-                        <tr>
-                            <td class="tc"><input name="id[]" value="59" type="checkbox"></td>
+            <div class="result-title">
+                <h1>博文搜索</h1>
+            </div>
+            <div class="result-content">
+		                <ul class="sys-info-list">
+		                   <li align="center">
+		                       <label class="res-lab ">标题/标签:</label><span class="res-info"><input  type="text" class="wid" id="sarticle" required/></span>
+		                       <input type="submit" value="搜索" id="searchArticle" onclick="searchArticle()"/>
+		                       <script type="text/javascript">
+		                       		function searchArticle() {
+										var content = $("#sarticle").val();//获取输入的用户名
+										if (content=="") {
+											$("#search-result").hide();
+										} else {
+
+										$.post("/ThreeBlog_V1.0/AdminServlet?method=SearchArticle",{content:content},function(data,status){
+											//alert(data);
+											if(data==1){
+												$("#search-result").hide();
+												alert("查询无结果！");
+											}else{
+												//alert(data);
+												$("#search-result").show();
+												$('#search-result').html(data);
+											}
+											});
+										}
+									}
+		                       </script>
+		                   </li>
+		                 </ul>
+            </div>  
+        </div>
+        <div  id="search-result">
+       		
+        </div>
+        
+        <div class="search-wrap">
+            <div class="search-content">
+                    <table class="search-tab">
+                        <tr align="center">
+                            <th width="120">选择分类:</th>
                             <td>
-                                <input name="ids[]" value="59" type="hidden">
-                                <input class="common-input sort-input" name="ord[]" value="0" type="text">
-                            </td>
-                            <td>59</td>
-                            <td title="发哥经典"><a target="_blank" href="#" title="发哥经典">发哥经典</a> …
-                            </td>
-                            <td>0</td>
-                            <td>2</td>
-                            <td>admin</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td></td>
-                            <td>
-                                <a class="link-update" href="#">修改</a>
-                                <a class="link-del" href="#">删除</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tc"><input name="id[]" value="58" type="checkbox"></td>
-                            <td>
-                                <input name="ids[]" value="58" type="hidden">
-                                <input class="common-input sort-input" name="ord[]" value="0" type="text">
-                            </td>
-                            <td>58</td>
-                            <td title="黑色经典"><a target="_blank" href="#" title="黑色经典">黑色经典</a> …
-                            </td>
-                            <td>0</td>
-                            <td>35</td>
-                            <td>admin</td>
-                            <td>2013-12-30 22:34:00</td>
-                            <td></td>
-                            <td>
-                                <a class="link-update" href="#">修改</a>
-                                <a class="link-del" href="#">删除</a>
+                                <select name="search-sort" id="ac-select" onchange="aTypeChange()">
+                                    <option value="All" selected="selected">全部博文</option>
+                                    <option value="默认分类">默认分类</option>
+					            	<option value="个人心情">个人心情</option>
+					            	<option value="杂乱无章">杂乱无章</option>
+					            	<option value="休闲娱乐">休闲娱乐</option>
+					            	<option value="游戏漫画">游戏漫画</option>
+					            	<option value="旅游摄影">旅游摄影</option>
+					            	<option value="时尚美食">时尚美食</option>
+					            	<option value="校园青春">校园青春</option>
+					            	<option value="媒体科技">媒体科技</option>
+					            	<option value="体育健康">体育健康</option>
+                                </select>
                             </td>
                         </tr>
                     </table>
-                    <div class="list-page"> 2 条 1/1 页</div>
-                </div>
-            </form>
+            </div>
+        </div>
+        <div id="defaultDiv">
+          <div class="result-wrap">
+        	<div class="result-title">
+                <h1>分类管理</h1>
+            </div>
+            <div class="result-content"> 
+				<table class="result-tab" width="100%">
+                        <tr>
+                            <th>作者</th>
+                            <th>标题</th>
+                            <th>标签</th>
+                            <th>点击数</th>
+                            <th>喜欢数</th>
+                            <th>收藏数</th>
+                            <th>评论数</th>
+                            <th>发布日期</th>
+                            <th>类型</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                        </tr>
+                        <%
+                        	ArticleService aService = new ArticleServiceImpl();
+                        	List<ArticleBean> list= aService.findAllACover();
+                        	if(list.isEmpty()){
+                        %>
+                        <tr align="center">
+                        	<td colspan="11" style="padding: 20px;"><strong>没有发布过文章！</strong></td>    
+                        </tr>
+                        <% 	                      
+                        	}else{
+                        		for(int i =0;i<list.size();i++){                     	
+	                        		ArticleBean aBean= list.get(i);
+	                        		request.setAttribute("aBean", aBean);
+	                        		String aid = aBean.getId();
+	                        		ArticleTypeBean aTypeBean = aService.findArticleType(aid);
+	                        		request.setAttribute("aTBean", aTypeBean);         	
+                        %>
+                        <tr>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${aBean.author_id}">${aBean.author}</a>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}">${aBean.title }</a> 
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBean.label}">${aBean.label}</a> 
+                            <td>${aBean.click_num}</td>
+                            <td>${aBean.liked_num}</td>
+                            <td>${aBean.collect_num}</td>
+                            <td>${aBean.comment_num}</td>
+                            <td>${aBean.publish_date}</td>
+                            <td>${aTBean.article_type}</td>
+                            <td>${aBean.status}</td>
+                            <td>
+                                <a class="link-update" target="_blank" href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}">查看</a>
+                                <a class="link-del" onclick="hideArticle('${aBean.id}')">屏蔽</a>
+                                <script type="text/javascript">
+                                	function hideArticle(id) {
+										var aid=id;//文章id
+										var s = confirm("你确定要屏蔽此文章吗？");
+	        							if (s) {
+	        								$.ajax({
+	        									type:"POST",//用post方式传输
+	        									dataType:"json",//数据格式:JSON
+	        									url:"/ThreeBlog_V1.0/AdminServlet?method=HideArticle" ,//目标地址
+	        									data:{"id":aid},
+	        									error:function(){
+	        										alert("出错！请稍后再试...");
+	        									},
+	        									success:function(data){
+	        										if (data) {
+	        											alert("屏蔽成功！");
+	        											window.location.reload();
+	        										} else {
+	        											alert("屏蔽失败，本照片可能已处于屏蔽或非正常状态！");		
+	        											window.location.reload();
+	        										}
+	        									}
+	        								});
+	        							}
+									}
+                                </script>
+                            </td>
+                        </tr>
+                        <%}} %>
+                    </table>
+                  </div>
+			</div>
+        </div>
+        <div id="srDiv">
+		        
         </div>
     </div>
     <!--/main-->
