@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -9,6 +11,9 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/md5.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/aencryptionPassword.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -68,86 +73,148 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用Three Blog后台管理中心。</span></div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>快捷操作</h1>
-            </div>
-            <div class="result-content">
-                <div class="short-wrap">
-					<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><i class="icon-font">&#xe048;</i>数据统计</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_publish.jsp"><i class="icon-font">&#xe001;</i>新增公告</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_list.jsp"><i class="icon-font">&#xe005;</i>公告管理</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/admin_manage.jsp"><i class="icon-font">&#xe01e;</i>管理员管理</a>
-                </div>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>个人中心</span>
             </div>
         </div>
+        
         <div class="result-wrap">
             <div class="result-title">
-                <h1>数据统计</h1>
+                <h1>个人信息</h1>
             </div>
             <div class="result-content">
                 <ul class="sys-info-list">
                     <li>
-                        <label class="res-lab">博客系统</label><span class="res-info">Three Blog</span>
+                        <label class="res-lab">用户名</label><span class="res-info">${adminBean.username }</span>
                     </li>
                     <li>
-                        <label class="res-lab">总用户量</label><span class="res-info">100</span>
+                        <label class="res-lab">电话</label><span class="res-info">${adminBean.phone }</span>
                     </li>
                     <li>
-                        <label class="res-lab">总博文数</label><span class="res-info">2000</span>
+                        <label class="res-lab">注册时间</label><span class="res-info">${adminBean.register_time }</span>
                     </li>
                     <li>
-                        <label class="res-lab">总浏览量</label><span class="res-info">245561654</span>
+                        <label class="res-lab">最近登录时间</label><span class="res-info">${adminBean.last_login_time }</span>
                     </li>
+                    <c:if test="${adminBean.id=='72C5BA19E0C1431BA25D74E9B0D47647' }">
                     <li>
-                        <label class="res-lab">全年新增博文数</label><span class="res-info">78914</span>
+                        <label class="res-lab">权限</label><span class="res-info">超级管理员</span>
                     </li>
-                    
+                    </c:if>
+                    <c:if test="${adminBean.id!='72C5BA19E0C1431BA25D74E9B0D47647' }">
                     <li>
-                        <label class="res-lab">全年新增用户数</label><span class="res-info">2486</span>
+                        <label class="res-lab">权限</label><span class="res-info">管理员</span>
                     </li>
+                    </c:if>
+                    <li>
+                        <label class="res-lab">状态</label><span class="res-info">已注册</span>
+                    </li>
+                    <%
+	                    Date now = new Date();
+	        		    SimpleDateFormat sdf = new SimpleDateFormat("yyy年MM月dd日 HH:mm:ss");
+	        		    String time = sdf.format(now);
+	        		    request.setAttribute("time", time);
+                    %>
 					<li>
-                        <label class="res-lab">北京时间</label><span class="res-info">2014年3月18日 21:08:24</span>
+                        <label class="res-lab">北京时间</label><span class="res-info">${time }</span>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="result-wrap">
             <div class="result-title">
-                <h1>活跃用户</h1>
+                <h1>修改密码</h1>
             </div>
-            <div class="result-content">             
-				<table class="result-tab" width="100%">
-                        <tr>
-                            <th class="tc" width="5%">#</th>
-                            <th>用户名</th>
-                            <th>性别</th>
-                            <th>电话</th>
-                            <th>所在地区</th>
-                            <th>注册时间</th>
-                            <th>最近登录时间</th>
-							<th>禁用状态</th>
-                            <th>登录次数</th>
-                            <th>操作</th>
-                        </tr>
-                        <tr>
-                            <td class="tc">1</td>
-                            <td><a target="_blank" href="#" title="发哥经典">查无此人</a></td>
-                            <td>男</td>
-                            <td>15800000012</td>
-                            <td>广东省广州市</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>否</td>
-                            <td>50</td>
-                            <td>
-                                <a class="link-update" href="#">查看</a>
-                            </td>
-                        </tr>
-                        
-                    </table>
+            <div class="result-content">
+            	<form action="${pageContext.request.contextPath}/AdminServlet?method=ChangeNPasswd" method="post">
+                <ul class="sys-info-list">
+                    <li align="left">
+                        <label class="res-lab">当前管理员</label><span class="res-info">${adminBean.username }<input  type="text" value="${adminBean.id }" id="admin"  name="admin" style="visibility: hidden;"/><input  type="text" value="${adminBean.phone }" id="aphone"  name="aphone" style="visibility: hidden;"/></span>
+                    </li>
+                    <li align="left">
+                        <label class="res-lab">原密码</label><span class="res-info"><input  type="password" class="wid" id="password" name="password" onkeyup="checkPasswd()" required/></span><span id="span02"></span>
+                        <script type="text/javascript">
+                        	function checkPasswd() {
+                        		var id=$("#admin").val();
+								var passwd=$("#password").val();
+								var md5KeyR= "jL2NdrALvN";
+								//表单提交时对输入的密码进行加密， 避免抓包分析破解密码
+							    var hash1 = passwd+md5KeyR; 
+								var hash2=MD5(hash1); 
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/AdminServlet?method=checkPasswd" ,//目标地址
+									data:{"id":id,"passwd":hash2},
+									error:function(){
+										alert("出错！请稍后再试");
+									},
+									success:function(data){
+										if(data){
+											$("#span02").html("<font color='green'>正确</font>");
+										}else{
+											$("#span02").html("<font color='red'>错误</font>");
+										}
+									}
+								});
+							}
+                        </script>
+                    </li>
+                     <li>
+                        <label class="res-lab">授权码</label><span class="res-info"><input type="text" class="wid"  name="license_code" id="license_code" onkeyup="checkLicenseCode()" required></span><span id="span03"></span>
+                        <script type="text/javascript">
+                        	function checkLicenseCode() {
+                        		var phone=$("#aphone").val();
+								var license_code=$("#license_code").val();
+								$.ajax({
+									type:"POST",//用post方式传输
+									dataType:"json",//数据格式:JSON
+									url:"/ThreeBlog_V1.0/AdminServlet?method=CheckLicenseCode" ,//目标地址
+									data:{"phone":phone,"license_code":license_code},
+									error:function(){
+										alert("出错！请稍后再试");
+									},
+									success:function(data){
+										if(data){
+											$("#span03").html("<font color='green'>正确</font>");
+										}else{
+											$("#span03").html("<font color='red'>错误</font>");
+										}
+									}
+								});
+							}
+                        </script>
+                    </li>
+                    <li>
+                        <label class="res-lab">新密码</label><span class="res-info"><input  type="password" class="wid" id="newpassword" name="newpassword"  required/></span>
+                    </li>
+                    <li>
+                        <label class="res-lab">重新输入密码</label><span class="res-info"><input  type="password" class="wid" id="newpassword1" name="newpassword1" onkeyup="check()" required/></span><span id="span01"></span>
+                        <script type="text/javascript">
+                        	function check() {
+								var newpasswd=$("#newpassword").val();
+								var newpasswd1=$("#newpassword1").val();
+								if (newpasswd==newpasswd1) {
+									$("#span01").html("<font color='green'>一致</font>");
+								} else {
+									$("#span01").html("<font color='red'>不一致</font>");
+								}
+							}
+                        </script>
+                    </li>
+					<li align="left">
+                        <label class="res-lab">*</label><span class="res-info">请养成每两周更改一次密码的好习惯！</span>
+                    </li>
+                    <li align="left">
+                        <label class="res-lab"></label><span class="res-info" style="color: green;">${errorMsg}</span><span class="res-info" style="color: green;" id="license_codeMsg">${Msg}</span>
+                    </li>
+					<li>
+                        <input type="submit" value="更改密码" class="submit-button" id="addA" onclick="hidePasswd()"/>
+                    </li>
+                </ul>
+                </form>
             </div>
         </div>
     </div>

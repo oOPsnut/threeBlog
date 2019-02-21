@@ -1,6 +1,7 @@
 package com.threeblog.dao;
 
 import java.util.Date;
+import java.util.List;
 import java.sql.SQLException;
 
 import com.threeblog.domain.AdminBean;
@@ -95,4 +96,27 @@ public interface AdminDao {
 	 * @throws SQLException
 	 */
 	boolean checkAdminPhone(String phone) throws SQLException;
+	
+	/**
+	 * 添加管理员
+	 * @param admin
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addAdmin(AdminBean admin)throws SQLException;
+	
+	/**
+	 * 查找所有管理员
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AdminBean> findAllAdmin()throws SQLException;
+	
+	/**
+	 * 删除管理员
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean DeleteAdmin(String id)throws SQLException;
 }

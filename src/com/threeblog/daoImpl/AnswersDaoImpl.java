@@ -69,4 +69,12 @@ public class AnswersDaoImpl implements AnswersDao {
 		return result>0;
 	}
 
+	@Override
+	public boolean HideAnswer(String cid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_answer set status='屏蔽' where id=?";
+		int result = runner.update(sql,cid);
+		return result>0;
+	}
+
 }

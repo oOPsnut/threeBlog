@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -12,6 +15,7 @@
     <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/md5.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/aencryptionPassword.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/clipboard.min.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -83,13 +87,13 @@
                 <h1>新增管理员</h1>
             </div>
             <div class="result-content">
-            	<form action="${pageContext.request.contextPath}/AdminServlet?method=addAdmin">
+            	<form action="${pageContext.request.contextPath}/AdminServlet?method=addAdmin" method="post">
                 <ul class="sys-info-list">
                     <li align="left">
                         <label class="res-lab">当前管理员</label><span class="res-info">${adminBean.username }<input  type="text" value="${adminBean.id }" id="admin"  name="admin" style="visibility: hidden;"/></span>
                     </li>
                     <li align="left">
-                        <label class="res-lab">密码</label><span class="res-info"><input  type="password" class="wid" id="password" name="password" onkeyup="checkPasswd()" required/></span><span id="span02"></span>
+                        <label class="res-lab">当前管理员密码</label><span class="res-info"><input  type="password" class="wid" id="password" name="password" onkeyup="checkPasswd()" required/></span><span id="span02"></span>
                         <script type="text/javascript">
                         	function checkPasswd() {
                         		var id=$("#admin").val();
@@ -150,8 +154,12 @@
                     <li align="left">
                         <label class="res-lab">*</label><span class="res-info">请仔细检查，并确认手机号填写正确！</span>
                     </li>
+                    <li align="left">
+                        <label class="res-lab"></label><span class="res-info" style="color: green;">${errorMsg}</span><span class="res-info" style="color: green;" id="license_codeMsg">${Msg}</span>
+                    </li>
                     <li>
-                        <input type="submit" value="添加" class="submit-button" id="addA" onclick="encryptionPassword()"/>
+                        <input type="submit" value="添加" class="submit-button" id="addA" onclick="encryptionPassword()"/>&emsp;&emsp;
+                    	<input type="button" id="copy" value="复制授权码" class="submit-button" data-clipboard-action="copy" data-clipboard-target="#license_codeMsg" onclick="copyCode()"/>
                     </li>
                     
                 </ul>
@@ -160,39 +168,169 @@
         </div>
         <div class="result-wrap">
             <div class="result-title">
-                <h1>活跃用户</h1>
+                <h1>管理员管理</h1>
             </div>
+            <%--超级管理员 --%>
+            <c:if test="${adminBean.id=='72C5BA19E0C1431BA25D74E9B0D47647'}">
             <div class="result-content">             
 				<table class="result-tab" width="100%">
                         <tr>
                             <th class="tc" width="5%">#</th>
                             <th>用户名</th>
-                            <th>性别</th>
                             <th>电话</th>
-                            <th>所在地区</th>
                             <th>注册时间</th>
                             <th>最近登录时间</th>
-							<th>禁用状态</th>
-                            <th>登录次数</th>
+                            <th>状态</th>
+							<th>权限</th>
                             <th>操作</th>
                         </tr>
+                        <%
+                        	AdminService adminService = new AdminServiceImpl();
+                        	List<AdminBean> list = adminService.findAllAdmin();
+                        	for(int i=0;i<list.size();i++){
+                        		int number=i+1;
+    		        			request.setAttribute("number", number); 
+                        		AdminBean admin = list.get(i);
+                        		request.setAttribute("admin", admin);
+                        %>
+                        <c:if test="${admin.password!=null }">
                         <tr>
-                            <td class="tc">1</td>
-                            <td><a target="_blank" href="#" title="发哥经典">查无此人</a></td>
-                            <td>男</td>
-                            <td>15800000012</td>
-                            <td>广东省广州市</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>否</td>
-                            <td>50</td>
+                            <td class="tc">${number}</td>
+                            <td>${admin.username}</td>
+                            <td>${admin.phone}</td>
+                            <td>${admin.register_time}</td>
+                            <td>${admin.last_login_time}</td>
+                            <td>已注册</td>
+                            <c:if test="${admin.id=='72C5BA19E0C1431BA25D74E9B0D47647' }">
+                            	<td>超级管理员</td>
+                            </c:if>
+                            <c:if test="${admin.id!='72C5BA19E0C1431BA25D74E9B0D47647' }">
+                            	<td>管理员</td>
+                            </c:if>
+							<c:if test="${admin.id!='72C5BA19E0C1431BA25D74E9B0D47647' }">
                             <td>
-                                <a class="link-update" href="#">查看</a>
+                                <a class="link-update" onclick="deleteAdmin('${admin.id}')">删除</a>
+                                <script type="text/javascript">
+                                	function deleteAdmin(id) {
+										var aid=id;//管理员id
+										var s = confirm("你确定要删除此管理员吗？");
+	        							if (s) {
+	        								$.ajax({
+	        									type:"POST",//用post方式传输
+	        									dataType:"json",//数据格式:JSON
+	        									url:"/ThreeBlog_V1.0/AdminServlet?method=DeleteAdmin" ,//目标地址
+	        									data:{"id":aid},
+	        									error:function(){
+	        										alert("出错！请稍后再试...");
+	        									},
+	        									success:function(data){
+	        										if (data) {
+	        											alert("删除成功！");
+	        											window.location.reload();
+	        										} else {
+	        											alert("删除失败，请稍后再试...");		
+	        											window.location.reload();
+	        										}
+	        									}
+	        								});
+	        							}
+									}
+                                </script>
+                            </td>
+                            </c:if>
+                            <c:if test="${admin.id=='72C5BA19E0C1431BA25D74E9B0D47647' }">
+                            	<td>
+                                <a class="link-update" href="${pageContext.request.contextPath}/admin/index/personalcenter.jsp">查看</a>
+                            </td>
+                            </c:if>
+                        </tr>
+                        </c:if>
+                        <c:if test="${admin.password==null }">
+                        <tr>
+                            <td class="tc">${number}</td>
+                            <td>NULL</td>
+                            <td>${admin.phone}</td>
+                            <td>NULL</td>
+                            <td>NULL</td>
+                            <td>未注册</td>
+                            <td>管理员</td>
+                            <td>
+                                <a class="link-update" onclick="deleteAd('${admin.id}')">删除</a>
+                                <script type="text/javascript">
+                                	function deleteAd(id) {
+										var aid=id;//管理员id
+										var s = confirm("你确定要删除此管理员吗？");
+	        							if (s) {
+	        								$.ajax({
+	        									type:"POST",//用post方式传输
+	        									dataType:"json",//数据格式:JSON
+	        									url:"/ThreeBlog_V1.0/AdminServlet?method=DeleteAdmin" ,//目标地址
+	        									data:{"id":aid},
+	        									error:function(){
+	        										alert("出错！请稍后再试...");
+	        									},
+	        									success:function(data){
+	        										if (data) {
+	        											alert("删除成功！");
+	        											window.location.reload();
+	        										} else {
+	        											alert("删除失败，请稍后再试...");		
+	        											window.location.reload();
+	        										}
+	        									}
+	        								});
+	        							}
+									}
+                                </script>
                             </td>
                         </tr>
-                        
+                        </c:if>
+                        <%} %>
                     </table>
             </div>
+            </c:if>
+            <%--管理员 --%>
+            <c:if test="${adminBean.id!='72C5BA19E0C1431BA25D74E9B0D47647'}">
+            <div class="result-content">             
+				<table class="result-tab" width="100%">
+                        <tr>
+                            <th class="tc" width="5%">#</th>
+                            <th>用户名</th>
+                            <th>电话</th>
+                            <th>注册时间</th>
+                            <th>最近登录时间</th>
+							<th>状态</th>
+							<th>权限</th>
+                        </tr>
+                        <%
+                        	AdminService adminService = new AdminServiceImpl();
+                        	List<AdminBean> list = adminService.findAllAdmin();
+                        	for(int i=0;i<list.size();i++){
+                        		int number=i+1;
+    		        			request.setAttribute("number", number); 
+                        		AdminBean admin = list.get(i);
+                        		request.setAttribute("admin", admin);
+                        %>
+                        <c:if test="${admin.password!=null }">
+                        <tr>
+                            <td class="tc">${number}</td>
+                            <td>${admin.username}</td>
+                            <td>${admin.phone}</td>
+                            <td>${admin.register_time}</td>
+                            <td>${admin.last_login_time}</td>
+                            <td>已注册</td>
+                            <c:if test="${admin.id=='72C5BA19E0C1431BA25D74E9B0D47647' }">
+                            	<td>超级管理员</td>
+                            </c:if>
+                            <c:if test="${admin.id!='72C5BA19E0C1431BA25D74E9B0D47647' }">
+                            	<td>管理员</td>
+                            </c:if>
+                        </tr>
+                        </c:if>
+                        <%} %>
+                    </table>
+            </div>
+            </c:if>
         </div>
     </div>
     <!--/main-->

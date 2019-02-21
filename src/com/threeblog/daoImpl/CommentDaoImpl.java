@@ -54,4 +54,12 @@ public class CommentDaoImpl implements CommentDao {
 		return result>0;
 	}
 
+	@Override
+	public boolean HideComment(String cid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_comment set status='屏蔽' where id=?";
+		int result = runner.update(sql,cid);
+		return result>0;
+	}
+
 }

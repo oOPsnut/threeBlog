@@ -1,11 +1,13 @@
 package com.threeblog.daoImpl;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.threeblog.dao.ReportDao;
 import com.threeblog.domain.AblumBean;
@@ -66,6 +68,62 @@ public class ReportDaoImpl implements ReportDao {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="update t_report set feedback_reason=? , status3=? where id=?;";
 		int result = runner.update(sql,feedback_reason,status3,id);  
+		return result>0;
+	}
+
+	@Override
+	public List<ReportBean> findAllReport() throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		//author_id:被举报者id   user_id:举报者id
+		String sql="select * from t_report order by add_time DESC";
+		return  runner.query(sql, new BeanListHandler<ReportBean>(ReportBean.class));
+	}
+
+	@Override
+	public List<ReportBean> findAllReportMessage() throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		//author_id:被举报者id   user_id:举报者id
+		String sql="select * from t_report where feedback_reason='空' order by add_time DESC";
+		return  runner.query(sql, new BeanListHandler<ReportBean>(ReportBean.class));
+	}
+
+	@Override
+	public List<ReportBean> findAllRenewMessage() throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		//author_id:被举报者id   user_id:举报者id
+		String sql="select * from t_report where feedback_reason!='空' order by add_time DESC";
+		return  runner.query(sql, new BeanListHandler<ReportBean>(ReportBean.class));
+	}
+
+	@Override
+	public Long countReports() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select count(id) as rid from t_report where status1='未处理'";
+		Long count =(Long) runner.query(sql,new ScalarHandler());
+		return count;
+	}
+
+	@Override
+	public Long countRenews() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select count(id) as rid from t_report where status2='已处理' and status3='等待审核'";
+		Long count =(Long) runner.query(sql,new ScalarHandler());
+		return count;
+	}
+
+	@Override
+	public boolean ReadReport(String id,Date notice_time) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_report set status1='已处理' and notice_time=? where id=?";
+		int result = runner.update(sql,notice_time,id);
+		return result>0;
+	}
+
+	@Override
+	public boolean changeReport(String rid,Date notice_time) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_report set status1='已处理' and status2='屏蔽' and notice_time=? where id=?";
+		int result = runner.update(sql,notice_time,rid);
 		return result>0;
 	}
 	

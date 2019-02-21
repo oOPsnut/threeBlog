@@ -5,6 +5,7 @@ import com.threeblog.domain.AdminBean;
 import com.threeblog.domain.ArticleBean;
 import com.threeblog.domain.NoticeBean;
 import com.threeblog.domain.UserBean;
+import com.threeblog.filter.SensitivewordFilter;
 import com.threeblog.service.AdminService;
 import com.threeblog.service.ArticleService;
 import com.threeblog.service.UserService;
@@ -13,18 +14,24 @@ import com.threeblog.serviceImpl.ArticleServiceImpl;
 import com.threeblog.serviceImpl.UserServiceImpl;
 import com.threeblog.util.DateDiffUtil;
 import com.threeblog.util.Md5StringUtils;
+import com.threeblog.util.RandomCodeUtil;
 import com.threeblog.util.UUIDUtils;
 
 import net.sf.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.RandomAccessFile;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -157,8 +164,10 @@ public class AdminServlet extends BaseServlet {
 		try {
 			//检测是否存在
 			String phone = request.getParameter("phone");
-			String license_code = request.getParameter("license_code");
+			String flicense_code = request.getParameter("license_code");
 			
+			//对授权码进行md5加密
+			String license_code = Md5StringUtils.getMD5Str(flicense_code+md5Key,null);	
 			
 			AdminService adminService=new AdminServiceImpl();
 			boolean uisExist = adminService.CheckLicenseCode(phone,license_code);
@@ -322,6 +331,58 @@ public class AdminServlet extends BaseServlet {
 			} catch (Exception e) {
 				//修改失败，跳转到提示页面
 				return "/admin/error/error.jsp";
+			}
+		}
+	
+	//修改密码（更改密码）
+	public String ChangeNPasswd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+			
+			//接受表单参数
+			String admin_id = request.getParameter("admin");//当前管理员id
+			String fpassword = request.getParameter("password");//原密码
+			String phone = request.getParameter("aphone");//当前管理员电话
+			String flicense_code = request.getParameter("license_code");//授权码
+			String fnewpassword = request.getParameter("newpassword");//新密码
+			String fnewpassword1 = request.getParameter("newpassword1");//确认密码
+			
+			//System.out.println(fnewpassword+"="+fnewpassword1);
+			
+			//MD5加密
+			String password = Md5StringUtils.getMD5Str(fpassword+md5Key,null);	
+			
+			//调用业务层修改密码
+			AdminService adminService=new AdminServiceImpl();
+			boolean r = adminService.checkPasswd(admin_id, password);
+			if (r) {
+				//原密码输入正确
+				//对授权码进行md5加密
+				String license_code = Md5StringUtils.getMD5Str(flicense_code+md5Key,null);	
+				boolean code = adminService.CheckLicenseCode(phone, license_code);
+				if (code) {
+					//授权码正确
+					if (fnewpassword.equals(fnewpassword1)) {
+						//密码一致
+						//MD5加密
+						String newpassword = Md5StringUtils.getMD5Str(fnewpassword+md5Key,null);	
+						boolean result = adminService.changePasswd(phone, newpassword);
+						if (result) {
+							return "/admin/login/admin_login.jsp";
+						}else {
+							//修改失败，跳转到提示页面
+							return "/admin/error/error.jsp";
+						}
+					} else {
+						request.setAttribute("errorMsg", "两次输入密码不一致！");
+						return "/admin/index/personalcenter.jsp";
+					}
+				} else {
+					request.setAttribute("errorMsg", "授权码错误！");
+					return "/admin/index/personalcenter.jsp";
+				}
+				
+			} else {
+				request.setAttribute("errorMsg", "原密码错误！");
+				return "/admin/index/personalcenter.jsp";
 			}
 		}
 
@@ -666,5 +727,212 @@ public class AdminServlet extends BaseServlet {
 		} else {
 			response.getWriter().println(true);//可用
 		}
+	}
+	
+	
+	//添加管理员
+	public String addAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String admin_id = request.getParameter("admin");//当前管理员id
+		String fpassword = request.getParameter("password");//当前管理员密码
+		String phone = request.getParameter("phone");//新管理员的手机号
+		
+		//MD5加密
+		String password = Md5StringUtils.getMD5Str(fpassword+md5Key,null);
+		
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.checkPasswd(admin_id,password);//检查当前密码是否正确（验证身份）
+
+		//返回数据
+		if (r) {
+			boolean s = adminService.checkAdminPhone(phone);//检查手机号是否已注册			
+			//返回数据
+			if (s) {
+				//已注册
+				request.setAttribute("errorMsg", "该手机号已注册！");
+				return "/admin/index/admin_manage.jsp";
+			} else {
+				//可添加管理员
+				//UUID生成管理员id
+				String id = UUIDUtils.getId();
+				//随机生成10位的授权码
+				String flicense_code = RandomCodeUtil.getRandStrCode(10);
+				//对授权码进行md5加密
+				String license_code = Md5StringUtils.getMD5Str(flicense_code+md5Key,null);	
+				//将数据封装到adminBean中
+				AdminBean admin =  new AdminBean();
+				admin.setId(id);
+				admin.setPhone(phone);
+				admin.setLicense_code(license_code);
+				//调用函数
+				boolean result = adminService.addAdmin(admin);
+				if (result) {
+					request.setAttribute("errorMsg", "添加成功，请自行复制并发给对应管理员！");
+					request.setAttribute("Msg", "授权码为："+flicense_code);
+					return "/admin/index/admin_manage.jsp";
+				} else {
+					request.setAttribute("errorMsg", "出错，请稍后再试！");
+					return "/admin/index/admin_manage.jsp";
+				}
+			}
+		} else {
+			request.setAttribute("errorMsg", "密码错误！");
+			return "/admin/index/admin_manage.jsp";
+		}
+	}
+	
+	//删除管理员
+	public void DeleteAdmin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");
+		
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.DeleteAdmin(id);
+
+		//返回数据
+		if (r) {
+			response.getWriter().println(true);//成功
+		} else {
+			response.getWriter().println(false);//删除失败
+		}
+	}
+	
+	//检查违规词是否存在
+	public String CheckIllegalWord(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String word = request.getParameter("word");
+		
+		//检查违规词，出现则将其改为*
+		SensitivewordFilter swFilter = new SensitivewordFilter();
+		Set<String> sensitiveWord = swFilter.getSensitiveWord(word, 1);
+		boolean sensitive = swFilter.isSensitive(word);
+		//返回数据
+		if (sensitive) {
+			request.setAttribute("Msg", "存在违规词，其为："+sensitiveWord);
+			return "/admin/index/illegal_manage.jsp";
+		} else {
+			request.setAttribute("Msg", "不存在违规词，或词库不存在此词");
+			return "/admin/index/illegal_manage.jsp";
+		}
+	}
+	
+	//检查违规词是否存在
+	public String AddIllegalWord(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String word = request.getParameter("word");
+		
+		
+		String fileName="F:\\Tomcat\\Tomcat\\apache-tomcat-7.0.85\\webapps\\ThreeBlog_V1.0\\key.txt";
+		try {
+			// 打开一个随机访问文件流，按读写方式
+			RandomAccessFile randomFile = new RandomAccessFile(fileName, "rw");
+			// 文件长度，字节数
+			long fileLength = randomFile.length();
+				// 将写文件指针移到文件尾。
+				randomFile.seek(fileLength);
+				//randomFile.writeUTF(word+"\r\n");
+				randomFile.write(("\r\n"+word).getBytes("utf-8"));
+				//randomFile.write(("\r\n"+word).getBytes());
+				randomFile.close();
+			} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//检查违规词，出现则将其改为*
+		SensitivewordFilter swFilter = new SensitivewordFilter();
+		boolean sensitive = swFilter.isSensitive(word);
+		//返回数据
+		if (sensitive) {
+			request.setAttribute("Msg", "添加成功");
+			return "/admin/index/illegal_manage.jsp";
+		} else {
+			request.setAttribute("Msg", "添加失败，请稍后再试");
+			return "/admin/index/illegal_manage.jsp";
+		}
+	}
+	
+	
+	//举报信息（已阅）
+	public void ReadReport(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");
+		
+		//通知时间
+		Date now=new Date();
+		Date notice_time=new Date(now.getTime());
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.ReadReport(id,notice_time);
+
+		//返回数据
+		if (r) {
+			response.getWriter().println(true);//成功
+		} else {
+			response.getWriter().println(false);//失败
+		}
+	}
+	
+	//举报信息（屏蔽）
+	public void HideTarget(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String rid = request.getParameter("rid");//举报id
+		String cid = request.getParameter("cid");//目标id
+		String ctype = request.getParameter("ctype");//目标类型
+		
+		//通知时间
+		Date now=new Date();
+		Date notice_time=new Date(now.getTime());
+		//调用服务
+		ArticleService aService = new ArticleServiceImpl();
+		AdminService adminService = new AdminServiceImpl();
+		if (ctype.equals("举报文章")) {
+			//举报目标是文章
+			boolean r = adminService.changeReport(rid,notice_time);
+			if (r) {
+				boolean article = aService.HideArticle(cid);
+				if (article) {
+					response.getWriter().println(true);//成功					
+				} else {
+					response.getWriter().println(false);//失败
+				}
+			} else {
+				response.getWriter().println(false);//失败
+			}	
+		} else if(ctype.equals("举报留言")){
+			//举报目标是留言
+			boolean r = adminService.changeReport(rid,notice_time);
+			if (r) {
+				boolean comment = aService.HideComment(cid);
+				if (comment) {
+					response.getWriter().println(true);//成功					
+				} else {
+					response.getWriter().println(false);//失败
+				}
+			} else {
+				response.getWriter().println(false);//失败
+			}			
+		}else if(ctype.equals("举报回复")) {
+			//举报目标是回复
+			boolean r = adminService.changeReport(rid,notice_time);
+			if (r) {
+				boolean answer = aService.HideAnswer(cid);
+				if (answer) {
+					response.getWriter().println(true);//成功					
+				} else {
+					response.getWriter().println(false);//失败
+				}
+			} else {
+				response.getWriter().println(false);//失败
+			}	
+		}
+
+		
 	}
 }

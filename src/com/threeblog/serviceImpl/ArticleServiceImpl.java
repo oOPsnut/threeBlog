@@ -595,6 +595,22 @@ public class ArticleServiceImpl implements ArticleService {
 		return list;
 	}
 
+	@Override
+	public boolean HideComment(String cid) throws SQLException {
+		// 屏蔽留言
+		CommentDao dao = new CommentDaoImpl();
+		boolean hideComment = dao.HideComment(cid);
+		return hideComment;
+	}
+
+	@Override
+	public boolean HideAnswer(String cid) throws SQLException {
+		// 屏蔽回复
+		AnswersDao dao = new AnswersDaoImpl();
+		boolean hideAnswer = dao.HideAnswer(cid);
+		return hideAnswer;
+	}
+
 	
 	
 }

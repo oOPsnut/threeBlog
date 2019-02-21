@@ -51,4 +51,12 @@ public interface CommentDao {
 	 * @throws SQLException
 	 */
 	boolean UpdateCommentZan(String comment_id, int zan)throws SQLException;
+	
+	/**
+	 * 屏蔽留言
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean HideComment(String cid)throws SQLException;
 }

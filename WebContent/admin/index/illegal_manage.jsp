@@ -9,6 +9,7 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -68,86 +69,42 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用Three Blog后台管理中心。</span></div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>快捷操作</h1>
-            </div>
-            <div class="result-content">
-                <div class="short-wrap">
-					<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><i class="icon-font">&#xe048;</i>数据统计</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_publish.jsp"><i class="icon-font">&#xe001;</i>新增公告</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_list.jsp"><i class="icon-font">&#xe005;</i>公告管理</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/admin_manage.jsp"><i class="icon-font">&#xe01e;</i>管理员管理</a>
-                </div>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>违规词管理</span>
             </div>
         </div>
+        
         <div class="result-wrap">
             <div class="result-title">
-                <h1>数据统计</h1>
+                <h1>新增违规词</h1>
             </div>
             <div class="result-content">
+            	<form action="" method="post" name="illegal_form">
                 <ul class="sys-info-list">
-                    <li>
-                        <label class="res-lab">博客系统</label><span class="res-info">Three Blog</span>
+                    <li align="center">
+                        <label class="res-lab" style="width: 60px;">违规词</label><span class="res-info"><input  type="text" class="wid" id="word" name="word"  required/></span>
                     </li>
-                    <li>
-                        <label class="res-lab">总用户量</label><span class="res-info">100</span>
+                     <li align="center">
+                        <label class="res-lab" style="width: 20px;"></label><span class="res-info">${Msg}</span>
                     </li>
-                    <li>
-                        <label class="res-lab">总博文数</label><span class="res-info">2000</span>
+					<li align="center">
+						<input type="button" value="检查违规词" class="submit-button"  onclick="checkWord()" style="background-color:green;"/>&emsp;&emsp;
+                        <input type="button" value="添加违规词" class="submit-button"  onclick="addWord()"/>
                     </li>
-                    <li>
-                        <label class="res-lab">总浏览量</label><span class="res-info">245561654</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">全年新增博文数</label><span class="res-info">78914</span>
-                    </li>
-                    
-                    <li>
-                        <label class="res-lab">全年新增用户数</label><span class="res-info">2486</span>
-                    </li>
-					<li>
-                        <label class="res-lab">北京时间</label><span class="res-info">2014年3月18日 21:08:24</span>
-                    </li>
+                    <script type="text/javascript">
+                        	function checkWord() {
+                        		document.illegal_form.action="/ThreeBlog_V1.0/AdminServlet?method=CheckIllegalWord";
+                        		document.illegal_form.submit();
+							}
+                        	function addWord() {
+                        		document.illegal_form.action="/ThreeBlog_V1.0/AdminServlet?method=AddIllegalWord";
+                        		document.illegal_form.submit();
+							}
+                   </script>
                 </ul>
-            </div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>活跃用户</h1>
-            </div>
-            <div class="result-content">             
-				<table class="result-tab" width="100%">
-                        <tr>
-                            <th class="tc" width="5%">#</th>
-                            <th>用户名</th>
-                            <th>性别</th>
-                            <th>电话</th>
-                            <th>所在地区</th>
-                            <th>注册时间</th>
-                            <th>最近登录时间</th>
-							<th>禁用状态</th>
-                            <th>登录次数</th>
-                            <th>操作</th>
-                        </tr>
-                        <tr>
-                            <td class="tc">1</td>
-                            <td><a target="_blank" href="#" title="发哥经典">查无此人</a></td>
-                            <td>男</td>
-                            <td>15800000012</td>
-                            <td>广东省广州市</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>否</td>
-                            <td>50</td>
-                            <td>
-                                <a class="link-update" href="#">查看</a>
-                            </td>
-                        </tr>
-                        
-                    </table>
+                </form>
             </div>
         </div>
     </div>

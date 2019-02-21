@@ -572,4 +572,20 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	List<ArticleBean> findAllArticleByType(String article_type) throws SQLException;
+
+	/**
+	 * 屏蔽留言
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean HideComment(String cid)throws SQLException;
+
+	/**
+	 * 屏蔽回复
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean HideAnswer(String cid)throws SQLException;
 }

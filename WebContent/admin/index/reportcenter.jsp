@@ -1,5 +1,12 @@
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
+<%@page import="com.threeblog.domain.UserBean"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="java.util.List"%>
+<%@page import="com.threeblog.domain.ReportBean"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.service.AdminService"%>
+<%@page import="com.threeblog.service.UserService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -13,7 +20,14 @@
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
 	if(adminBean!=null){
-		
+		UserService uService= new UserServiceImpl();
+    	AdminService adminService = new AdminServiceImpl();
+		int countReports =  Integer.valueOf( adminService.countReports().toString());//举报数
+		int countRenews =  Integer.valueOf( adminService.countRenews().toString());//反馈数
+		int countMessages=countRenews+countReports;//消息总数
+		request.setAttribute("countMessages", countMessages);
+		request.setAttribute("countReports", countReports);
+		request.setAttribute("countRenews", countRenews);
 %>
 <body>
 <div class="topbar-wrap white">
@@ -48,9 +62,9 @@
                         <li><a href="${pageContext.request.contextPath}/admin/index/user_manage.jsp"><i class="icon-font">&#xe003;</i>用户管理</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/index/article_classify.jsp"><i class="icon-font">&#xe006;</i>分类管理</a></li>
 						<li><a href="${pageContext.request.contextPath}/admin/index/photo_manage.jsp"><i class="icon-font">&#xe033;</i>图片管理</a></li>
-						<li><a href="${pageContext.request.contextPath}/admin/index/messagecenter.jsp"><i class="icon-font">&#xe004;</i>消息管理<span id="messageNum">1</span></a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/index/reportcenter.jsp"><i class="icon-font">&#xe00a;</i>举报管理<span id="messageNum">1</span></a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/index/renew.jsp"><i class="icon-font">&#xe00e;</i>恢复管理<span id="messageNum">1</span></a></li>
+						<li><a href="${pageContext.request.contextPath}/admin/index/messagecenter.jsp"><i class="icon-font">&#xe004;</i>消息管理<span id="messageNum">${countMessages}</span></a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/index/reportcenter.jsp"><i class="icon-font">&#xe00a;</i>举报管理<span id="messageNum">${countReports}</span></a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/index/renew.jsp"><i class="icon-font">&#xe00e;</i>恢复管理<span id="messageNum">${countRenews}</span></a></li>
                     </ul>
                 </li>
                 <li>
@@ -68,88 +82,186 @@
     <!--/sidebar-->
     <div class="main-wrap">
         <div class="crumb-wrap">
-            <div class="crumb-list"><i class="icon-font">&#xe06b;</i><span>欢迎使用Three Blog后台管理中心。</span></div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>快捷操作</h1>
-            </div>
-            <div class="result-content">
-                <div class="short-wrap">
-					<a href="${pageContext.request.contextPath}/admin/index/index.jsp"><i class="icon-font">&#xe048;</i>数据统计</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_publish.jsp"><i class="icon-font">&#xe001;</i>新增公告</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/notice_list.jsp"><i class="icon-font">&#xe005;</i>公告管理</a>
-                    <a href="${pageContext.request.contextPath}/admin/index/admin_manage.jsp"><i class="icon-font">&#xe01e;</i>管理员管理</a>
-                </div>
+            <div class="crumb-list">
+            	<i class="icon-font">&#xe000;</i>
+            	<a href="${pageContext.request.contextPath}/admin/index/index.jsp">首页</a>
+            	<span class="crumb-step">&gt;</span><span>举报管理</span>
             </div>
         </div>
+        
         <div class="result-wrap">
             <div class="result-title">
-                <h1>数据统计</h1>
-            </div>
-            <div class="result-content">
-                <ul class="sys-info-list">
-                    <li>
-                        <label class="res-lab">博客系统</label><span class="res-info">Three Blog</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总用户量</label><span class="res-info">100</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总博文数</label><span class="res-info">2000</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">总浏览量</label><span class="res-info">245561654</span>
-                    </li>
-                    <li>
-                        <label class="res-lab">全年新增博文数</label><span class="res-info">78914</span>
-                    </li>
-                    
-                    <li>
-                        <label class="res-lab">全年新增用户数</label><span class="res-info">2486</span>
-                    </li>
-					<li>
-                        <label class="res-lab">北京时间</label><span class="res-info">2014年3月18日 21:08:24</span>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="result-wrap">
-            <div class="result-title">
-                <h1>活跃用户</h1>
+                <h1>举报管理</h1>
             </div>
             <div class="result-content">             
 				<table class="result-tab" width="100%">
                         <tr>
-                            <th class="tc" width="5%">#</th>
-                            <th>用户名</th>
-                            <th>性别</th>
-                            <th>电话</th>
-                            <th>所在地区</th>
-                            <th>注册时间</th>
-                            <th>最近登录时间</th>
-							<th>禁用状态</th>
-                            <th>登录次数</th>
+                            <th>被举报人</th>
+                            <th>类型</th>
+                            <th>摘要</th>
+                            <th>举报原因</th>
+                            <th>详细理由</th>
+							<th>举报人</th>
+                            <th>举报时间</th>
+                            <th>通知时间</th>
+                            <th>处理状态</th>
+                            <th>状态</th>
                             <th>操作</th>
                         </tr>
-                        <tr>
-                            <td class="tc">1</td>
-                            <td><a target="_blank" href="#" title="发哥经典">查无此人</a></td>
-                            <td>男</td>
-                            <td>15800000012</td>
-                            <td>广东省广州市</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>2014-03-15 21:11:01</td>
-                            <td>否</td>
-                            <td>50</td>
-                            <td>
-                                <a class="link-update" href="#">查看</a>
-                            </td>
+                        <%                        	
+                        	List<ReportBean> list = adminService.findAllReport();
+                        	if(list.isEmpty()){
+                        %>
+                        <tr align="center">
+                        	<td colspan="8" style="padding: 20px;"><strong>没有消息记录！</strong></td>    
                         </tr>
-                        
+                        <%
+                        	}else{
+                        		for(int i =0;i<list.size();i++){
+                        			ReportBean rBean=list.get(i);
+                        			request.setAttribute("rBean", rBean);	
+                        			String id =  rBean.getUser_id();//举报人id
+                        			UserBean uBean= uService.findUserInfo(id);
+                        			request.setAttribute("uBean", uBean);
+                        %>
+                        <tr>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${rBean.author_id}">${rBean.username }</a></td>
+                            <td>${rBean.type}</td>
+                            <td>${rBean.content}</td>
+                            <td>${rBean.simple_reason}</td>
+                            <td>${rBean.all_reason}</td>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}">${uBean.username }</a></td>
+                            <td>${rBean.add_time}</td>
+                            <c:if test="${rBean.status1=='未处理'}">
+                            <td>NULL</td>
+                            <td>未处理</td>
+                            <td>正常</td>
+                            <td>
+                                <a class="link-update" href="${rBean.url}" target="_blank">查看</a>
+                                <a class="link-update" onclick="read('${rBean.id}')">已阅</a>  
+                                <a class="link-update" onclick="Hide('${rBean.type},${rBean.content_id},${rBean.id}')">屏蔽</a>
+                                <script type="text/javascript">
+                                	function read(id) {
+										var rid=id;//举报id
+										var s = confirm("审核不通过，该文章/评论未发现违规？");
+										if (s) {
+											$.ajax({
+												type:"POST",//用post方式传输
+												dataType:"json",//数据格式:JSON
+												url:"/ThreeBlog_V1.0/AdminServlet?method=ReadReport" ,//目标地址
+												data:{"id":rid},
+												error:function(){
+													alert("出错！请稍后再试...");
+												},
+												success:function(data){
+													if (data) {
+														window.location.reload();
+													} else {
+														alert("已阅失败，请稍后再试...");		
+														window.location.reload();
+													}
+												}
+											});
+										}
+									}
+                                	
+                                	function Hide(type,id1,id2) {
+										var ctype=type;//目标举报类型
+										var cid=id1;//目标id
+										var rid=id2;//举报id
+										var s = confirm("你确定屏蔽此文章/评论吗？");
+										if (s) {
+											$.ajax({
+												type:"POST",//用post方式传输
+												dataType:"json",//数据格式:JSON
+												url:"/ThreeBlog_V1.0/AdminServlet?method=HideTarget" ,//目标地址
+												data:{"rid":rid,"cid":cid,"ctype":ctype},
+												error:function(){
+													alert("出错！请稍后再试...");
+												},
+												success:function(data){
+													if (data) {
+														alert("屏蔽成功");		
+														window.location.reload();
+													} else {
+														alert("屏蔽失败，请稍后再试...");		
+														window.location.reload();
+													}
+												}
+											});
+										}
+									}
+                                </script>
+                            </td>
+                        	</c:if>
+                        	<c:if test="${rBean.status1=='已处理'}">
+                            <td>${rBean.notice_time}</td>
+                            <td>已处理</td>
+                            <td>${rBean.status2 }</td>
+                            <td>
+                                <a class="link-update" href="${rBean.url}" target="_blank">查看</a>
+                                <a class="link-update" onclick="read('${rBean.id}')">已阅</a>  
+                                <a class="link-update" onclick="Hide('${rBean.type},${rBean.content_id},${rBean.id}')">屏蔽</a>
+                                <script type="text/javascript">
+                                	function read(id) {
+										var rid=id;//举报id
+										var s = confirm("审核不通过，该文章/评论未发现违规？");
+										if (s) {
+											$.ajax({
+												type:"POST",//用post方式传输
+												dataType:"json",//数据格式:JSON
+												url:"/ThreeBlog_V1.0/AdminServlet?method=ReadReport" ,//目标地址
+												data:{"id":rid},
+												error:function(){
+													alert("出错！请稍后再试...");
+												},
+												success:function(data){
+													if (data) {
+														window.location.reload();
+													} else {
+														alert("已阅失败，请稍后再试...");		
+														window.location.reload();
+													}
+												}
+											});
+										}
+									}
+                                	
+                                	function Hide(type,id1,id2) {
+										var ctype=type;//目标举报类型
+										var cid=id1;//目标id
+										var rid=id2;//举报id
+										var s = confirm("你确定屏蔽此文章/评论吗？");
+										if (s) {
+											$.ajax({
+												type:"POST",//用post方式传输
+												dataType:"json",//数据格式:JSON
+												url:"/ThreeBlog_V1.0/AdminServlet?method=HideTarget" ,//目标地址
+												data:{"rid":rid,"cid":cid,"ctype":ctype},
+												error:function(){
+													alert("出错！请稍后再试...");
+												},
+												success:function(data){
+													if (data) {
+														alert("屏蔽成功");		
+														window.location.reload();
+													} else {
+														alert("屏蔽失败，请稍后再试...");		
+														window.location.reload();
+													}
+												}
+											});
+										}
+									}
+                                </script>
+                            </td>
+                        	</c:if>
+                        </tr>
+                        <% }}%>
                     </table>
             </div>
         </div>
+        
     </div>
     <!--/main-->
 </div>

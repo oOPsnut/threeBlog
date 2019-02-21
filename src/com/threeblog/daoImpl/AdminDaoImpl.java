@@ -1,10 +1,12 @@
 package com.threeblog.daoImpl;
 
 import java.util.Date;
+import java.util.List;
 import java.sql.SQLException;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.threeblog.dao.AdminDao;
@@ -90,6 +92,29 @@ public class AdminDaoImpl implements AdminDao {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
 		String sql="select count(*) from t_admin where phone=? ";
 		Long result = (Long) runner.query(sql,new ScalarHandler(),phone);
+		return result>0;
+	}
+
+	@Override
+	public boolean addAdmin(AdminBean admin) throws SQLException {
+		QueryRunner runner=new QueryRunner(JDBCUtil.getDataSource());
+		String sql="insert into t_admin(id,phone,license_code) values(?,?,?);";
+		int result = runner.update(sql,admin.getId(),admin.getPhone(),admin.getLicense_code());
+		return result>0;
+	}
+
+	@Override
+	public List<AdminBean> findAllAdmin() throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="select * from t_admin order by register_time DESC";
+		return runner.query(sql, new BeanListHandler<AdminBean>(AdminBean.class));
+	}
+
+	@Override
+	public boolean DeleteAdmin(String id) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="delete from t_admin where id=?";
+		int result = runner.update(sql,id);  
 		return result>0;
 	}
 

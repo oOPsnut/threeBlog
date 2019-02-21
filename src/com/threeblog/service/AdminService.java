@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import com.threeblog.domain.AdminBean;
 import com.threeblog.domain.NoticeBean;
+import com.threeblog.domain.ReportBean;
 
 /**
  * 这是针对于管理员的业务处理规范
@@ -160,4 +161,80 @@ public interface AdminService {
 	 * @throws SQLException
 	 */
 	boolean checkAdminPhone(String phone) throws SQLException;
+
+	/**
+	 * 添加管理员
+	 * @param admin
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean addAdmin(AdminBean admin)throws SQLException;
+	
+	/**
+	 * 查找所有管理员
+	 * @return
+	 * @throws SQLException
+	 */
+	List<AdminBean> findAllAdmin()throws SQLException;
+
+	/**
+	 * 删除管理员
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean DeleteAdmin(String id)throws SQLException;
+	
+	/**
+	 * 查找所有举报信息
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ReportBean> findAllReport()throws SQLException;
+	
+	/**
+	 * 查找所有举报信息(举报消息)
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ReportBean> findAllReportMessage()throws SQLException;
+	
+	/**
+	 * 查找所有举报信息(反馈消息)
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ReportBean> findAllRenewMessage()throws SQLException;
+	
+	/**
+	 * 计算消息数目（举报消息）
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countReports()throws SQLException;
+	
+	/**
+	 * 计算消息数目（反馈消息）
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countRenews()throws SQLException;
+
+	/**
+	 * 更新举报消息（已阅）
+	 * @param id
+	 * @param notice_time
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean ReadReport(String id,Date notice_time)throws SQLException;
+
+	/**
+	 * 更新举报消息（屏蔽）
+	 * @param rid
+	 * @param notice_time
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean changeReport(String rid,Date notice_time)throws SQLException;
 }

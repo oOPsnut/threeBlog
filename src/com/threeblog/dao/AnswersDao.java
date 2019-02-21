@@ -67,4 +67,12 @@ public interface AnswersDao {
 	 * @throws SQLException
 	 */
 	boolean UpdateAnswerZan(String answer_id, int zan)throws SQLException;
+	
+	/**
+	 * 屏蔽回复
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean HideAnswer(String cid)throws SQLException;
 }

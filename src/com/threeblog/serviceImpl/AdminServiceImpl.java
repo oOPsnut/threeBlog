@@ -6,12 +6,15 @@ import java.sql.SQLException;
 
 import com.threeblog.dao.AdminDao;
 import com.threeblog.dao.NoticeDao;
+import com.threeblog.dao.ReportDao;
 import com.threeblog.dao.UserDao;
 import com.threeblog.daoImpl.AdminDaoImpl;
 import com.threeblog.daoImpl.NoticeDaoImpl;
+import com.threeblog.daoImpl.ReportDaoImpl;
 import com.threeblog.daoImpl.UserDaoImpl;
 import com.threeblog.domain.AdminBean;
 import com.threeblog.domain.NoticeBean;
+import com.threeblog.domain.ReportBean;
 import com.threeblog.service.AdminService;
 
 public class AdminServiceImpl implements AdminService {
@@ -157,6 +160,86 @@ public class AdminServiceImpl implements AdminService {
 		AdminDao dao = new AdminDaoImpl();
 		boolean adminPhone = dao.checkAdminPhone(phone);
 		return adminPhone;
+	}
+
+	@Override
+	public boolean addAdmin(AdminBean admin) throws SQLException {
+		// 添加管理员
+		AdminDao dao = new AdminDaoImpl();
+		boolean addAdmin = dao.addAdmin(admin);
+		return addAdmin;
+	}
+
+	@Override
+	public List<AdminBean> findAllAdmin() throws SQLException {
+		// 查找所有管理员
+		AdminDao dao = new AdminDaoImpl();
+		List<AdminBean> list = dao.findAllAdmin();
+		return list;
+	}
+
+	@Override
+	public boolean DeleteAdmin(String id) throws SQLException {
+		// 删除管理员
+		AdminDao dao = new AdminDaoImpl();
+		boolean admin = dao.DeleteAdmin(id);
+		return admin;
+	}
+
+	@Override
+	public List<ReportBean> findAllReport() throws SQLException {
+		// 查找所有举报信息
+		ReportDao dao = new ReportDaoImpl();
+		List<ReportBean> list = dao.findAllReport();
+		return list;
+	}
+
+	@Override
+	public List<ReportBean> findAllReportMessage() throws SQLException {
+		// 查找所有举报信息(举报消息)
+		ReportDao dao = new ReportDaoImpl();
+		List<ReportBean> list = dao.findAllReportMessage();
+		return list;
+	}
+
+	@Override
+	public List<ReportBean> findAllRenewMessage() throws SQLException {
+		// 查找所有举报信息(反馈消息)
+		ReportDao dao = new ReportDaoImpl();
+		List<ReportBean> list = dao.findAllRenewMessage();
+		return list;
+	}
+
+	@Override
+	public Long countReports() throws SQLException {
+		// 计算消息数目（举报消息）
+		ReportDao dao  = new ReportDaoImpl();
+		Long reports = dao.countReports();
+		return reports;
+	}
+
+	@Override
+	public Long countRenews() throws SQLException {
+		// 计算消息数目（反馈消息）
+		ReportDao dao = new ReportDaoImpl();
+		Long renews = dao.countRenews();
+		return renews;
+	}
+
+	@Override
+	public boolean ReadReport(String id,Date notice_time) throws SQLException {
+		// 更新举报消息（已阅）
+		ReportDao dao = new ReportDaoImpl();
+		boolean report = dao.ReadReport(id,notice_time);
+		return report;
+	}
+
+	@Override
+	public boolean changeReport(String rid,Date notice_time) throws SQLException {
+		// 更新举报消息（屏蔽）
+		ReportDao dao = new ReportDaoImpl();
+		boolean report = dao.changeReport(rid,notice_time);
+		return report;
 	}
 
 }
