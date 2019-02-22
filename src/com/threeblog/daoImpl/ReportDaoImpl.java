@@ -106,7 +106,7 @@ public class ReportDaoImpl implements ReportDao {
 	@Override
 	public Long countRenews() throws SQLException {
 		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="select count(id) as rid from t_report where status2='已处理' and status3='等待审核'";
+		String sql="select count(id) as rid from t_report where status1='已处理' and status3='等待审核'";
 		Long count =(Long) runner.query(sql,new ScalarHandler());
 		return count;
 	}
@@ -114,7 +114,7 @@ public class ReportDaoImpl implements ReportDao {
 	@Override
 	public boolean ReadReport(String id,Date notice_time) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="update t_report set status1='已处理' and notice_time=? where id=?";
+		String sql="update t_report set status1='已处理' , notice_time=? where id=?";
 		int result = runner.update(sql,notice_time,id);
 		return result>0;
 	}
@@ -122,9 +122,33 @@ public class ReportDaoImpl implements ReportDao {
 	@Override
 	public boolean changeReport(String rid,Date notice_time) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="update t_report set status1='已处理' and status2='屏蔽' and notice_time=? where id=?";
+		String sql="update t_report set status1='已处理' , status2='屏蔽' , notice_time=? where id=?";
 		int result = runner.update(sql,notice_time,rid);
 		return result>0;
+	}
+
+	@Override
+	public boolean PassRenew(String rid, Date notice_time) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_report set status3='审核通过' , notice_time=? where id=?";
+		int result = runner.update(sql,notice_time,rid);
+		return result>0;
+	}
+
+	@Override
+	public boolean NotPassRenew(String id, Date notice_time) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="update t_report set status3='审核不通过' , notice_time=? where id=?";
+		int result = runner.update(sql,notice_time,id);
+		return result>0;
+	}
+
+	@Override
+	public Long countArticleReportByCid(String cid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(id) AS rnum FROM t_report WHERE content_id=?";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),cid);
+		return count;
 	}
 	
 

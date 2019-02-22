@@ -1,3 +1,6 @@
+<%@page import="com.threeblog.domain.ArticleBean"%>
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
 <%@page import="com.threeblog.domain.AdminBean"%>
 <%@page import="com.threeblog.domain.UserBean"%>
@@ -16,6 +19,7 @@
     <title>ThreeBlog后台管理中心</title>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/main.css"/>
+    <script src="${pageContext.request.contextPath}/js/jquery-1.min.js"></script>
 </head>
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
@@ -113,7 +117,7 @@
                         	if(list.isEmpty()){
                         %>
                         <tr align="center">
-                        	<td colspan="8" style="padding: 20px;"><strong>没有消息记录！</strong></td>    
+                        	<td colspan="11" style="padding: 20px;"><strong>没有举报记录！</strong></td>    
                         </tr>
                         <%
                         	}else{
@@ -139,7 +143,7 @@
                             <td>
                                 <a class="link-update" href="${rBean.url}" target="_blank">查看</a>
                                 <a class="link-update" onclick="read('${rBean.id}')">已阅</a>  
-                                <a class="link-update" onclick="Hide('${rBean.type},${rBean.content_id},${rBean.id}')">屏蔽</a>
+                                <a class="link-update" onclick="Hide('${rBean.type}','${rBean.content_id}','${rBean.id}')">屏蔽</a>
                                 <script type="text/javascript">
                                 	function read(id) {
 										var rid=id;//举报id
@@ -198,66 +202,60 @@
                             <td>${rBean.notice_time}</td>
                             <td>已处理</td>
                             <td>${rBean.status2 }</td>
-                            <td>
-                                <a class="link-update" href="${rBean.url}" target="_blank">查看</a>
-                                <a class="link-update" onclick="read('${rBean.id}')">已阅</a>  
-                                <a class="link-update" onclick="Hide('${rBean.type},${rBean.content_id},${rBean.id}')">屏蔽</a>
-                                <script type="text/javascript">
-                                	function read(id) {
-										var rid=id;//举报id
-										var s = confirm("审核不通过，该文章/评论未发现违规？");
-										if (s) {
-											$.ajax({
-												type:"POST",//用post方式传输
-												dataType:"json",//数据格式:JSON
-												url:"/ThreeBlog_V1.0/AdminServlet?method=ReadReport" ,//目标地址
-												data:{"id":rid},
-												error:function(){
-													alert("出错！请稍后再试...");
-												},
-												success:function(data){
-													if (data) {
-														window.location.reload();
-													} else {
-														alert("已阅失败，请稍后再试...");		
-														window.location.reload();
-													}
-												}
-											});
-										}
-									}
-                                	
-                                	function Hide(type,id1,id2) {
-										var ctype=type;//目标举报类型
-										var cid=id1;//目标id
-										var rid=id2;//举报id
-										var s = confirm("你确定屏蔽此文章/评论吗？");
-										if (s) {
-											$.ajax({
-												type:"POST",//用post方式传输
-												dataType:"json",//数据格式:JSON
-												url:"/ThreeBlog_V1.0/AdminServlet?method=HideTarget" ,//目标地址
-												data:{"rid":rid,"cid":cid,"ctype":ctype},
-												error:function(){
-													alert("出错！请稍后再试...");
-												},
-												success:function(data){
-													if (data) {
-														alert("屏蔽成功");		
-														window.location.reload();
-													} else {
-														alert("屏蔽失败，请稍后再试...");		
-														window.location.reload();
-													}
-												}
-											});
-										}
-									}
-                                </script>
-                            </td>
+                            <td>${rBean.status3 }</td>
                         	</c:if>
                         </tr>
                         <% }}%>
+                    </table>
+            </div>
+        </div>
+        
+        <div class="result-wrap">
+            <div class="result-title">
+                <h1>文章被举报次数</h1>
+            </div>
+            <div class="result-content">             
+				<table class="result-tab" width="100%">
+                        <tr>
+                            <th>被举报人</th>
+                            <th>被举报文章</th>
+                            <th>被举报次数</th>							
+                            <th>目标状态</th>
+                            <th>操作</th>
+                        </tr>
+                        <%
+                        	ArticleService aService = new ArticleServiceImpl();
+                        	List<ArticleBean> articleBeans = aService.findAllACover();
+                     		if(articleBeans.isEmpty()){
+                        %>
+                       <tr align="center">
+                       		<td colspan="5" style="padding: 20px;"><strong>没有举报记录！</strong></td>    
+                       </tr>
+                       <%
+                            }else{
+                           		for(int i =0;i<articleBeans.size();i++){
+                           			ArticleBean aBean=articleBeans.get(i);
+                           			String aid = aBean.getId();//文章id
+	                          		int countArticleReport =  Integer.valueOf( adminService.countArticleReportByCid(aid).toString());//文章举报数
+	                          		if(countArticleReport>0){
+	                          			ArticleBean articleBean = aService.findArticle(aid);
+	                          			request.setAttribute("aBean", articleBean);
+	                          			request.setAttribute("CAR", countArticleReport);
+                           			}
+                           		}
+                           	}
+                       %>
+                       <c:if test="${not empty CAR }">
+                        <tr>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${aBean.author_id}">${aBean.author }</a></td>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" >${aBean.title }</a></td>
+                            <td>${CAR}</td>
+                            <td>${aBean.status}</td>
+                            <td>
+                                <a class="link-update" href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" target="_blank">查看</a>
+                            </td>
+                        </tr>
+                        </c:if>
                     </table>
             </div>
         </div>

@@ -75,4 +75,12 @@ public interface AnswersDao {
 	 * @throws SQLException
 	 */
 	boolean HideAnswer(String cid)throws SQLException;
+	
+	/**
+	 * 回复反馈（通过）
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenewAnswer(String cid)throws SQLException;
 }

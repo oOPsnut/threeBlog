@@ -59,4 +59,12 @@ public interface CommentDao {
 	 * @throws SQLException
 	 */
 	boolean HideComment(String cid)throws SQLException;
+	
+	/**
+	 * 留言反馈（通过）
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenewComment(String cid)throws SQLException;
 }

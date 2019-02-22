@@ -588,4 +588,28 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	boolean HideAnswer(String cid)throws SQLException;
+
+	/**
+	 * 文章反馈（通过）
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenewArticle(String cid)throws SQLException;
+
+	/**
+	 * 留言反馈（通过）
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenewComment(String cid)throws SQLException;
+
+	/**
+	 * 回复反馈（通过）
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenewAnswer(String cid)throws SQLException;
 }

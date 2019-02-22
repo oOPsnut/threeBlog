@@ -351,4 +351,12 @@ public interface ArticleDao {
 	 * @throws SQLException
 	 */
 	List<ArticleBean> findAllArticleByType(String article_type) throws SQLException;
+	
+	/**
+	 * 文章反馈（通过）
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenewArticle(String cid)throws SQLException;
 }

@@ -144,13 +144,13 @@
             <div class="result-content">             
 				<table class="result-tab" width="100%">
                         <tr>
-                            <th>被举报人</th>
-                            <th>类型</th>
+                            <th>反馈人</th>
+                            <th>被举报类型</th>
                             <th>摘要</th>
-                            <th>举报原因</th>
-                            <th>详细理由</th>
+                            <th>被举报原因</th>
+                            <th>被举报详细理由</th>
 							<th>反馈原因</th>
-                            <th>举报时间</th>
+                            <th>被举报时间</th>
                             <th>操作</th>
                         </tr>
                         <%

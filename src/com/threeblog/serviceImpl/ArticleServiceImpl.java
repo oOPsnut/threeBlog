@@ -611,6 +611,30 @@ public class ArticleServiceImpl implements ArticleService {
 		return hideAnswer;
 	}
 
+	@Override
+	public boolean PassRenewArticle(String cid) throws SQLException {
+		// 文章反馈（通过）
+		ArticleDao dao = new ArticleDaoImpl();
+		boolean article = dao.PassRenewArticle(cid);
+		return article;
+	}
+
+	@Override
+	public boolean PassRenewComment(String cid) throws SQLException {
+		// 留言反馈（通过）
+		CommentDao dao = new CommentDaoImpl();
+		boolean comment = dao.PassRenewComment(cid);
+		return comment;
+	}
+
+	@Override
+	public boolean PassRenewAnswer(String cid) throws SQLException {
+		// 回复反馈（通过）
+		AnswersDao dao =new AnswersDaoImpl();
+		boolean answer = dao.PassRenewAnswer(cid);
+		return answer;
+	}
+
 	
 	
 }

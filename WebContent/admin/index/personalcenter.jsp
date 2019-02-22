@@ -1,3 +1,7 @@
+<%@page import="com.threeblog.service.AdminService"%>
+<%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
+<%@page import="com.threeblog.serviceImpl.UserServiceImpl"%>
+<%@page import="com.threeblog.service.UserService"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.sun.java.swing.plaf.windows.resources.windows"%>
@@ -18,7 +22,14 @@
 <%
 	AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");
 	if(adminBean!=null){
-		
+		UserService uService= new UserServiceImpl();
+    	AdminService adminService = new AdminServiceImpl();
+		int countReports =  Integer.valueOf( adminService.countReports().toString());//举报数
+		int countRenews =  Integer.valueOf( adminService.countRenews().toString());//反馈数
+		int countMessages=countRenews+countReports;//消息总数
+		request.setAttribute("countMessages", countMessages);
+		request.setAttribute("countReports", countReports);
+		request.setAttribute("countRenews", countRenews);
 %>
 <body>
 <div class="topbar-wrap white">
@@ -53,9 +64,9 @@
                         <li><a href="${pageContext.request.contextPath}/admin/index/user_manage.jsp"><i class="icon-font">&#xe003;</i>用户管理</a></li>
                         <li><a href="${pageContext.request.contextPath}/admin/index/article_classify.jsp"><i class="icon-font">&#xe006;</i>分类管理</a></li>
 						<li><a href="${pageContext.request.contextPath}/admin/index/photo_manage.jsp"><i class="icon-font">&#xe033;</i>图片管理</a></li>
-						<li><a href="${pageContext.request.contextPath}/admin/index/messagecenter.jsp"><i class="icon-font">&#xe004;</i>消息管理<span id="messageNum">1</span></a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/index/reportcenter.jsp"><i class="icon-font">&#xe00a;</i>举报管理<span id="messageNum">1</span></a></li>
-                        <li><a href="${pageContext.request.contextPath}/admin/index/renew.jsp"><i class="icon-font">&#xe00e;</i>恢复管理<span id="messageNum">1</span></a></li>
+						<li><a href="${pageContext.request.contextPath}/admin/index/messagecenter.jsp"><i class="icon-font">&#xe004;</i>消息管理<span id="messageNum">${countMessages}</span></a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/index/reportcenter.jsp"><i class="icon-font">&#xe00a;</i>举报管理<span id="messageNum">${countReports}</span></a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/index/renew.jsp"><i class="icon-font">&#xe00e;</i>恢复管理<span id="messageNum">${countRenews}</span></a></li>
                     </ul>
                 </li>
                 <li>

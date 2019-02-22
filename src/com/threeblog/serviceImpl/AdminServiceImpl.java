@@ -242,4 +242,28 @@ public class AdminServiceImpl implements AdminService {
 		return report;
 	}
 
+	@Override
+	public boolean PassRenew(String rid, Date notice_time) throws SQLException {
+		// 更新举报消息（反馈通过）
+		ReportDao dao = new ReportDaoImpl();
+		boolean renew = dao.PassRenew(rid, notice_time);
+		return renew;
+	}
+
+	@Override
+	public boolean NotPassRenew(String id, Date notice_time) throws SQLException {
+		// 更新举报消息（反馈不通过）
+		ReportDao dao = new ReportDaoImpl();
+		boolean notrenew = dao.NotPassRenew(id, notice_time);
+		return notrenew;
+	}
+
+	@Override
+	public Long countArticleReportByCid(String cid) throws SQLException {
+		// 计算目标的被举报数
+		ReportDao dao = new ReportDaoImpl();
+		Long reportByCid = dao.countArticleReportByCid(cid);
+		return reportByCid;
+	}
+
 }

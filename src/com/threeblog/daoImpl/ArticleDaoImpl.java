@@ -187,7 +187,7 @@ public class ArticleDaoImpl implements ArticleDao {
 	@Override
 	public List<ArticleBean> getArticlesByUid(String uid) throws SQLException {
 		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="select * from t_article where author_id=? order by publish_date DESC";
+		String sql="select * from t_article where author_id=?  order by publish_date DESC";
 		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),uid);
 	}
 
@@ -378,6 +378,14 @@ public class ArticleDaoImpl implements ArticleDao {
 		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
 		String sql="SELECT * FROM t_article where  id IN(SELECT article_id FROM t_articletype WHERE article_type=?) order by publish_date DESC ";
 		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class),article_type);
+	}
+
+	@Override
+	public boolean PassRenewArticle(String cid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql = "update t_article set status='正常' where id=?;";
+		int result = runner.update(sql, cid);
+		return result>0;
 	}
 
 

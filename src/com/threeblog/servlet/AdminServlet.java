@@ -886,6 +886,7 @@ public class AdminServlet extends BaseServlet {
 		String cid = request.getParameter("cid");//目标id
 		String ctype = request.getParameter("ctype");//目标类型
 		
+		
 		//通知时间
 		Date now=new Date();
 		Date notice_time=new Date(now.getTime());
@@ -931,8 +932,85 @@ public class AdminServlet extends BaseServlet {
 			} else {
 				response.getWriter().println(false);//失败
 			}	
-		}
-
+		}	
+	}
+	
+	
+	//反馈信息（通过）
+	public void PassRenew(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
 		
+		//获取数据
+		String rid = request.getParameter("rid");//举报id
+		String cid = request.getParameter("cid");//目标id
+		String ctype = request.getParameter("ctype");//目标类型
+		
+		//通知时间
+		Date now=new Date();
+		Date notice_time=new Date(now.getTime());
+		//调用服务
+		ArticleService aService = new ArticleServiceImpl();
+		AdminService adminService = new AdminServiceImpl();
+		if (ctype.equals("举报文章")) {
+			//举报目标是文章
+			boolean r = adminService.PassRenew(rid,notice_time);
+			if (r) {
+				boolean article = aService.PassRenewArticle(cid);
+				if (article) {
+					response.getWriter().println(true);//成功					
+				} else {
+					response.getWriter().println(false);//失败
+				}
+			} else {
+				response.getWriter().println(false);//失败
+			}	
+		} else if(ctype.equals("举报留言")){
+			//举报目标是留言
+			boolean r = adminService.PassRenew(rid,notice_time);
+			if (r) {
+				boolean comment = aService.PassRenewComment(cid);
+				if (comment) {
+					response.getWriter().println(true);//成功					
+				} else {
+					response.getWriter().println(false);//失败
+				}
+			} else {
+				response.getWriter().println(false);//失败
+			}			
+		}else if(ctype.equals("举报回复")) {
+			//举报目标是回复
+			boolean r = adminService.PassRenew(rid,notice_time);
+			if (r) {
+				boolean answer = aService.PassRenewAnswer(cid);
+				if (answer) {
+					response.getWriter().println(true);//成功					
+				} else {
+					response.getWriter().println(false);//失败
+				}
+			} else {
+				response.getWriter().println(false);//失败
+			}	
+		}	
+	}
+	
+	
+	//反馈信息（不通过）
+	public void NotPassRenew(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
+		
+		//获取数据
+		String id = request.getParameter("id");
+		
+		//通知时间
+		Date now=new Date();
+		Date notice_time=new Date(now.getTime());
+		//调用服务
+		AdminService adminService = new AdminServiceImpl();
+		boolean r = adminService.NotPassRenew(id,notice_time);
+
+		//返回数据
+		if (r) {
+			response.getWriter().println(true);//成功
+		} else {
+			response.getWriter().println(false);//失败
+		}
 	}
 }

@@ -237,4 +237,30 @@ public interface AdminService {
 	 * @throws SQLException
 	 */
 	boolean changeReport(String rid,Date notice_time)throws SQLException;
+
+	/**
+	 * 更新举报消息（反馈通过）
+	 * @param rid
+	 * @param notice_time
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean PassRenew(String rid, Date notice_time)throws SQLException;
+
+	/**
+	 * 更新举报消息（反馈不通过）
+	 * @param id
+	 * @param notice_time
+	 * @return
+	 * @throws SQLException
+	 */
+	boolean NotPassRenew(String id, Date notice_time)throws SQLException;
+	
+	/**
+	 * 计算目标的被举报数
+	 * @param cid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countArticleReportByCid(String cid)throws SQLException;
 }
