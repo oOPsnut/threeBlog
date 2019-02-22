@@ -20,11 +20,12 @@
         <div id="introduce_right">
         <%
         	UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
-        	String uid = userBean.getId();
-        	UserService uService = new UserServiceImpl();
-        	ArticleService aService = new ArticleServiceImpl();
-        	List<CollectBean> collects = aService.getCollectByUid(uid);
-        	if(collects.isEmpty()){
+        	if(userBean!=null){
+	        	String uid = userBean.getId();
+	        	UserService uService = new UserServiceImpl();
+	        	ArticleService aService = new ArticleServiceImpl();
+	        	List<CollectBean> collects = aService.getCollectByUid(uid);
+	        	if(collects.isEmpty()){
         %>
         	
         		<div class="introduce_right_articles">
@@ -110,7 +111,9 @@
                 </div>
             </div>
            </c:if>
-            <%}}%>
+            <%}}}else{
+                	response.sendRedirect(request.getContextPath()+"/jsp/login/login.jsp");
+                }%>
             
             
             

@@ -8,18 +8,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 			UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
-			String uid = userBean.getId();
-			UserService uService = new UserServiceImpl();
-			int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
-			int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
-			int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
-			int countZans =  Integer.valueOf( uService.countZans(uid).toString());//点赞消息数
-			int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
-			request.setAttribute("countAll", countAll);
-			request.setAttribute("countReviews", countReviews);
-    		request.setAttribute("countFollows", countFollows);
-    		request.setAttribute("countCollects", countCollects);
-    		request.setAttribute("countZans", countZans);
+			if(userBean!=null){
+				String uid = userBean.getId();
+				UserService uService = new UserServiceImpl();
+				int countReviews =  Integer.valueOf( uService.countReviews(uid).toString());//评论消息数
+				int countFollows =  Integer.valueOf( uService.countFollows(uid).toString());//关注消息数
+				int countCollects =  Integer.valueOf( uService.countCollects(uid).toString());//收藏消息数
+				int countZans =  Integer.valueOf( uService.countZans(uid).toString());//点赞消息数
+				int countAll=countReviews+countFollows+countCollects+countZans;//消息总数
+				request.setAttribute("countAll", countAll);
+				request.setAttribute("countReviews", countReviews);
+	    		request.setAttribute("countFollows", countFollows);
+	    		request.setAttribute("countCollects", countCollects);
+	    		request.setAttribute("countZans", countZans);
 %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -287,3 +288,6 @@ function resetForm() {
 <!--底部end-->
 </body>
 </html>
+<%}else{
+	response.sendRedirect(request.getContextPath()+"/jsp/login/login.jsp");
+}%>

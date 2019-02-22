@@ -22,9 +22,11 @@
       		//作者是指此中心的用户
       		String uid =  request.getParameter("uid");//作者id
         	UserService uService = new UserServiceImpl();
-        	ArticleService aService = new ArticleServiceImpl();
-        	List<CollectBean> collects = aService.getCollectByUid(uid);
-        	if(collects.isEmpty()){
+        	UserBean finduBean = uService.findUserInfo(uid);//找出作者的信息
+        	if(finduBean!=null){
+	        	ArticleService aService = new ArticleServiceImpl();
+	        	List<CollectBean> collects = aService.getCollectByUid(uid);
+	        	if(collects.isEmpty()){
         %>
         	
         		<div class="introduce_right_articles">
@@ -81,7 +83,10 @@
             <%}}%>
             
             
-            
+            <%}else{
+      		//id不存在
+      		response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+      } %> 
             
         </div>
 <!--内容end-->

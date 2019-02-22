@@ -14,6 +14,7 @@
 		String uid =  request.getQueryString().substring(3);
     	UserService uService = new UserServiceImpl();
     	UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
+    	if(uBean!=null){
     	request.setAttribute("uBean", uBean);
     	 UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");//本登录用户
     	if(userBean!=null){
@@ -503,3 +504,7 @@ $(function() {
 <!--底部end-->
 </body>
 </html>
+<%	}else{
+		//id不存在
+		response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+}%>

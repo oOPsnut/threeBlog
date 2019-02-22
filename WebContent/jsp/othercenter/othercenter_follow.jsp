@@ -26,9 +26,11 @@
 	        	//作者是指此中心的用户
 				String uid =  request.getParameter("uid");//作者id
         		UserService uService = new UserServiceImpl();
-        		ArticleService aService = new ArticleServiceImpl();
-        		List<FollowBean> follows = uService.getFollowingsByUid(uid);
-        		if(follows.isEmpty()){   		
+        		UserBean finduBean = uService.findUserInfo(uid);//找出作者的信息
+            	if(finduBean!=null){
+	        		ArticleService aService = new ArticleServiceImpl();
+	        		List<FollowBean> follows = uService.getFollowingsByUid(uid);
+	        		if(follows.isEmpty()){   		
         	%>
         		<!--列表middle-->
                 <div class="r_f_middle">
@@ -96,7 +98,10 @@
                 </div>
                 
                 <%}} %>
-                
+                <%}else{
+      		//id不存在
+      		response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+      } %> 
             </div>
             
         </div>

@@ -30,12 +30,13 @@
 		String uid =  request.getParameter("uid");//作者id
 		UserService uService = new UserServiceImpl();
     	UserBean uBean = uService.findUserInfo(uid);//找出作者的信息
-    	request.setAttribute("uBean", uBean);
-    	
-		//在博文表查找ta的所有博文及其信息，listBean（按照时间降序）
-		ArticleService aService = new ArticleServiceImpl();
-		List<ArticleBean> aBeans =	aService.getArticlesByUid(uid);
-		if(aBeans.isEmpty()){
+    	if(uBean!=null){
+	    	request.setAttribute("uBean", uBean);
+	    	
+			//在博文表查找ta的所有博文及其信息，listBean（按照时间降序）
+			ArticleService aService = new ArticleServiceImpl();
+			List<ArticleBean> aBeans =	aService.getArticlesByUid(uid);
+			if(aBeans.isEmpty()){
 		%>
         		<div class="introduce_right_articles">
             		<p style="margin-top: 120px; margin-left: 250px;"><strong>Ta还没有发表过文章！</strong></p>
@@ -563,7 +564,10 @@
                 </div>
             </div>
             </c:if>
-           
+          <%}else{
+      		//id不存在
+      		response.sendRedirect(request.getContextPath()+"/jsp/error/error.jsp");
+      } %> 
         </div>
 </body>
 </html>

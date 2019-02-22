@@ -8,6 +8,10 @@
 <%@page import="com.threeblog.domain.UserBean"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	UserBean userBean =(UserBean) request.getSession().getAttribute("userBean");
+	if(userBean!=null){
+%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -26,7 +30,6 @@
                         <th width="20%">处理状态</th>
                         </tr>
                         <%
-	                    	UserBean userBean =(UserBean) request.getSession().getAttribute("userBean");
 	                    	String uid = userBean.getId();//用户id
 	                    	ArticleService aService=new ArticleServiceImpl();
 	                    	UserService uService = new UserServiceImpl();
@@ -101,3 +104,6 @@
            
 </body>
 </html>
+<%}else{
+	response.sendRedirect(request.getContextPath()+"/jsp/login/login.jsp");
+}%>

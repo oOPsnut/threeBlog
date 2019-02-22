@@ -55,13 +55,21 @@ public class LoginFilter implements Filter {
 	
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
 		
-//		HttpServletResponse response=(HttpServletResponse) resp;
-//		HttpServletRequest request =(HttpServletRequest) req;
-//		
-//		//获取页面访问路径
-//		String path = request.getServletPath();
-//		System.out.println(path);
-//		
+		HttpServletResponse response=(HttpServletResponse) resp;
+		HttpServletRequest request =(HttpServletRequest) req;
+		
+/*		System.out.println("进来了");
+		//获取页面访问路径
+		String path = request.getServletPath();
+		System.out.println("path:"+path);
+		
+		String currentURL = request.getRequestURI();
+		String ctxPath = request.getContextPath();
+		// 除掉项目名称时访问页面当前路径
+		String targetURL = currentURL.substring(ctxPath.length());
+		System.out.println("currentURL:"+currentURL);
+		System.out.println("ctxPath:"+ctxPath);
+		System.out.println("targetURL:"+targetURL);*/
 //		//获取session中userBean，若有，则已经登录，直接放行
 //		UserBean userBean = (UserBean)request.getSession().getAttribute("userBean");
 //		if (userBean!=null) {

@@ -24,11 +24,12 @@
                 </div>
         	<%
         		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
-        		String uid = userBean.getId();
-        		UserService uService = new UserServiceImpl();
-        		ArticleService aService = new ArticleServiceImpl();
-        		List<FollowBean> follows = uService.getFollowingsByUid(uid);
-        		if(follows.isEmpty()){   		
+        		if(userBean!=null){
+	        		String uid = userBean.getId();
+	        		UserService uService = new UserServiceImpl();
+	        		ArticleService aService = new ArticleServiceImpl();
+	        		List<FollowBean> follows = uService.getFollowingsByUid(uid);
+	        		if(follows.isEmpty()){   		
         	%>
         		<!--列表middle-->
                 <div class="r_f_middle">
@@ -71,7 +72,9 @@
                     </div>
                 </div>
                 
-                <%}} %>
+                <%}}}else{
+                	response.sendRedirect(request.getContextPath()+"/jsp/login/login.jsp");
+                } %>
                 
             </div>
             
