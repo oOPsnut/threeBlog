@@ -503,7 +503,7 @@ $(function() {
                     </c:if>
                     <c:if test="${empty userBean }">
 	                    <script type="text/javascript">
-		                    $('#like').click(function(){  
+		                    $('#favor').click(function(){  
 		                    	window.location.href='${pageContext.request.contextPath}/RedirectServlet?method=LoginUI';       
 		                    });  
 	                    </script>  
@@ -618,7 +618,7 @@ $(function() {
 						<div class="comment-show-con clearfix">
 							<!--这是头像div-->
 							<div class="comment-show-con-img pull-left">
-							<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${comment.author_id}">
+							<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${comment.author_id}">
 								<img src="${commenterBean.head }" alt="">
 							</a>
 							</div>
@@ -626,7 +626,7 @@ $(function() {
 							<div class="comment-show-con-list pull-left clearfix">
 								<div class="pl-text clearfix">
 									<!--用户名-->
-									<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${comment.author_id}" class="comment-size-name"
+									<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${comment.author_id}" class="comment-size-name"
 										data="${comment.id }">${commenterBean.username}: </a>
 									<!--评论内容 -->
 									<c:if test="${comment.status != '屏蔽' }">						
@@ -674,7 +674,7 @@ $(function() {
 
 									<div class="all-pl-con">
 										<div class="pl-text hfpl-text clearfix">
-											<a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${answer.author_id}" class="comment-size-name" data="${answer.id }">${ answerUBean.username} : </a> 
+											<a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${answer.author_id}" class="comment-size-name" data="${answer.id }">${ answerUBean.username} : </a> 
 											<c:if test="${answer.status != '屏蔽' }">
 											<span class="my-pl-con"> &nbsp;${answer.text}</span>
 											</c:if>
@@ -735,6 +735,7 @@ $(function() {
 					}
 		</script>
 		<!--点击评论创建评论条-->
+		<c:if test="${not empty userBean }">
 		<c:if test="${userBean.id!=aBean.author_id }">
 				<script type="text/javascript">
 					$('.commentAll').on('click','.plBtn',function() {
@@ -764,7 +765,7 @@ $(function() {
 													console.log(comment_id);
 													var add_time=result.add_time;
 													console.log(add_time);
-												    oHtml ='<div  class="comment-show-con clearfix" ><div class="comment-show-con-img pull-left" ><a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}"><img src="${userBean.head}"</a>  alt=""></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/othercenter/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'
+												    oHtml ='<div  class="comment-show-con clearfix" ><div class="comment-show-con-img pull-left" ><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${userBean.id}"><img src="${userBean.head}"</a>  alt=""></div> <div class="comment-show-con-list pull-left clearfix"><div class="pl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${userBean.id}" class="comment-size-name" data="'
 												     						+comment_id+
 												     						'">${userBean.username} : </a><span class="my-pl-con">&nbsp;'
 												     						+ oSize+ 
@@ -787,6 +788,7 @@ $(function() {
 								alert("不能给自己留言哟！");
 							});
 					</script>
+		</c:if>
 		</c:if>
 		<c:if test="${empty userBean }">
 				<script type="text/javascript">
@@ -911,7 +913,7 @@ $(function() {
 																			console.log(answer_id);
 																			var add_time=result.add_time;
 																			console.log(add_time);
-																			oHtml= '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/other_center/otherscenter.jsp?id=${userBean.id}" class="comment-size-name" data="'
+																			oHtml= '<div class="all-pl-con"><div class="pl-text hfpl-text clearfix"><a href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${userBean.id}" class="comment-size-name" data="'
 																							+answer_id+
 																							'">${userBean.username} : </a><span class="my-pl-con">'
 																							+ oAt+ 
