@@ -134,7 +134,7 @@
                     </c:if>
                     <c:if test="${rBean.status1=='未处理'||rBean.status2=='正常'}">
                     	<tr>
-                        	<td colspan="3" style="padding: 20px;"><strong>没有违规记录！</strong></td>                     
+                        	<td colspan="3" style="padding: 20px;"><strong>经过审核，该条未检测到违规！</strong></td>                     
                     	</tr>
                     </c:if>
                     <%}} %>
