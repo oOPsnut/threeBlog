@@ -97,6 +97,9 @@ public class ReportServlet extends BaseServlet {
 		//从session中获取用户名等信息
 		UserBean userBean = (UserBean) request.getSession().getAttribute("userBean");
 		String user_id = userBean.getId();
+		//举报时间
+		Date now=new Date();
+		Date add_time=new Date(now.getTime());
 		//生成举报文章id、举报类型,反馈原因
 		String id = UUIDUtils.getId();
 		String feedback_reason="空";
@@ -120,6 +123,7 @@ public class ReportServlet extends BaseServlet {
 		report.setAuthor_id(author_id);
 		report.setUser_id(user_id);
 		report.setContent_id(content_id);
+		report.setAdd_time(add_time);
 		//调用服务
 		ArticleService aService = new ArticleServiceImpl();
 		boolean result;
