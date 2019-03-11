@@ -237,15 +237,15 @@
                            			ArticleBean aBean=articleBeans.get(i);
                            			String aid = aBean.getId();//文章id
 	                          		int countArticleReport =  Integer.valueOf( adminService.countArticleReportByCid(aid).toString());//文章举报数
+	                          		//System.out.println(aid+"="+countArticleReport);
 	                          		if(countArticleReport>0){
-	                          			ArticleBean articleBean = aService.findArticle(aid);
-	                          			request.setAttribute("aBean", articleBean);
+	                          			//request.setAttribute("countArticleReport", countArticleReport);
+	                          			//ArticleBean articleBean = aService.findArticle(aid);
+	                          			request.setAttribute("aBean", aBean);
 	                          			request.setAttribute("CAR", countArticleReport);
-                           			}
-                           		}
-                           	}
+                           			}	
                        %>
-                       <c:if test="${not empty CAR }">
+                       <c:if test="${not empty aBean}">
                         <tr>
                             <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${aBean.author_id}">${aBean.author }</a></td>
                             <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}" >${aBean.title }</a></td>
@@ -256,6 +256,8 @@
                             </td>
                         </tr>
                         </c:if>
+                        <%}
+                           	}%>
                     </table>
             </div>
         </div>
