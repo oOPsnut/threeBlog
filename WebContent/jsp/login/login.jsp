@@ -128,7 +128,7 @@ $(function() {
         	<img src="${pageContext.request.contextPath}/image/footer_logo.png">
             <div id="right_content_f" align="center">
             	<form action="${pageContext.request.contextPath}/UserServlet?method=UserLogin" method="post">
-            	<input class="f_input" type="text" name="phone" placeholder=" 请 输 入 手 机 号"  required>
+            	<input class="f_input" type="text" name="phone" placeholder=" 请 输 入 手 机 号" id="phone" onkeyup="isPhoneNum()"  required>
                 <input class="f_input" type="password" name="password" placeholder=" 请 输 入 密 码"id="password" required><br>
                 	 <span class="errorMsg" style="color: red;">${errorMsg}</span>
                 <a href="${pageContext.request.contextPath}/RedirectServlet?method=forgetPasswdUI" id="forget_passwd">忘记密码？</a><br>

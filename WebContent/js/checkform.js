@@ -16,8 +16,7 @@ function checkAll(obj){
 	    var hash1 = $('#password1').val()+md5KeyR; 
 		var hash2=MD5(hash1); 
 	    $('#password1').val(hash2);
-	    $('#password2').val(hash2);	
-	    alert("注册成功，将自动返回登录页面");	
+	    $('#password2').val(hash2);		
 	    return true;
 	    
 		}else{

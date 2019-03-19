@@ -118,6 +118,8 @@ function checkAll(){
 	var tlabels = trim(labels);
 	var tbt = trim(bt);
 	var tdy = trim(dy);
+	//初始化
+	var final=false;
 	//判断博文为空
 	if(CKEDITOR.instances.editor.getData()==""||!isrc||tlabels==""||tbt==""||tdy==""){
 		alert("（封面、标签、文章、标题、导语）内容均不能为空！");
@@ -133,6 +135,7 @@ function checkAll(){
 				dataType:"json",//数据格式:JSON
 				url:"/ThreeBlog_V1.0/ArticleServlet?method=CheckSensitiveWd" ,//目标地址
 				data:{"bt":tbt,"labels":tlabels,"dy":tdy,"aTxt":articleTxt},
+				async: false,//改成同步，非异步
 				error:function(){
 					alert("出错！请稍后再试...");
 				},
@@ -141,25 +144,24 @@ function checkAll(){
 						var msg=confirm("发表后不能再修改哟！");
 						if(msg){
 							alert("发布成功，点击确定为您跳转...");
-							return true;
-						}else{
-							return false;
+							final=true;
 						}
 					}else if(data==1){
 						alert("标题存在违规词！请检查并改正！");
-						return false;
 					}else if(data==2){
 						alert("标签存在违规词！请检查并改正！");
-						return false;
 					}else if(data==3){
 						alert("导语存在违规词！请检查并改正！");
-						return false;
 					}else if(data==4){
 						alert("文章存在违规词！请检查并改正！");
-						return false;
 					}
 				}
-		 });		 	 
+		 });
+		 if(final){
+			 return true;
+		 }else{
+			 return false;
+		 }
 	}
 	
 };

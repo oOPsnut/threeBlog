@@ -287,6 +287,12 @@ public class AdminServlet extends BaseServlet {
 					adminBean.setLast_login_time(last_login_time);
 					//更新登录时间
 					adminService.changeLoginTime(id,last_login_time);
+					
+					//发送cookie给客户端
+					/*Cookie cookie=new Cookie("a_login", phone+"#"+password);
+					cookie.setMaxAge(60*60*5);//5小时内有效
+					cookie.setPath(request.getContextPath());
+					response.addCookie(cookie);*/
 									
 					//添加CKFinder_UserRole属性。给予使用ckfinder的权限。
 					request.getSession().setAttribute("CKFinder_UserRole","admin");
