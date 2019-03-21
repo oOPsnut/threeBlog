@@ -112,7 +112,7 @@
 				</div>
 				<div align="left" id="content">
 					<h4 >亲爱的ThreeBlog朋友们：</h4><br>
-					<p>&emsp;&emsp;${nBean.content }</p><br>
+					<p>${nBean.content }</p><br>
 					<h4 align="right" >ThreeBlog博客</h4>
 					<h4 align="right" >${nBean.publish_date }</h4>
 				</div>

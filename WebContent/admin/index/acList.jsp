@@ -6,9 +6,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="result-wrap">
-        	<div class="result-title">
-                <h1>分类管理</h1>
-            </div>
+        	
             <div class="result-content"> 
 				<table class="result-tab" width="100%">
                         <tr>

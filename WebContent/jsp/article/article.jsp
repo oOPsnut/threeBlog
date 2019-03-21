@@ -698,7 +698,7 @@ $(function() {
 												<span class="pull-left date-dz-line">|</span> 
 											</c:if>	
 												<a href="javascript:;" class="date-dz-z pull-left">
-												 <i class="date-dz-z-click-red"></i>赞 (<i class="z-num">${answer.zan})</i>
+												 <i class="date-dz-z-click-red"></i>赞 (<i class="z-num">${answer.zan}</i>)
 												</a>
 											</div>
                                     </div>

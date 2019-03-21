@@ -18,7 +18,7 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public boolean checkPhone(String phone) throws SQLException {
 		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
-		String sql="select count(*) from t_admin where phone=?";
+		String sql="select count(*) from t_admin where phone=? and register_time='null'";
 		Long result = (Long) runner.query(sql, new ScalarHandler(),phone);
 		//System.out.println(result);
 		return result>0;

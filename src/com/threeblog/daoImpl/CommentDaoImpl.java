@@ -8,6 +8,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.threeblog.dao.CommentDao;
@@ -68,6 +69,14 @@ public class CommentDaoImpl implements CommentDao {
 		String sql="update t_comment set status='正常' where id=?";
 		int result = runner.update(sql,cid);
 		return result>0;
+	}
+
+	@Override
+	public Long countComment(String uid) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(author_id) AS pubCommentNum FROM t_comment WHERE author_id=?";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),uid);
+		return count;
 	}
 
 }

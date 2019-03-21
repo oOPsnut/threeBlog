@@ -131,7 +131,9 @@
         <div  id="search-result">
        		
         </div>
-        
+        <div class="result-title" style=" padding-left: 20px;padding-top: 10px;">
+                <h1>分类管理</h1>
+        </div>
         <div class="search-wrap">
             <div class="search-content">
                     <table class="search-tab">
@@ -158,9 +160,7 @@
         </div>
         <div id="defaultDiv">
           <div class="result-wrap">
-        	<div class="result-title">
-                <h1>分类管理</h1>
-            </div>
+        	
             <div class="result-content"> 
 				<table class="result-tab" width="100%">
                         <tr>

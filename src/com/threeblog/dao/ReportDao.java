@@ -149,4 +149,12 @@ public interface ReportDao {
 	 * @throws SQLException
 	 */
 	Long countArticleReportByCid(String cid)throws SQLException;
+	
+	/**
+	 * 计算用户被举报次数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countBeReported(String uid)throws SQLException;
 }

@@ -92,28 +92,41 @@
                 <h1>新增违规词</h1>
             </div>
             <div class="result-content">
-            	<form action="" method="post" name="illegal_form">
+            	<form action="${pageContext.request.contextPath}/AdminServlet?method=AddIllegalWord" method="post" name="illegal_form">
                 <ul class="sys-info-list">
                     <li align="center">
                         <label class="res-lab" style="width: 60px;">违规词</label><span class="res-info"><input  type="text" class="wid" id="word" name="word"  required/></span>
                     </li>
                      <li align="center">
-                        <label class="res-lab" style="width: 20px;"></label><span class="res-info">${Msg}</span>
+                        <label class="res-lab" style="width: 20px;"></label><span class="res-info">${AddMsg}</span>
                     </li>
 					<li align="center">
-						<input type="button" value="检查违规词" class="submit-button"  onclick="checkWord()" style="background-color:green;"/>&emsp;&emsp;
-                        <input type="button" value="添加违规词" class="submit-button"  onclick="addWord()"/>
+                        <input type="submit" value="添加违规词" class="submit-button" />
                     </li>
-                    <script type="text/javascript">
-                        	function checkWord() {
-                        		document.illegal_form.action="/ThreeBlog_V1.0/AdminServlet?method=CheckIllegalWord";
-                        		document.illegal_form.submit();
-							}
-                        	function addWord() {
-                        		document.illegal_form.action="/ThreeBlog_V1.0/AdminServlet?method=AddIllegalWord";
-                        		document.illegal_form.submit();
-							}
-                   </script>
+                </ul>
+                </form>
+            </div>
+        </div>
+        <div class="result-wrap">
+            <div class="result-title">
+                <h1>违规词检查</h1>
+            </div>
+            <div class="result-content">
+            	<form action="${pageContext.request.contextPath}/AdminServlet?method=CheckIllegalWord" method="post" name="illegal_form">
+                <ul class="sys-info-list">
+                    <li align="center">
+                        <label class="res-lab" style="width: 60px;">检测内容</label>
+                        	<span class="res-info">
+                        		<!-- <input  type="text" class="wid" id="word" name="word"  required/> -->
+                        		<textarea name="word" class="common-textarea" id="content" cols="30" style="width: 98%;" rows="10" required></textarea>
+                        	</span>
+                    </li>
+                     <li align="center">
+                        <label class="res-lab" style="width: 20px;"></label><span class="res-info">${CheckMsg}</span>
+                    </li>
+					<li align="center">
+						<input type="submit" value="检查违规词" class="submit-button" style="background-color:green;"/>
+                    </li>
                 </ul>
                 </form>
             </div>

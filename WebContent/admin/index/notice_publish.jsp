@@ -91,15 +91,15 @@
                             <td>
                                 <select name="colId" id="catid" class="required">
                                     <option value="维护公告">维护公告</option>
-                                    <option value="博文公告">博文公告</option>
                                     <option value="封号公告">封号公告</option>
+                                    <option value="其它公告">其它公告</option>
                                 </select>
                             </td>
                         </tr>
                             <tr>
                                 <th><i class="require-red">*</i>标题：</th>
                                 <td>
-                                    <input class="common-text required" id="title" name="title" size="50" value="" type="text" required>
+                                    <input class="common-text required" id="title" name="title" size="50" value="" type="text" placeholder="限20字" required>
                                 </td>
                             </tr>
                             <tr>

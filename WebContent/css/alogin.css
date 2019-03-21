@@ -70,7 +70,7 @@
 #forget_passwd{
 	font-size:16px;
 	color:#666;
-	margin-left:230px;}
+	}
 #forget_passwd:hover{
 	color:#000;
 	font-weight:bold;}

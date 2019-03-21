@@ -426,4 +426,12 @@ public class UserServiceImpl implements UserService{
 		return list;
 	}
 
+	@Override
+	public Long countBeReported(String uid) throws SQLException {
+		// 计算用户被举报次数
+		ReportDao dao = new ReportDaoImpl();
+		Long countBeReported = dao.countBeReported(uid);
+		return countBeReported;
+	}
+
 }

@@ -289,10 +289,10 @@ public class AdminServlet extends BaseServlet {
 					adminService.changeLoginTime(id,last_login_time);
 					
 					//发送cookie给客户端
-					/*Cookie cookie=new Cookie("a_login", phone+"#"+password);
+					Cookie cookie=new Cookie("a_login", phone+"#"+password);
 					cookie.setMaxAge(60*60*5);//5小时内有效
 					cookie.setPath(request.getContextPath());
-					response.addCookie(cookie);*/
+					response.addCookie(cookie);
 									
 					//添加CKFinder_UserRole属性。给予使用ckfinder的权限。
 					request.getSession().setAttribute("CKFinder_UserRole","admin");
@@ -412,11 +412,13 @@ public class AdminServlet extends BaseServlet {
 		//数据初始化
 		String admin_username=null;
 		String admin_id = null;
+		String admin_phone=null;
 		//从session中获取用户名
 		AdminBean adminBean = (AdminBean)request.getSession().getAttribute("adminBean");	
 		if(adminBean!=null) {
 			admin_username = adminBean.getUsername();
 			admin_id = adminBean.getId();
+			admin_phone = adminBean.getPhone();
 			//System.out.println(admin_id+"="+admin_username);
 		}
 		
@@ -466,16 +468,17 @@ public class AdminServlet extends BaseServlet {
 						admin_username=value;	
 						AdminBean admin = adminService.findAdminByAUsername(admin_username);
 						admin_id = admin.getId();
+						admin_phone = admin.getPhone();
 					}
 					
 				}
 			}else{
 				//当前处理item里面封装的上传文件（公告封面）
-				//用用户管理员名称+当前时间作为文件名
+				//用用户管理员手机号+当前时间作为文件名
 				Date date=new Date();
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 				//手机号+时间+格式   136xxxx2211_20171201194110.jepg
-				String filename = admin_username+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
+				String filename = admin_phone+"_"+sdf.format(date)+"."+item.getContentType().substring(6);
 				//获取实际存储路径
 				String t1 = request.getServletContext().getRealPath("") + "\\image\\noticecover"; 	
 				String realFile=t1  +File.separator+ filename;
@@ -635,7 +638,7 @@ public class AdminServlet extends BaseServlet {
 		//System.out.println(word);
 		//查询数据库
 		ArticleService aService = new ArticleServiceImpl();
-		List<ArticleBean> list = aService.findSearchKey(content);
+		List<ArticleBean> list = aService.fingAllAboutWord(content);
 		//System.out.println(list);
 		//返回数据
 		if (list.isEmpty()) {
@@ -819,15 +822,15 @@ public class AdminServlet extends BaseServlet {
 		boolean sensitive = swFilter.isSensitive(word);
 		//返回数据
 		if (sensitive) {
-			request.setAttribute("Msg", "存在违规词，其为："+sensitiveWord);
+			request.setAttribute("CheckMsg", "存在违规词，其为："+sensitiveWord);
 			return "/admin/index/illegal_manage.jsp";
 		} else {
-			request.setAttribute("Msg", "不存在违规词，或词库不存在此词");
+			request.setAttribute("CheckMsg", "不存在违规词，或词库中不包含");
 			return "/admin/index/illegal_manage.jsp";
 		}
 	}
 	
-	//检查违规词是否存在
+	//添加违规词
 	public String AddIllegalWord(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException{
 		
 		//获取数据
@@ -854,10 +857,10 @@ public class AdminServlet extends BaseServlet {
 		boolean sensitive = swFilter.isSensitive(word);
 		//返回数据
 		if (sensitive) {
-			request.setAttribute("Msg", "添加成功");
+			request.setAttribute("AddMsg", "添加成功");
 			return "/admin/index/illegal_manage.jsp";
 		} else {
-			request.setAttribute("Msg", "添加失败，请稍后再试");
+			request.setAttribute("AddMsg", "添加失败，请稍后再试");
 			return "/admin/index/illegal_manage.jsp";
 		}
 	}

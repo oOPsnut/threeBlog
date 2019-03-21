@@ -154,7 +154,16 @@
                 </script>
                 </div>
             </div>
-        </div>      
+        </div>    
+        <%-- <!-- 文章内容图片管理 -->
+        <div class="result-wrap">
+            <div class="result-title">
+                <h1>文章内容图片管理</h1>
+            </div>
+            <div class="result-content content-overflow">
+            <a href="${pageContext.request.contextPath}/ckfinder/ckfinder.html">文章内容服务器</a>
+            </div>
+        </div>   --%>
         <!--用户头像管理-->
         <div class="result-wrap">
             <div class="result-title">

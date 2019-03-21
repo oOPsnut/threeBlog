@@ -612,4 +612,20 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	boolean PassRenewAnswer(String cid)throws SQLException;
+	
+	/**
+	 * 计算某用户的评论数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countComment(String uid)throws SQLException;
+	
+	/**
+	 * 计算某用户的回复数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countAnswer(String uid)throws SQLException;
 }

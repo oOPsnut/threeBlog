@@ -18,7 +18,7 @@
         	<h1 style="-webkit-margin-before: 10px;color: #cc6633;">后台管理中心</h1>
             <div id="right_content_f" align="center">
             	<form action="${pageContext.request.contextPath}/AdminServlet?method=AdminLogin" method="post">
-            	<input class="f_input" type="text" name="phone" placeholder=" 请 输 入 手 机 号"  required>
+            	<input class="f_input" type="text" name="phone" placeholder=" 请 输 入 手 机 号" id="phone" onkeyup="isPhoneNum()" required>
                 <input class="f_input" type="password" name="password" placeholder=" 请 输 入 密 码"id="password" required><br>
                 	 <span class="errorMsg" style="color: red;">${errorMsg}</span>
                 <a href="${pageContext.request.contextPath}/RedirectServlet?method=AforgetPasswdUI" id="forget_passwd">忘记密码？</a><br>

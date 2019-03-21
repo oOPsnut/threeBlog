@@ -150,6 +150,14 @@ public class ReportDaoImpl implements ReportDao {
 		Long count =(Long) runner.query(sql,new ScalarHandler(),cid);
 		return count;
 	}
+
+	@Override
+	public Long countBeReported(String uid) throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(author_id) AS brnum FROM t_report WHERE author_id=?";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),uid);
+		return count;
+	}
 	
 
 }

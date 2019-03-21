@@ -635,6 +635,22 @@ public class ArticleServiceImpl implements ArticleService {
 		return answer;
 	}
 
+	@Override
+	public Long countComment(String uid) throws SQLException {
+		// 计算某用户的评论数
+		CommentDao dao = new CommentDaoImpl();
+		Long countComment = dao.countComment(uid);
+		return countComment;
+	}
+
+	@Override
+	public Long countAnswer(String uid) throws SQLException {
+		// 计算某用户的回复数
+		AnswersDao dao =new AnswersDaoImpl();
+		Long countAnswer = dao.countAnswer(uid);
+		return countAnswer;
+	}
+
 	
 	
 }

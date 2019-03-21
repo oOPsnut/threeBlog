@@ -67,4 +67,12 @@ public interface CommentDao {
 	 * @throws SQLException
 	 */
 	boolean PassRenewComment(String cid)throws SQLException;
+	
+	/**
+	 * 计算某用户的评论数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countComment(String uid)throws SQLException;
 }

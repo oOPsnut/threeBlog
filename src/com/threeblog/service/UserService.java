@@ -410,4 +410,12 @@ public interface UserService {
 	 * @throws SQLException
 	 */
 	List<UserBean> SearchUser(String username) throws SQLException;
+	
+	/**
+	 * 计算用户被举报次数
+	 * @param uid
+	 * @return
+	 * @throws SQLException
+	 */
+	Long countBeReported(String uid)throws SQLException;
 }

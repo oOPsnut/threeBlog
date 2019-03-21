@@ -1,3 +1,5 @@
+<%@page import="com.threeblog.serviceImpl.ArticleServiceImpl"%>
+<%@page import="com.threeblog.service.ArticleService"%>
 <%@page import="com.threeblog.serviceImpl.AdminServiceImpl"%>
 <%@page import="com.threeblog.service.AdminService"%>
 <%@page import="com.sun.jndi.url.iiopname.iiopnameURLContextFactory"%>
@@ -149,7 +151,9 @@
 		                 </ul>
 		           </form>
             </div>
-        </div>      
+        </div> 
+        
+             
         <div class="result-wrap">
             <div class="result-title">
                 <h1>正常用户管理</h1>
@@ -257,6 +261,106 @@
                         </c:if>
                         <%}} %>
                     </table>
+            </div>
+        </div>
+        <div class="result-wrap">
+            <div class="result-title">
+                <h1>潜在违规用户管理</h1>
+            </div>
+            
+            <div class="result-content"> 
+            <h1>潜在违规用户</h1>            
+				<table class="result-tab" width="100%">
+                        <tr> 
+                            <th>用户名</th>
+                            <th>博文数</th>
+                            <th>评论/回复数</th>
+                            <th>被举报次数</th>
+                            <th>博文/评论/回复总数</th>
+                            <th>违规率:D</th>
+                            <th>被禁用时间</th>
+                            <th>操作</th>
+                        </tr>
+                        <%
+                        	ArticleService aService = new ArticleServiceImpl();
+                        	List<UserBean> list3 = uService.fingAllUser();//查找所有用户
+                        	if(list3.isEmpty()){
+                        %>
+                        <tr align="center">
+                        	<td colspan="8" style="padding: 20px;"><strong>暂时没有用户！</strong></td>    
+                        </tr>
+                        <% 	
+                        	}else{
+                        		for(int i = 0;i<list3.size();i++){  
+        		        			UserBean uBean = list3.get(i);
+        		        			request.setAttribute("uBean", uBean); 
+        		        			String uid = uBean.getId();//用户id
+        		        			int countArticle =  Integer.valueOf(aService.countArticles(uid).toString());//博文数
+        		        			request.setAttribute("countArticle", countArticle);
+        		        			int countComment =  Integer.valueOf(aService.countComment(uid).toString());//评论数
+        		        			int countAnswer =  Integer.valueOf(aService.countAnswer(uid).toString());//回复数
+        		        			int countCA=countComment+countAnswer;
+        		        			request.setAttribute("countCA", countCA);
+        		        			int countBeReported =  Integer.valueOf(uService.countBeReported(uid).toString());//被举报次数
+        		        			request.setAttribute("countBeReported", countBeReported);
+        		        			int total=countArticle+countCA;
+        		        			request.setAttribute("total", total);
+        		        			if(countBeReported!=0){
+        		        				long rate=total/countBeReported;
+        		        				request.setAttribute("rate", rate);
+        		        			}
+                        %>
+                        <c:if test="${not empty rate }">
+                        <tr>
+                            <td><a target="_blank" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}">${uBean.username }</a></td>
+                            <td>${countArticle }</td>
+                            <td>${countCA}</td>
+                            <td>${countBeReported}</td>
+                            <td>${total}</td>
+                            <td>${rate}</td>
+                            <td>${uBean.ban_time }</td>
+                            <td>
+                                <a class="link-update" href="${pageContext.request.contextPath}/jsp/othercenter/othercenter.jsp?id=${uBean.id}" target="_blank">查看</a>&emsp;
+                                <a class="link-update" onclick="addUsername('${uBean.username}')">限制</a>
+                                <script type="text/javascript">
+		                            function addUsername(username) {
+										$("#lusername").val(username);
+									} 
+                                </script>
+                            </td>
+                        </tr>
+                        </c:if>
+                        <%}} %>
+                    </table>
+            </div>
+            <div class="result-title">
+            	<h1>限制标准</h1>
+            	<table  class="result-tab" width="30%">
+            		<tr> 
+                            <th>违规率D</th>
+                            <th>限制时间</th>
+                    </tr>
+                    <tr>
+	                    <td><span>&lt;0.5违规率&gt;=0.6</span></td>
+	                    <td>限制7天</td>
+                    </tr>
+                    <tr>
+	                    <td><span>&lt;0.4违规率&gt;=0.5</span></td>
+	                    <td>限制15天</td>
+                    </tr>
+                    <tr>
+	                    <td><span>&lt;0.3违规率&gt;=0.4</span></td>
+	                    <td>限制30天</td>
+                    </tr>
+                    <tr>
+	                    <td><span>&lt;0.15违规率&gt;=0.3</span></td>
+	                    <td>限制60天</td>
+                    </tr>
+                    <tr>
+	                    <td><span>违规率&gt;=0.15</span></td>
+	                    <td>限制1年</td>
+                    </tr>
+            	</table>
             </div>
         </div>
     </div>

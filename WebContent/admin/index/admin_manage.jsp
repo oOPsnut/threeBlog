@@ -101,6 +101,11 @@
                     <li align="left">
                         <label class="res-lab">当前管理员</label><span class="res-info">${adminBean.username }<input  type="text" value="${adminBean.id }" id="admin"  name="admin" style="visibility: hidden;"/></span>
                     </li>
+                    <%--超级管理员 --%>
+                    <c:if test="${adminBean.id=='72C5BA19E0C1431BA25D74E9B0D47647'}">
+                    <li align="left">
+                        <label class="res-lab">是否具备添加权限</label><span class="res-info">是</span>
+                    </li>
                     <li align="left">
                         <label class="res-lab">当前管理员密码</label><span class="res-info"><input  type="password" class="wid" id="password" name="password" onkeyup="checkPasswd()" required/></span><span id="span02"></span>
                         <script type="text/javascript">
@@ -170,7 +175,13 @@
                         <input type="submit" value="添加" class="submit-button" id="addA" onclick="encryptionPassword()"/>&emsp;&emsp;
                     	<input type="button" id="copy" value="复制授权码" class="submit-button" data-clipboard-action="copy" data-clipboard-target="#license_codeMsg" onclick="copyCode()"/>
                     </li>
-                    
+                    </c:if>
+                    <%--普通管理员 --%>
+                    <c:if test="${adminBean.id!='72C5BA19E0C1431BA25D74E9B0D47647'}">
+                    <li align="left">
+                        <label class="res-lab">是否具备添加权限</label><span class="res-info">否</span>
+                    </li>
+                    </c:if>
                 </ul>
                 </form>
             </div>

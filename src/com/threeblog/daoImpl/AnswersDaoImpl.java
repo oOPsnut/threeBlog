@@ -85,4 +85,12 @@ public class AnswersDaoImpl implements AnswersDao {
 		return result>0;
 	}
 
+	@Override
+	public Long countAnswer(String uid) throws SQLException {
+		QueryRunner runner = new QueryRunner(JDBCUtil.getDataSource());
+		String sql="SELECT COUNT(author_id) AS pubAnswerNum FROM t_answer WHERE author_id=?";
+		Long count =(Long) runner.query(sql,new ScalarHandler(),uid);
+		return count;
+	}
+
 }
