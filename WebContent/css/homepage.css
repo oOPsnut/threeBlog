@@ -643,6 +643,7 @@ footer img{
 	margin-top:10px;
 	margin-left:10px;}
 .article_a_middle{
+	overflow:auto;
 	margin-bottom:30px;
 	width:100%;
 	}

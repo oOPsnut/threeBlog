@@ -143,7 +143,6 @@ function checkAll(){
 					if(data==0){
 						var msg=confirm("发表后不能再修改哟！");
 						if(msg){
-							alert("发布成功，点击确定为您跳转...");
 							final=true;
 						}
 					}else if(data==1){
