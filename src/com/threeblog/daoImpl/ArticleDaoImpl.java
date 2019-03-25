@@ -388,6 +388,20 @@ public class ArticleDaoImpl implements ArticleDao {
 		return result>0;
 	}
 
+	@Override
+	public List<ArticleBean> findAllHotArticles() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article WHERE STATUS!='屏蔽' ORDER BY click_num+liked_num+collect_num+comment_num DESC LIMIT 5";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
+	}
+
+	@Override
+	public List<ArticleBean> findBeReportedArticle() throws SQLException {
+		QueryRunner runner  = new QueryRunner(JDBCUtil.getDataSource());		
+		String sql="SELECT * FROM t_article WHERE id IN(SELECT content_id FROM t_report ORDER BY add_time DESC) ";
+		return runner.query(sql,new BeanListHandler<ArticleBean>(ArticleBean.class));
+	}
+
 
 
 	

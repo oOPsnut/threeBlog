@@ -225,7 +225,7 @@
                         </tr>
                         <%
                         	ArticleService aService = new ArticleServiceImpl();
-                        	List<ArticleBean> articleBeans = aService.findAllACover();
+                        	List<ArticleBean> articleBeans = aService.findBeReportedArticle();//查找到被举报的博文
                      		if(articleBeans.isEmpty()){
                         %>
                        <tr align="center">

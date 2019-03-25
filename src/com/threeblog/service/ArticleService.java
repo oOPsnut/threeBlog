@@ -628,4 +628,18 @@ public interface ArticleService {
 	 * @throws SQLException
 	 */
 	Long countAnswer(String uid)throws SQLException;
+	
+	/**
+	 * 查找到最火热的五篇文章。（评+浏+赞+藏）总数最大
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findAllHotArticles()throws SQLException;
+	
+	/**
+	 * 查找到被举报的博文
+	 * @return
+	 * @throws SQLException
+	 */
+	List<ArticleBean> findBeReportedArticle()throws SQLException;
 }

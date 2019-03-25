@@ -651,6 +651,22 @@ public class ArticleServiceImpl implements ArticleService {
 		return countAnswer;
 	}
 
+	@Override
+	public List<ArticleBean> findAllHotArticles() throws SQLException {
+		// 查找到最火热的五篇文章。（评+浏+赞+藏）总数最大
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> list = dao.findAllHotArticles();
+		return list;
+	}
+
+	@Override
+	public List<ArticleBean> findBeReportedArticle() throws SQLException {
+		// 查找到被举报的博文
+		ArticleDao dao = new ArticleDaoImpl();
+		List<ArticleBean> list = dao.findBeReportedArticle();
+		return list;
+	}
+
 	
 	
 }

@@ -208,12 +208,26 @@ $(function() {
 	<div id="index_body_head">
     	<div id="index_body_show">
     		<div id="owl-demo" class="owl-carousel">
+    		<%
+    			ArticleService aService = new ArticleServiceImpl();
+    			List<ArticleBean> aList = aService.findAllHotArticles();//获取最火热的五篇文章（评+浏+赞+藏）
+    			if(aList.isEmpty()){
+    		%>
     		<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic1.png" alt=""></a>
     		<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic2.jpg" alt=""></a>
             <a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic3.jpg" alt=""></a>
 			<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic4.jpg" alt=""></a>
 			<a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic5.jpg" alt=""></a>
             <a class="item"><img src="${pageContext.request.contextPath}/image/homepic/pic6.jpg" alt=""></a>
+            <%}else{
+            	for(int i =0;i<aList.size();i++){	
+            		ArticleBean aBean = aList.get(i);
+            		request.setAttribute("aBean", aBean);
+            %>
+            	 <a class="item" href="${pageContext.request.contextPath}/jsp/article/article.jsp?id=${aBean.id}"><img src="${aBean.cover }" alt="${aBean.title}"></a>
+            <%
+            	}
+            }%>
 			</div>
     	</div>
     </div>
@@ -277,7 +291,6 @@ $(function() {
         <div id="index_body_labels">
         	<h3>█ 热门标签</h3>
         	<%
-        		ArticleService aService = new ArticleServiceImpl();
         		List<Object[]> hotLabels = aService.findHotLabels();  
         		if(hotLabels.isEmpty()){
         	%>
