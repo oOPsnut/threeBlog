@@ -335,29 +335,30 @@
             </div>
             <div class="result-title">
             	<h1>限制标准</h1>
+            	<span style="color: red;">* 此标准需博文/评论/回复总数>10开始执行</span>
             	<table  class="result-tab" width="30%">
             		<tr> 
                             <th>违规率D</th>
                             <th>限制时间</th>
                     </tr>
                     <tr>
-	                    <td><span>&lt;0.5违规率&gt;=0.6</span></td>
+	                    <td><span>0.5&lt; 违规率D &lt;=0.6</span></td>
 	                    <td>限制7天</td>
                     </tr>
                     <tr>
-	                    <td><span>&lt;0.4违规率&gt;=0.5</span></td>
+	                    <td><span>0.4&lt; 违规率D &lt;=0.5</span></td>
 	                    <td>限制15天</td>
                     </tr>
                     <tr>
-	                    <td><span>&lt;0.3违规率&gt;=0.4</span></td>
+	                    <td><span>0.3&lt; 违规率D &lt;=0.4</span></td>
 	                    <td>限制30天</td>
                     </tr>
                     <tr>
-	                    <td><span>&lt;0.15违规率&gt;=0.3</span></td>
+	                    <td><span>0.15&lt; 违规率D &lt;=0.3</span></td>
 	                    <td>限制60天</td>
                     </tr>
                     <tr>
-	                    <td><span>违规率&gt;=0.15</span></td>
+	                    <td><span>违规率D &lt;=0.15</span></td>
 	                    <td>限制1年</td>
                     </tr>
             	</table>
