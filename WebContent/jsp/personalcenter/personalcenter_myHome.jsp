@@ -915,7 +915,7 @@
                     	<span>作者 : </span><a href="${pageContext.request.contextPath}/RedirectServlet?method=personalCenterUI">${userBean.username}</a>
                         <span>${aBeanF.publish_date}</span>
                         <span>分类: </span><strong>${atBeanF.article_type}</strong>
-                        <span>标签: </span><a href="#">&lt;${aBeanF.label }&gt;</a>
+                        <span>标签: </span><a href="${pageContext.request.contextPath}/jsp/homepage/search_result.jsp?content=${aBeanF.label }">&lt;${aBeanF.label }&gt;</a>
                     </div>
                 </div>
                 <!--文章middle-->
